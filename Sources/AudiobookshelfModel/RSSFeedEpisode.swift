@@ -1,0 +1,15 @@
+//
+//  RSSFeedEpisode.swift
+//  AudiobookshelfAPI
+//
+//  Created by James Harquail on 2024-11-18.
+//
+
+import Foundation
+
+public struct RSSFeedEpisode {
+    
+}
+
+extension RSSFeedEpisode: Decodable {}
+extension RSSFeedEpisode: Sendable {}
