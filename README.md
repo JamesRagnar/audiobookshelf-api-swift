@@ -1,8 +1,21 @@
 # Audiobookshelf API Swift
+A Swift Package providing Model, Interface, and Socket support for Audiobookshelf servers. 
 
 [Audiobookshelf](https://www.audiobookshelf.org/)
 
 [Docs](https://api.audiobookshelf.org/#introduction)
+
+> [!NOTE]
+> Work in progress, current status of each Module:
+> 
+> | ⚠️ | Models |
+> |---------------|:----------------------------------------|
+>
+> | ⚠️ | Interfaces |
+> |---------------|:----------------------------------------|
+>
+> | ✔️ | Sockets |
+> |---------------|:----------------------------------------|
 
 ## Components
 
