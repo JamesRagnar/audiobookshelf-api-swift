@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// - Note: Only provide fullPath when creating a new folder. The other attributes will be automatically set.
 public struct Folder {
     
     /// The ID of the folder. (Read Only)
