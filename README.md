@@ -8,7 +8,7 @@ A Swift Package providing Model, Interface, and Socket support for Audiobookshel
 > [!NOTE]
 > Work in progress, current status of each Module:
 > 
-> | ⚠️ | Models |
+> | ✔️ | Models |
 > |---------------|:----------------------------------------|
 >
 > | ⚠️ | Interfaces |
