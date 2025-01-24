@@ -52,6 +52,8 @@ public struct GetLibrary: Interface {
     
     public struct Response: Decodable, Sendable {
         
+        // TODO: Can be Library or special response body
+        
     }
     
     public enum AudiobookshelfError: Error {
