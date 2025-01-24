@@ -16,6 +16,8 @@ public struct AudiobookshelfRequestService {
     
     public weak var configurationProvider: ServerConfigurationProvider?
     
+    public weak var loggingService: LoggingService?
+    
     var dataTaskProvider: DataTaskProvider
     
     public init(dataTaskProvider: DataTaskProvider) {

@@ -19,6 +19,13 @@ public extension AudiobookshelfRequestService {
         do {
             interfaceRequest = try request(interface, parameters)
         } catch {
+            loggingService?
+                .log(
+                    source: .requestService,
+                    level: .error,
+                    message: "Failed to create request - \(error.localizedDescription)"
+                )
+            
             throw error
         }
         
@@ -27,6 +34,13 @@ public extension AudiobookshelfRequestService {
                 try await dataTaskProvider.data(for: interfaceRequest)
             )
         } catch {
+            loggingService?
+                .log(
+                    source: .requestService,
+                    level: .error,
+                    message: "Request error - \(error.localizedDescription)"
+                )
+            
             throw error
         }
     }

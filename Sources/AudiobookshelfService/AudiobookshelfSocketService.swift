@@ -28,6 +28,8 @@ open class AudiobookshelfSocketService {
      
     }
     
+    public weak var loggingService: LoggingService?
+    
     public func sendEvent<Event: SocketEvent>(
         _ socketEvent: Event.Type,
         _ message: Event.Schema
@@ -35,6 +37,12 @@ open class AudiobookshelfSocketService {
         guard let message = message as? SocketData else {
             return
         }
+        
+        loggingService?.log(
+            source: .socketService,
+            level: .debug,
+            message: "Sending Event - \(socketEvent.name)"
+        )
         
         manager
             .defaultSocket
@@ -106,6 +114,14 @@ open class AudiobookshelfSocketService {
         manager
             .defaultSocket
             .onAny { [weak self] event in
+                self?
+                    .loggingService?
+                    .log(
+                    source: .socketService,
+                    level: .debug,
+                    message: "Received Event - \(event.event)"
+                )
+                
                 self?.eventSubject.send(event)
             }
         
@@ -116,6 +132,14 @@ open class AudiobookshelfSocketService {
                     let statusInt = status.last as? Int,
                     let status = SocketStatus(rawValue: statusInt)
                 else { return }
+                
+                self?
+                    .loggingService?
+                    .log(
+                    source: .socketService,
+                    level: .debug,
+                    message: "Status Change - \(status)"
+                )
                 
                 self?.statusSubject.send(status)
             }
