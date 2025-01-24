@@ -90,7 +90,7 @@ public struct PatchMediaProgress: Interface {
     
     // MARK: Response
     
-    public struct Response: Decodable, Sendable {}
+    public typealias Response = String
     
     public enum AudiobookshelfError: Error {
         
