@@ -25,7 +25,7 @@ public struct Library {
     public let icon: Icon
     
     /// The type of media that the library contains. Will be book or podcast. (Read Only)
-    public let mediaType: String
+    public let mediaType: MediaType
     
     /// Preferred metadata provider for the library. See Metadata Providers for a list of possible providers.
     public let provider: String
@@ -39,6 +39,18 @@ public struct Library {
     /// The time (in ms since POSIX epoch) when the library was last updated. (Read Only)
     public let lastUpdate: Int
     
+}
+
+public extension Library {
+    
+    enum MediaType: String, Decodable, Sendable {
+        
+        case book
+        
+        case podcast
+        
+    }
+
 }
 
 extension Library: Decodable {}
