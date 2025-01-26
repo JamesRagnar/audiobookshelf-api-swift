@@ -19,7 +19,7 @@ public struct PlaylistItem {
     
     /// The podcast episode the playlist item is for. Will only exist if episodeId is not null.
     /// - Note: Playlist Item Expanded - Added Attribute
-    public let episode: PodcastEpisodeDownload?
+    public let episode: PodcastEpisode?
     
     /// The library item the playlist item is for. Will be Library Item Minified if episodeId is not null.
     /// - Note: Playlist Item Expanded - Added Attribute
