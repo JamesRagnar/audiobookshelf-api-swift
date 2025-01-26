@@ -13,7 +13,7 @@ public struct PodcastEpisodeDownload {
     public let id: String
     
     /// The display title of the episode to be downloaded.
-    public let episodeDisplayTitle: String
+    public let episodeDisplayTitle: String?
     
     /// The URL from which to download the episode.
     public let url: String
