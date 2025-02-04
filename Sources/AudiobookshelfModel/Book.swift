@@ -50,6 +50,16 @@ public struct Book {
     /// - Note: Book Minified - Added Attribute
     public let numChapters: Int?
     
+    /// The format of ebook of the book. Will be null if the book is an audiobook.
+    /// - Note: Book Minified - Added Attribute
+    public let ebookFormat: String?
+    
+    // MARK: Book Expanded
+    
+    /// The book's audio tracks from the audio files.
+    /// - Note: Book Expanded - Added Attribute
+    public let tracks: [AudioTrack]?
+    
     // MARK: Book Minified + Expanded
     
     /// The total length (in seconds) of the book.
@@ -61,11 +71,6 @@ public struct Book {
     /// - Note: Book Minified - Added Attribute
     /// - Note: Book Expanded - Added Attribute
     public let size: Int?
-    
-    /// The format of ebook of the book. Will be null if the book is an audiobook.
-    /// - Note: Book Minified - Added Attribute
-    /// - Note: Book Expanded - Added Attribute
-    public let ebookFormat: String?
     
 }
 
