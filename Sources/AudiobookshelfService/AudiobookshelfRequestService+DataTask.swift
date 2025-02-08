@@ -29,6 +29,13 @@ public extension AudiobookshelfRequestService {
             throw error
         }
         
+        loggingService?
+            .log(
+                source: .requestService,
+                level: .debug,
+                message: "\(interfaceRequest.httpMethod ?? "") - \(interfaceRequest.url?.description ?? "")"
+            )
+
         do {
             return try T.handle(
                 try await dataTaskProvider.data(for: interfaceRequest)
