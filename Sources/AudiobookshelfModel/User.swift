@@ -15,8 +15,9 @@ public struct User {
     /// The username of the user.
     public let username: String
     
-    /// The type of the user. Will be root, guest, user, or admin. There will be only one root user which is created when the server first starts.
-    public let type: String
+    /// The type of the user.
+    /// There will be only one root user which is created when the server first starts.
+    public let type: UserType
     
     /// The authentication token of the user.
     public let token: String
@@ -37,7 +38,7 @@ public struct User {
     public let isLocked: Bool
     
     /// The time (in ms since POSIX epoch) when the user was last seen by the server. Will be null if the user has never logged in.
-    public  let lastSeen: Int?
+    public let lastSeen: Int?
     
     /// The time (in ms since POSIX epoch) when the user was created.
     public let createdAt: Int
@@ -51,6 +52,21 @@ public struct User {
     /// The tags accessible to the user. An empty array means all tags are accessible.
     public let itemTagsAccessible: [String]?
     
+}
+
+extension User {
+    
+    public enum UserType: String, Decodable, Sendable {
+        
+        case root
+        
+        case guest
+        
+        case user
+        
+        case admin
+        
+    }
 }
 
 extension User: Decodable {}
