@@ -117,7 +117,13 @@ public struct LibraryItem {
     /// The time (in ms since POSIX epoch) when the book or episode was finished.
     /// - Note: Library Item Personalized - Added Attribute
     public let finishedAt: Int?
+    
+    // MARK: Other
 
+    /// The time (in ms since POSIX epoch) when the corresponding media progress was last updated.
+    /// - Note: GetLibraryItemsInProgress extra parameter
+    public let progressLastUpdate: Int?
+    
 }
 
 public extension LibraryItem {
@@ -166,6 +172,7 @@ extension LibraryItem: Decodable {
         case prevBookInProgressLastUpdate
         case weight
         case finishedAt
+        case progressLastUpdate
     }
     
     public init(from decoder: any Decoder) throws {
@@ -198,6 +205,7 @@ extension LibraryItem: Decodable {
         self.prevBookInProgressLastUpdate = try container.decodeIfPresent(Int.self, forKey: .prevBookInProgressLastUpdate)
         self.weight = try container.decodeIfPresent(Float.self, forKey: .weight)
         self.finishedAt = try container.decodeIfPresent(Int.self, forKey: .finishedAt)
+        self.progressLastUpdate = try container.decodeIfPresent(Int.self, forKey: .progressLastUpdate)
         
         switch mediaType {
         case .book:
