@@ -45,7 +45,7 @@ public struct GetLibraryItemsInProgress: Interface {
     public struct Response: Decodable, Sendable {
         
         /// The in progress library items.
-        let libraryItems: [LibraryItem]
+        public let libraryItems: [LibraryItem]
         
     }
         
