@@ -11,20 +11,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AudiobookshelfInterface",
-            targets: ["AudiobookshelfInterface"]
-        ),
-        .library(
-            name: "AudiobookshelfModel",
-            targets: ["AudiobookshelfModel"]
-        ),
-        .library(
-            name: "AudiobookshelfService",
-            targets: ["AudiobookshelfService"]
-        ),
-        .library(
-            name: "AudiobookshelfSocket",
-            targets: ["AudiobookshelfSocket"]
+            name: "AudiobookshelfAPI",
+            targets: ["AudiobookshelfAPI"]
         ),
     ],
     dependencies: [
@@ -35,27 +23,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "AudiobookshelfInterface",
-            dependencies: ["AudiobookshelfModel"]
-        ),
-        .target(
-            name: "AudiobookshelfModel",
-            dependencies: []
-        ),
-        .target(
-            name: "AudiobookshelfService",
-            dependencies: [
-                "AudiobookshelfInterface",
-                "AudiobookshelfModel",
-                "AudiobookshelfSocket",
-                .product(
-                    name: "SocketIO",
-                    package: "socket.io-client-swift"
-                )
-            ]
-        ),
-        .target(
-            name: "AudiobookshelfSocket",
+            name: "AudiobookshelfAPI",
             dependencies: [
                 .product(
                     name: "SocketIO",
@@ -66,10 +34,6 @@ let package = Package(
         .testTarget(
             name: "AudiobookshelfAPITests",
             dependencies: [
-                "AudiobookshelfInterface",
-                "AudiobookshelfModel",
-                "AudiobookshelfSocket",
-                "AudiobookshelfService",
             ]
         ),
     ]
