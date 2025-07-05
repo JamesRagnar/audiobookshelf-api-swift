@@ -7,9 +7,6 @@
 
 import Foundation
 
-
-import UIKit
-
 /// This endpoint retrieves a library item's cover image.
 public struct GetLibraryItemCover: Interface {
     
