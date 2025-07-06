@@ -176,7 +176,7 @@ public struct ItemUpdatedEvent: SocketEvent {
 #### Request Service
 Providing endpoint and credentials
 ```
-import AudiobookshelfService
+import AudiobookshelfAPI
 
 class DemoClass {
 
@@ -215,8 +215,7 @@ let author = try await myRequestService.dataTask(
 ##### Creating and connecting socket
 
 ```
-import AudiobookshelfService
-import AudiobookshelfSocket
+import AudiobookshelfAPI
 
 var mySocketService = AudiobookshelfSocketService(url: #url)
 ```
