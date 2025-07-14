@@ -23,6 +23,14 @@ public struct PlaylistBatchRemoveItems: Interface {
             
             /// The ID of the podcast episode the playlist item is for.
             public let episodeId: String?
+            
+            public init(
+                libraryItemId: String,
+                episodeId: String?
+            ) {
+                self.libraryItemId = libraryItemId
+                self.episodeId = episodeId
+            }
 
         }
         
