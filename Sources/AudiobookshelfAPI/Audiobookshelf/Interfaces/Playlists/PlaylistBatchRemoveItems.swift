@@ -34,6 +34,12 @@ public struct PlaylistBatchRemoveItems: Interface {
 
         }
         
+        struct Body: Encodable {
+            
+            let items: [Item]
+
+        }
+        
         public let method: RequestMethod = .post
 
         public let path: String
@@ -56,7 +62,7 @@ public struct PlaylistBatchRemoveItems: Interface {
             items: [Item]
         ) throws {
             self.path = "/api/playlists/\(playlistID)/batch/remove"
-            self.body = try JSONEncoder().encode(items)
+            self.body = try JSONEncoder().encode(Body(items: items))
         }
         
     }
