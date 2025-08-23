@@ -1,16 +1,14 @@
 //
-//  Login.swift
+//  File.swift
 //  AudiobookshelfAPI
 //
-//  Created by James Harquail on 2024-11-19.
+//  Created by James Harquail on 2025-08-23.
 //
 
 import Foundation
 import RagnarNetworking
 
-/// This endpoint logs in a client to the server, returning information about the user and server.
-/// The`Authorize` endpoint is also available if an API token was persisted.
-public struct Login: Interface {
+public struct RefreshToken: Interface {
     
     // MARK: Request
     
@@ -18,36 +16,24 @@ public struct Login: Interface {
         
         public let method: RequestMethod = .post
 
-        public let path: String = "/login"
+        public let path: String = "/auth/refresh"
         
         public let queryItems: [String : String]? = nil
         
         public let headers: [String : String]?
         
-        public let body: Data?
+        public let body: Data? = nil
         
         public let authentication: AuthenticationType = .none
         
         /// Login Parameters
         ///
         /// - Parameters:
-        ///   - username: The username to log in with.
-        ///   - password: The password of the user.
-        public init(
-            username: String,
-            password: String,
-            returnRefreshToken: Bool
-        ) throws {
+        ///   - refreshToken: JWT refresh token
+        public init(refreshToken: String) {
             self.headers = [
-                "x-return-tokens": returnRefreshToken.description,
+                "x-refresh-token": refreshToken,
             ]
-            
-            self.body = try JSONEncoder().encode(
-                [
-                    "username": username,
-                    "password": password
-                ]
-            )
         }
         
     }
