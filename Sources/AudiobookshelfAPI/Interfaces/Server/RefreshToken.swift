@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  RefreshToken.swift
 //  AudiobookshelfAPI
 //
 //  Created by James Harquail on 2025-08-23.
@@ -8,6 +8,7 @@
 import Foundation
 import RagnarNetworking
 
+/// Generate a new authentication token from a User's refresh token.
 public struct RefreshToken: Interface {
     
     // MARK: Request
