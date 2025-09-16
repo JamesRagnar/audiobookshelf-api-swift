@@ -1,17 +1,15 @@
 //
-//  GetAuthorizedUserAndServerInformation.swift
+//  RefreshToken.swift
 //  AudiobookshelfAPI
 //
-//  Created by James Harquail on 2024-11-21.
+//  Created by James Harquail on 2025-08-23.
 //
 
 import Foundation
 import RagnarNetworking
 
-/// This endpoint retrieves information about the authorized user and the server.
-/// Used for logging into a client if an API token was persisted.
-/// Returns the same payload as `Login`
-public struct GetAuthorizedUserAndServerInformation: Interface {
+/// Generate a new authentication token from a User's refresh token.
+public struct RefreshToken: Interface {
     
     // MARK: Request
     
@@ -19,18 +17,25 @@ public struct GetAuthorizedUserAndServerInformation: Interface {
         
         public let method: RequestMethod = .post
 
-        public let path: String = "/api/authorize"
+        public let path: String = "/auth/refresh"
         
         public let queryItems: [String : String]? = nil
         
-        public let headers: [String : String]? = nil
+        public let headers: [String : String]?
         
         public let body: Data? = nil
         
-        public let authentication: AuthenticationType = .bearer
-
-        /// Get Authorized User and Server Information Parameters
-        public init() {}
+        public let authentication: AuthenticationType = .none
+        
+        /// Login Parameters
+        ///
+        /// - Parameters:
+        ///   - refreshToken: JWT refresh token
+        public init(refreshToken: String) {
+            self.headers = [
+                "x-refresh-token": refreshToken,
+            ]
+        }
         
     }
     
@@ -70,7 +75,7 @@ public struct GetAuthorizedUserAndServerInformation: Interface {
         /// Success
         200: .success(Response.self),
         
-        /// No authorization was provided.
+        /// Invalid username or password.
         401: .failure(AudiobookshelfError.unauthorized)
         
     ]

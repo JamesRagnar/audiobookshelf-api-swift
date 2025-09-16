@@ -20,7 +20,18 @@ public struct User {
     public let type: UserType
     
     /// The authentication token of the user.
+    @available(
+        *,
+         deprecated,
+         message: "User.token will be removed in a future server version, no earlier than September 30, 2025. Please migrate to the new JWT authentication flow."
+    )
     public let token: String
+    
+    /// JWT access token.
+    public let accessToken: String
+    
+    /// JWT refresh token.
+    public let refreshToken: String?
     
     /// The user's media progress.
     public let mediaProgress: [MediaProgress]
@@ -71,3 +82,4 @@ extension User {
 
 extension User: Decodable {}
 extension User: Sendable {}
+

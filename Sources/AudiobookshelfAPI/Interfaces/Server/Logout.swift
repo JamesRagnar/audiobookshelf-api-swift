@@ -9,8 +9,6 @@ import Foundation
 import RagnarNetworking
 
 /// This endpoint logs out a client from the server.
-/// If the socketId parameter is provided, the server removes the socket from the client list.
-/// When using a socket connection this allows a client to change the user without needing to re-create the socket connection.
 public struct Logout: Interface {
     
     // MARK: Request
@@ -21,28 +19,39 @@ public struct Logout: Interface {
 
         public let path: String = "/logout"
         
-        public let queryItems: [String : String]?
+        public let queryItems: [String : String]? = nil
         
-        public let headers: [String : String]? = nil
+        public let headers: [String : String]?
         
         public let body: Data? = nil
         
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationType = .none
 
         /// Logout Parameters
         ///
-        /// - Parameter socketID: The ID of the connected socket.
-        public init(socketID: String? = nil) {
-            var queryItems: [String: String] = [:]
-            queryItems.setIfPresent("socketId", socketID)
-            self.queryItems = queryItems
+        /// - Parameter refreshToken: The JWT refresh token.
+        public init(
+            refreshToken: String
+        ) {
+            self.headers = [
+                "x-refresh-token": refreshToken,
+            ]
         }
         
     }
     
     // MARK: Response
     
-    public typealias Response = String
+    public struct Response: Decodable, Sendable {
+        
+        /// OIDC logout URL
+        public let redirectURL: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case redirectURL = "redirect_url"
+        }
+        
+    }
 
     public static let responseCases: ResponseCases = [
 

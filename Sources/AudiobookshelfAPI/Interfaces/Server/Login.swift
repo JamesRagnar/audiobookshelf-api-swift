@@ -22,7 +22,7 @@ public struct Login: Interface {
         
         public let queryItems: [String : String]? = nil
         
-        public let headers: [String : String]? = nil
+        public let headers: [String : String]?
         
         public let body: Data?
         
@@ -35,8 +35,13 @@ public struct Login: Interface {
         ///   - password: The password of the user.
         public init(
             username: String,
-            password: String
+            password: String,
+            returnRefreshToken: Bool
         ) throws {
+            self.headers = [
+                "x-return-tokens": returnRefreshToken.description,
+            ]
+            
             self.body = try JSONEncoder().encode(
                 [
                     "username": username,
