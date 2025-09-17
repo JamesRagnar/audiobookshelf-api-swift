@@ -40,7 +40,7 @@ public struct PlaybackSession {
     public let displayAuthor: String
     
     /// The cover path of the library item's media.
-    public let coverPath: String
+    public let coverPath: String?
     
     /// The total duration (in seconds) of the playing item.
     public let duration: Float
