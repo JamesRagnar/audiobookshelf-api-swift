@@ -17,7 +17,7 @@ public struct GetYourListeningSessions: Interface {
         
         public let method: RequestMethod = .get
 
-        public let path: String = ""
+        public let path: String = "/api/me/listening-sessions"
         
         public let queryItems: [String : String]?
         
