@@ -49,7 +49,7 @@ public struct AudioFileMetadataFinishedEvent: SocketEvent {
 // MARK: - Audio Metadata Event Objects
 
 /// The object representing the audio metadata started event.
-public struct AudioMetadataStartedEventObject: Decodable {
+public struct AudioMetadataStartedEventObject: Decodable, Sendable {
     
     /// The ID of the user that requested the metadata update.
     let userId: String
@@ -66,7 +66,7 @@ public struct AudioMetadataStartedEventObject: Decodable {
 }
 
 /// The object representing the audio metadata finished event.
-public struct AudioMetadataFinishedEventObject: Decodable {
+public struct AudioMetadataFinishedEventObject: Decodable, Sendable {
     
     /// The ID of the user that requested the metadata update.
     let userId: String
@@ -92,7 +92,7 @@ public struct AudioMetadataFinishedEventObject: Decodable {
 }
 
 /// The object representing the audio file metadata started event.
-public struct AudioFileMetadataStartedEventObject: Decodable {
+public struct AudioFileMetadataStartedEventObject: Decodable, Sendable {
     
     /// The ID of the library item which the audio file belongs to.
     let libraryItemId: String
@@ -109,7 +109,7 @@ public struct AudioFileMetadataStartedEventObject: Decodable {
 }
 
 /// The object representing the audio file metadata finished event.
-public struct AudioFileMetadataFinishedEventObject: Decodable {
+public struct AudioFileMetadataFinishedEventObject: Decodable, Sendable {
     
     /// The ID of the library item which the audio file belongs to.
     let libraryItemId: String
@@ -129,7 +129,7 @@ public struct AudioFileMetadataFinishedEventObject: Decodable {
 }
 
 /// The object representing an individual audio file in an event.
-public struct EventAudioFile: Decodable {
+public struct EventAudioFile: Decodable, Sendable {
     
     /// The index of the audio file.
     let index: Int
