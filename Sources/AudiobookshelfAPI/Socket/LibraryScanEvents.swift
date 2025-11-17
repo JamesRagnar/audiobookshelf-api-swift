@@ -26,7 +26,7 @@ public struct ScanCompleteEvent: SocketEvent {
 
 }
 
-public struct LibraryScan: Decodable, Sendable {
+public struct LibraryScan: Decodable {
     
     /// The ID of the scanned library.
     public let id: String
@@ -42,7 +42,7 @@ public struct LibraryScan: Decodable, Sendable {
         
 }
 
-public struct LibraryScanResults: Decodable, Sendable {
+public struct LibraryScanResults: Decodable {
     
     /// The number of library items added during the scan.
     public let added: Int
