@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking",
-            branch: "interceptor"
+            branch: "main"
         )
     ],
     targets: [
