@@ -16,34 +16,56 @@ public struct BatchCreateUpdateMediaProgress: Interface {
     public struct Parameters: RequestParameters {
         
         public struct ProgressItem: Encodable {
-            
+
             /// The ID of the library item the media progress is for.
             public let libraryItemId: String
-            
+
             /// The ID of the podcast episode the media progress is for.
             public let episodeId: String?
-            
+
             /// The total duration (in seconds) of the media.
             public let duration: Float
-            
+
             /// The percentage completion progress of the media. Will automatically be set to 1 if the media is finished.
             public let progress: Float
-            
+
             /// The current time (in seconds) of your progress.
             public let currentTime: Float
-            
+
             /// Whether the media is finished.
             public let isFinished: Bool
-            
+
             /// Whether the media will be hidden from the "Continue Listening" shelf.
             public let hideFromContinueListening: Bool
-            
+
             /// The time (in ms since POSIX epoch) when the user finished the media. The default will be Date.now() if isFinished is true.
             public let finishedAt: Int?
-            
+
             /// Date.now() or finishedAt    The time (in ms since POSIX epoch) when the user started consuming the media. The default will be the value of finishedAt if isFinished is true.
             public let startedAt: Int
-            
+
+            public init(
+                libraryItemId: String,
+                episodeId: String? = nil,
+                duration: Float,
+                progress: Float,
+                currentTime: Float,
+                isFinished: Bool,
+                hideFromContinueListening: Bool,
+                finishedAt: Int? = nil,
+                startedAt: Int
+            ) {
+                self.libraryItemId = libraryItemId
+                self.episodeId = episodeId
+                self.duration = duration
+                self.progress = progress
+                self.currentTime = currentTime
+                self.isFinished = isFinished
+                self.hideFromContinueListening = hideFromContinueListening
+                self.finishedAt = finishedAt
+                self.startedAt = startedAt
+            }
+
         }
         
         public let method: RequestMethod = .patch

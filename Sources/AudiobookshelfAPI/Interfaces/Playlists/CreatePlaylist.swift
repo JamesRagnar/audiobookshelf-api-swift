@@ -32,13 +32,21 @@ public struct CreatePlaylist: Interface {
         /// An Encodable version of PlaylistItem,
         /// including only the parameters required to add the Item to a Playlist
         public struct Item: Encodable {
-            
+
             /// The ID of the library item the playlist item is for.
             public let libraryItemId: String
-            
+
             /// The ID of the podcast episode the playlist item is for.
             public let episodeId: String?
-            
+
+            public init(
+                libraryItemId: String,
+                episodeId: String? = nil
+            ) {
+                self.libraryItemId = libraryItemId
+                self.episodeId = episodeId
+            }
+
         }
         
         public let method: RequestMethod = .post
