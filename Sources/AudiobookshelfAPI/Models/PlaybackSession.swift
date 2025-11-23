@@ -98,25 +98,25 @@ extension PlaybackSession: Decodable {}
 extension PlaybackSession: Sendable {}
 
 extension PlaybackSession {
-    
+
     public enum MediaType: String, Decodable, Sendable {
-        
+
         case book
-        
+
         case podcast
-        
+
     }
-    
+
     public enum PlayMethod: Int, Decodable, Sendable {
-        
+
         case directPlay = 0
-        
+
         case directStream = 1
-        
+
         case transcode = 2
-        
+
         case local = 3
-        
+
     }
     
 }
