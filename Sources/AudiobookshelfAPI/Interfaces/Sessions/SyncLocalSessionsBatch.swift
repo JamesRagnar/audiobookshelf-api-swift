@@ -17,7 +17,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let method: RequestMethod = .post
 
-        public let path: String = "/api/sessions/local/batch"
+        public let path: String = "/api/session/local-all"
 
         public let queryItems: [String : String]? = nil
 

@@ -17,7 +17,7 @@ public struct SyncLocalSession: Interface {
 
         public let method: RequestMethod = .post
 
-        public let path: String = "/api/sessions/local"
+        public let path: String = "/api/session/local"
 
         public let queryItems: [String : String]? = nil
 
