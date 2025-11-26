@@ -38,7 +38,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
     // MARK: Response
 
-    public typealias Response = [PlaybackSession]
+    public typealias Response = String
 
     public enum AudiobookshelfError: Error {
 
