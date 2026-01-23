@@ -37,8 +37,8 @@ public struct PodcastEpisode {
     public let description: String
     
     /// Information about the podcast episode from when it was downloaded.
-    public let enclosure: PodcastEpisodeEnclosure
-    
+    public let enclosure: PodcastEpisodeEnclosure?
+
     /// When the podcast episode was published.
     public let pubDate: String
     
@@ -46,8 +46,8 @@ public struct PodcastEpisode {
     public let audioFile: AudioFile
     
     /// The time (in ms since POSIX epoch) when the podcast episode was published.
-    public let publishedAt: Int
-    
+    public let publishedAt: Int?
+
     /// The time (in ms since POSIX epoch) when the podcast episode was added to the library.
     public let addedAt: Int
     
