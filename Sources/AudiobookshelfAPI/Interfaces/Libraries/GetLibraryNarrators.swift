@@ -41,12 +41,6 @@ public struct GetLibraryNarrators: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
-
-        public let narrators: [Narrator]
-
-    }
-
     public static let responseCases: ResponseCases = [
 
         /// The requested narrators.
@@ -57,6 +51,12 @@ public struct GetLibraryNarrators: Interface {
 }
 
 public extension GetLibraryNarrators {
+
+    struct Response: Decodable, Sendable {
+
+        public let narrators: [Narrator]
+
+    }
 
     struct Narrator: Decodable, Sendable, Identifiable {
 

@@ -15,12 +15,6 @@ public struct CollectionAddBook: Interface {
     
     public struct Parameters: RequestParameters {
         
-        struct Body: Encodable {
-            
-            let id: String
-            
-        }
-        
         public let method: RequestMethod = .post
 
         public let path: String
@@ -79,4 +73,14 @@ public struct CollectionAddBook: Interface {
         
     ]
     
+}
+
+extension CollectionAddBook.Parameters {
+
+    struct Body: Encodable {
+
+        let id: String
+
+    }
+
 }
