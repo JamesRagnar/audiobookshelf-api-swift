@@ -59,4 +59,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-Apache License 2.0 License. See [LICENSE](LICENSE.txt) for details.
+Apache License 2.0. See [LICENSE](LICENSE.txt) for details.
