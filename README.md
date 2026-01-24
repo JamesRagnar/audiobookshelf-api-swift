@@ -20,8 +20,8 @@ A Swift Package providing Model, Interface, and Socket support for Audiobookshel
 ## Components
 
 ### Models
-Example
-```
+
+```swift
 public struct Collection {
     
     /// The ID of the collection.
@@ -62,37 +62,83 @@ extension Collection: Sendable {}
 
 ```
 ### Interfaces
-```
-public protocol Interface {
-    
+
+```swift
+public protocol Interface: Sendable {
+
+    /// The parameters defining how to construct the network request
     associatedtype Parameters: RequestParameters
 
+    /// The expected response type when the request succeeds
     associatedtype Response: Decodable, Sendable
-    
-    typealias ResponseCases = [Int: Result<Response.Type, Error>]
-        
-    static var responseCases: ResponseCases { get }
-        
-}
 
+    /// Maps HTTP status codes to their expected outcomes (success with a type, or a specific error)
+    typealias ResponseCases = [Int: Result<Response.Type, Error>]
+
+    /// Defines how each HTTP status code should be handled for this interface
+    static var responseCases: ResponseCases { get }
+
+}
+```
+
+```swift
 public protocol RequestParameters: Sendable {
-        
+
+    /// The HTTP method for this request (GET, POST, etc.)
     var method: RequestMethod { get }
-    
+
+    /// The path component of the URL (e.g., "/api/users/123")
     var path: String { get }
-    
+
+    /// Optional query parameters to append to the URL
     var queryItems: [String: String]? { get }
-    
+
+    /// Optional HTTP headers to include in the request
     var headers: [String: String]? { get }
-    
+
+    /// Optional request body data (typically JSON-encoded)
     var body: Data? { get }
 
+    /// The authentication strategy for this request
     var authentication: AuthenticationType { get }
 
 }
 ```
-Example
+
+```swift
+public enum RequestMethod: String, Sendable {
+
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case head = "HEAD"
+    case delete = "DELETE"
+    case patch = "PATCH"
+    case options = "OPTIONS"
+    case connect = "CONNECT"
+    case trace = "TRACE"
+
+}
 ```
+
+```swift
+public enum AuthenticationType: Sendable {
+
+    /// No authentication required for this request
+    case none
+
+    /// Authentication token included in request headers as `Authorization: Bearer <token>`
+    case bearer
+
+    /// Authentication token included in query parameters as `?token=<token>`
+    case url
+
+}
+```
+
+#### Example
+
+```swift
 /// This endpoint matches all items in a library using quick match.
 /// Quick match populates empty book details and the cover with the first book result from the library's default metadata provider.
 /// Does not overwrite details unless the "Prefer matched metadata" server setting is enabled.
@@ -150,8 +196,10 @@ public struct MatchAllLibraryItems: Interface {
     
 }
 ```
+
 ### Sockets
-```
+
+```swift
 public protocol SocketEvent: Sendable {
     
     static var name: String { get }
@@ -160,8 +208,10 @@ public protocol SocketEvent: Sendable {
     
 }
 ```
-Example
-```
+
+#### Examples
+
+```swift
 /// A library item was updated.
 public struct ItemUpdatedEvent: SocketEvent {
     
@@ -171,16 +221,19 @@ public struct ItemUpdatedEvent: SocketEvent {
 
 }
 ```
+
 ### Services
 
 #### Request Service
-Providing endpoint and credentials
-```
+
+Providing endpoint and credential management.
+
+```swift
 import AudiobookshelfAPI
 
 class DemoClass {
 
-    let severURL = #url
+    let serverURL = #url
     let authToken = #token
 
     var myRequestService = AudiobookshelfRequestService(dataTaskProvider: URLSession.shared)
@@ -199,8 +252,10 @@ extension DemoClass: ServerConfigurationProvider {
 
 }
 ```
+
 Making requests
-```
+
+```swift
 let author = try await myRequestService.dataTask(
     GetAuthor.self,
     .init(
@@ -212,19 +267,24 @@ let author = try await myRequestService.dataTask(
 ```
 
 #### Socket Service
+
 ##### Creating and connecting socket
 
-```
+```swift
 import AudiobookshelfAPI
 
 var mySocketService = AudiobookshelfSocketService(url: #url)
 ```
-##### Emiting User events
-```
+
+##### Emitting User Events
+
+```swift
 mySocketService.sendEvent(AuthEvent.self, #token)
 ```
+
 ##### Observing server events
-```
+
+```swift
 var cancellables = Set<AnyCancellable>()
 
 mySocketService

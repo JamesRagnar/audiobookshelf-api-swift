@@ -2,7 +2,7 @@
 
 ## Summary
 
-An overview of Interface structure, compoenents, and exceptions.
+An overview of Interface structure, components, and exceptions.
 
 ## Overview
 
@@ -19,7 +19,7 @@ public struct MyInterface: Interface {
     	// RequestParameters should be set based on the request structure, in-line if possible
         public let method: RequestMethod = .get
 
-		// If a paramater requries a dynamic input value, include it in the init below
+		// If a parameter requires a dynamic input value, include it in the init below
         public let path: String
         
         public let queryItems: [String : String]? = nil
@@ -46,12 +46,12 @@ public struct MyInterface: Interface {
     
     // The expected response body. Can also be a typealias to a shared Model.
     public struct Response: Decodable, Sendable {
-        
-        let parameter: String
+
+        public let parameter: String
 
     }
     
-    // Predefined error scenerios, automatically mapped from server responses during decoding. 
+    // Predefined error scenarios, automatically mapped from server responses during decoding. 
     // Define any known cases where the server may define an error. Cases not covered here
     // will be captured by a generic error during the response processing
     public enum AudiobookshelfError: Error {
@@ -60,7 +60,7 @@ public struct MyInterface: Interface {
         
     }
 
-    // The expected response cases, whith the known body or error types.
+    // The expected response cases, with the known body or error types.
     public static let responseCases: ResponseCases = [
 
         200: .success(Response.self),
@@ -76,7 +76,7 @@ public struct MyInterface: Interface {
 
 ### Request Body
 
-When a complex body type is required for a request, scope it to only be included in the Interface space. Avoid exposing Request body models where possible, lean on public parameter initialization and creating the request body locally
+When a complex body type is required for a request, scope it to only be included in the Interface space. Avoid exposing Request body models where possible, lean on public parameter initialization and creating the request body locally. The Parameters init can throw, allowing the client to catch incorrect request structures.
 
 ```swift
 public struct MyInterface: Interface {
@@ -87,10 +87,10 @@ public struct MyInterface: Interface {
 
     	public let body: Data?
 
-    	init(
+    	public init(
     		parameterOne: String,
     		parameterTwo: Int?
-    	) {
+    	) throws {
     		self.body = try JSONEncoder()
     		.encode(
     			Body(
@@ -168,8 +168,107 @@ public extension MyInterface {
 
 Responses may also be a raw response type, one of String, Data
 
-## Design Condierations
+## Design Considerations
 
 - Ensure Interface and components are marked as public.
-- Comments should be designed to be self-documenting, providing clear operation scope and responsiblity. Do not include example request code or superflous comments, let the code define itself.
-- Response 
+- Comments should be designed to be self-documenting, providing clear operation scope and responsibility. Do not include example request code or superfluous comments, let the code define itself.
+
+## Validation Checklist
+
+Before submitting an Interface implementation, verify:
+
+- [ ] All types marked `public` (struct, enum, protocol)
+- [ ] All public properties marked `public let`
+- [ ] All inits marked `public init`
+- [ ] Body struct in extension, not inline (if body is required)
+- [ ] Init throws if encoding Body
+- [ ] Response type is Decodable & Sendable
+- [ ] AudiobookshelfError cases match API docs
+- [ ] responseCases includes all documented status codes
+- [ ] Top-level comment describes endpoint operation
+- [ ] File header includes proper copyright and creation info
+- [ ] Imports Foundation and RagnarNetworking
+
+## Common Mistakes
+
+### ❌ WRONG: Body struct inline
+
+```swift
+public struct Parameters: RequestParameters {
+    struct Body: Encodable {  // DON'T DO THIS
+        let id: String
+    }
+
+    public let body: Data?
+}
+```
+
+### ✅ CORRECT: Body struct in extension
+
+```swift
+public struct Parameters: RequestParameters {
+    public let body: Data?
+
+    public init(id: String) throws {
+        self.body = try JSONEncoder().encode(Body(id: id))
+    }
+}
+
+extension MyInterface.Parameters {
+    struct Body: Encodable {  // DO THIS
+        let id: String
+    }
+}
+```
+
+### ❌ WRONG: Missing public modifiers
+
+```swift
+struct Response: Decodable, Sendable {  // Missing public
+    let id: String  // Missing public
+}
+```
+
+### ✅ CORRECT: All public
+
+```swift
+public struct Response: Decodable, Sendable {
+    public let id: String
+}
+```
+
+### ❌ WRONG: Missing throws on init with Body encoding
+
+```swift
+public init(name: String) {  // Should throw
+    self.body = try JSONEncoder().encode(Body(name: name))  // Won't compile
+}
+```
+
+### ✅ CORRECT: Init throws when encoding
+
+```swift
+public init(name: String) throws {
+    self.body = try JSONEncoder().encode(Body(name: name))
+}
+```
+
+### ❌ WRONG: Response struct in extension missing public
+
+```swift
+extension MyInterface {
+    struct Response: Decodable, Sendable {  // Missing public on extension
+        let id: String  // Missing public
+    }
+}
+```
+
+### ✅ CORRECT: Public extension and properties
+
+```swift
+public extension MyInterface {
+    struct Response: Decodable, Sendable {
+        public let id: String
+    }
+}
+```
