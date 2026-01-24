@@ -8,7 +8,10 @@
 import Foundation
 
 public struct Podcast {
-    
+
+    /// The ID of the podcast.
+    public let id: String
+
     /// The ID of the library item that contains the podcast.
     /// - Note: Podcast Minified - Removed Attribute
     public let libraryItemId: String?
@@ -36,7 +39,7 @@ public struct Podcast {
     public let autoDownloadSchedule: String
     
     /// The time (in ms since POSIX epoch) when the podcast was checked for new episodes.
-    public let lastEpisodeCheck: Int
+    public let lastEpisodeCheck: Int?
     
     /// The maximum number of podcast episodes to keep when automatically downloading new episodes. Episodes beyond this limit will be deleted. If 0, all episodes will be kept.
     public let maxEpisodesToKeep: Int

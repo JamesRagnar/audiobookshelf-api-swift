@@ -38,7 +38,13 @@ public struct Library {
 
     /// The time (in ms since POSIX epoch) when the library was last updated. (Read Only)
     public let lastUpdate: Int
-    
+
+    /// The time (in ms since POSIX epoch) when the library was last scanned. Will be null if never scanned.
+    public let lastScan: Int?
+
+    /// The version of the scanner when the library was last scanned. Will be null if never scanned.
+    public let lastScanVersion: String?
+
 }
 
 public extension Library {

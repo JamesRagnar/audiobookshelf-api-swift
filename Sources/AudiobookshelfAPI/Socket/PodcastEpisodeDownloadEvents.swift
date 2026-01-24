@@ -51,9 +51,27 @@ public struct EpisodeDownloadStartedEvent: SocketEvent {
 
 /// A podcast episode has finished downloading.
 public struct EpisodeDownloadFinishedEvent: SocketEvent {
-    
+
     public static let name = "episode_download_finished"
-    
+
     public typealias Schema = PodcastEpisodeDownload
+
+}
+
+/// A podcast episode was added to a podcast.
+public struct EpisodeAddedEvent: SocketEvent {
+
+    public static let name = "episode_added"
+
+    public typealias Schema = PodcastEpisode
+
+}
+
+/// The podcast episode download queue was cleared.
+public struct EpisodeDownloadQueueClearedEvent: SocketEvent {
+
+    public static let name = "episode_download_queue_cleared"
+
+    public typealias Schema = String
 
 }

@@ -54,7 +54,10 @@ public struct BookMetadata {
     
     /// Whether the book has been marked as explicit.
     public let explicit: Bool
-    
+
+    /// Whether the book is abridged.
+    public let abridged: Bool?
+
     // MARK: BookMetadata Minified + Expanded
     
     /// The title of the book with any prefix moved to the end.
@@ -101,6 +104,7 @@ extension BookMetadata: Decodable {
         case asin
         case language
         case explicit
+        case abridged
         case titleIgnorePrefix
         case authorName
         case authorNameLF
@@ -123,6 +127,7 @@ extension BookMetadata: Decodable {
         self.asin = try container.decodeIfPresent(String.self, forKey: .asin)
         self.language = try container.decodeIfPresent(String.self, forKey: .language)
         self.explicit = try container.decode(Bool.self, forKey: .explicit)
+        self.abridged = try container.decodeIfPresent(Bool.self, forKey: .abridged)
         self.titleIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .titleIgnorePrefix)
         self.authorName = try container.decodeIfPresent(String.self, forKey: .authorName)
         self.authorNameLF = try container.decodeIfPresent(String.self, forKey: .authorNameLF)

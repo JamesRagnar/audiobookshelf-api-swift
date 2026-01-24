@@ -14,7 +14,13 @@ public struct User {
     
     /// The username of the user.
     public let username: String
-    
+
+    /// The email address of the user. Will be null if not set.
+    public let email: String?
+
+    /// Whether the user has an OpenID link. Will be null if not applicable.
+    public let hasOpenIDLink: Bool?
+
     /// The type of the user.
     /// There will be only one root user which is created when the server first starts.
     public let type: UserType
@@ -61,7 +67,7 @@ public struct User {
     public let librariesAccessible: [String]
     
     /// The tags accessible to the user. An empty array means all tags are accessible.
-    public let itemTagsAccessible: [String]?
+    public let itemTagsSelected: [String]?
     
 }
 
@@ -80,6 +86,30 @@ extension User {
     }
 }
 
-extension User: Decodable {}
 extension User: Sendable {}
+
+extension User: Decodable {
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case username
+        case email
+        case hasOpenIDLink
+        case type
+        case token
+        case accessToken
+        case refreshToken
+        case mediaProgress
+        case seriesHideFromContinueListening
+        case bookmarks
+        case isActive
+        case isLocked
+        case lastSeen
+        case createdAt
+        case permissions
+        case librariesAccessible
+        case itemTagsSelected
+    }
+
+}
 

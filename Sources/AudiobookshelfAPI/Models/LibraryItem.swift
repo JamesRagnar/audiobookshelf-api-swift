@@ -11,7 +11,10 @@ public struct LibraryItem {
     
     /// The ID of the library item.
     public let id: String
-    
+
+    /// The old library item ID, used for migration purposes. Will be null if not migrated.
+    public let oldLibraryItemId: String?
+
     /// The inode of the library item.
     public let ino: String
     
@@ -144,6 +147,7 @@ extension LibraryItem: Decodable {
     
     enum CodingKeys: CodingKey {
         case id
+        case oldLibraryItemId
         case ino
         case libraryId
         case folderId
@@ -178,6 +182,7 @@ extension LibraryItem: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
+        self.oldLibraryItemId = try container.decodeIfPresent(String.self, forKey: .oldLibraryItemId)
         self.ino = try container.decode(String.self, forKey: .ino)
         self.libraryId = try container.decode(String.self, forKey: .libraryId)
         self.folderId = try container.decode(String.self, forKey: .folderId)

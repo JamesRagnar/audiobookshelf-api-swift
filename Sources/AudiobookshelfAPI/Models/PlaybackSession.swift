@@ -16,14 +16,17 @@ public struct PlaybackSession {
     public let userId: String
     
     /// The ID of the library that contains the library item.
-    public let libraryId: String
+    public let libraryId: String?
     
     /// The ID of the library item.
     public let libraryItemId: String
     
     /// The ID of the podcast episode. Will be null if this playback session was started without an episode ID.
     public let episodeId: String?
-    
+
+    /// The ID of the book. Will be null if this playback session is for a podcast episode.
+    public let bookId: String?
+
     /// The media type of the library item.
     public let mediaType: MediaType
     
@@ -49,10 +52,10 @@ public struct PlaybackSession {
     public let playMethod: PlayMethod
     
     /// The given media player when the playback session was requested.
-    public let mediaPlayer: String
+    public let mediaPlayer: String?
     
     /// The given device info when the playback session was requested.
-    public let deviceInfo: DeviceInfo
+    public let deviceInfo: DeviceInfo?
     
     /// The server version the playback session was started with.
     public let serverVersion: String
@@ -64,7 +67,7 @@ public struct PlaybackSession {
     public let dayOfWeek: String
     
     /// The amount of time (in seconds) the user has spent listening using this playback session.
-    public let timeListening: Float
+    public let timeListening: Float?
     
     /// The time (in seconds) where the playback session started.
     public let startTime: Float

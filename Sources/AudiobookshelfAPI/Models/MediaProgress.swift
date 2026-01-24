@@ -24,7 +24,13 @@ public struct MediaProgress {
     
     /// The current time (in seconds) of the user's progress. If the media has been marked as finished, this will be the time the user was at beforehand.
     public let currentTime: Float
-    
+
+    /// The ebook location (for ebook progress tracking).
+    public let ebookLocation: String?
+
+    /// The ebook progress (for ebook progress tracking).
+    public let ebookProgress: Float?
+
     /// Whether the media is finished.
     public let isFinished: Bool
     
@@ -69,6 +75,8 @@ extension MediaProgress: Decodable {
         case duration
         case progress
         case currentTime
+        case ebookLocation
+        case ebookProgress
         case isFinished
         case hideFromContinueListening
         case lastUpdate
@@ -87,6 +95,8 @@ extension MediaProgress: Decodable {
         duration = try container.decode(Float.self, forKey: .duration)
         progress = try container.decode(Float.self, forKey: .progress)
         currentTime = try container.decode(Float.self, forKey: .currentTime)
+        ebookLocation = try container.decodeIfPresent(String.self, forKey: .ebookLocation)
+        ebookProgress = try container.decodeIfPresent(Float.self, forKey: .ebookProgress)
         isFinished = try container.decode(Bool.self, forKey: .isFinished)
         hideFromContinueListening = try container.decode(Bool.self, forKey: .hideFromContinueListening)
         lastUpdate = try container.decode(Int.self, forKey: .lastUpdate)
