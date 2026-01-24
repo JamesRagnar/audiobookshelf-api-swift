@@ -59,4 +59,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE](LICENSE.txt) for details.
