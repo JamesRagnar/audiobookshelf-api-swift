@@ -1,10 +1,12 @@
-# Interface Template
+# Interfaces
 
 ## Summary
 
 An overview of Interface structure, components, and exceptions.
 
 ## Overview
+
+The Interface protocol is defined in RagnarNetworking, and provides a structure of defining the requirements of a network request, and the expected response cases and types.
 
 ```swift
 // Include a comment defining the operation performed by the request
@@ -119,7 +121,7 @@ extension MyInterface.Parameters {
 }
 ```
 
-## Response Body
+### Response Body
 
 Generally, the Response type is a shared Model, which can be defined with a typealias
 
