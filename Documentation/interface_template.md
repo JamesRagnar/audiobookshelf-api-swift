@@ -191,7 +191,7 @@ Before submitting an Interface implementation, verify:
 
 ## Common Mistakes
 
-### ❌ WRONG: Body struct inline
+### WRONG: Body struct inline
 
 ```swift
 public struct Parameters: RequestParameters {
@@ -203,7 +203,7 @@ public struct Parameters: RequestParameters {
 }
 ```
 
-### ✅ CORRECT: Body struct in extension
+### CORRECT: Body struct in extension
 
 ```swift
 public struct Parameters: RequestParameters {
@@ -221,7 +221,7 @@ extension MyInterface.Parameters {
 }
 ```
 
-### ❌ WRONG: Missing public modifiers
+### WRONG: Missing public modifiers
 
 ```swift
 struct Response: Decodable, Sendable {  // Missing public
@@ -229,7 +229,7 @@ struct Response: Decodable, Sendable {  // Missing public
 }
 ```
 
-### ✅ CORRECT: All public
+### CORRECT: All public
 
 ```swift
 public struct Response: Decodable, Sendable {
@@ -237,7 +237,7 @@ public struct Response: Decodable, Sendable {
 }
 ```
 
-### ❌ WRONG: Missing throws on init with Body encoding
+### WRONG: Missing throws on init with Body encoding
 
 ```swift
 public init(name: String) {  // Should throw
@@ -245,7 +245,7 @@ public init(name: String) {  // Should throw
 }
 ```
 
-### ✅ CORRECT: Init throws when encoding
+### CORRECT: Init throws when encoding
 
 ```swift
 public init(name: String) throws {
@@ -253,7 +253,7 @@ public init(name: String) throws {
 }
 ```
 
-### ❌ WRONG: Response struct in extension missing public
+### WRONG: Response struct in extension missing public
 
 ```swift
 extension MyInterface {
@@ -263,7 +263,7 @@ extension MyInterface {
 }
 ```
 
-### ✅ CORRECT: Public extension and properties
+### CORRECT: Public extension and properties
 
 ```swift
 public extension MyInterface {
