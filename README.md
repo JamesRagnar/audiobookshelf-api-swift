@@ -82,63 +82,6 @@ public protocol Interface: Sendable {
 ```
 
 ```swift
-public protocol RequestParameters: Sendable {
-
-    /// The HTTP method for this request (GET, POST, etc.)
-    var method: RequestMethod { get }
-
-    /// The path component of the URL (e.g., "/api/users/123")
-    var path: String { get }
-
-    /// Optional query parameters to append to the URL
-    var queryItems: [String: String]? { get }
-
-    /// Optional HTTP headers to include in the request
-    var headers: [String: String]? { get }
-
-    /// Optional request body data (typically JSON-encoded)
-    var body: Data? { get }
-
-    /// The authentication strategy for this request
-    var authentication: AuthenticationType { get }
-
-}
-```
-
-```swift
-public enum RequestMethod: String, Sendable {
-
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case head = "HEAD"
-    case delete = "DELETE"
-    case patch = "PATCH"
-    case options = "OPTIONS"
-    case connect = "CONNECT"
-    case trace = "TRACE"
-
-}
-```
-
-```swift
-public enum AuthenticationType: Sendable {
-
-    /// No authentication required for this request
-    case none
-
-    /// Authentication token included in request headers as `Authorization: Bearer <token>`
-    case bearer
-
-    /// Authentication token included in query parameters as `?token=<token>`
-    case url
-
-}
-```
-
-#### Example
-
-```swift
 /// This endpoint matches all items in a library using quick match.
 /// Quick match populates empty book details and the cover with the first book result from the library's default metadata provider.
 /// Does not overwrite details unless the "Prefer matched metadata" server setting is enabled.
