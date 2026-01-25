@@ -24,4 +24,5 @@ public struct BookChapter {
 }
 
 extension BookChapter: Decodable {}
+extension BookChapter: Encodable {}
 extension BookChapter: Sendable {}

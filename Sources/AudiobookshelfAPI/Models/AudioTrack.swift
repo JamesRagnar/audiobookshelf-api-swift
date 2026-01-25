@@ -36,4 +36,5 @@ public struct AudioTrack {
 }
 
 extension AudioTrack: Decodable {}
+extension AudioTrack: Encodable {}
 extension AudioTrack: Sendable {}

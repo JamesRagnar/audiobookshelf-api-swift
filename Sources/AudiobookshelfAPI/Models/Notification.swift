@@ -51,4 +51,5 @@ public struct Notification {
 }
 
 extension Notification: Decodable {}
+extension Notification: Encodable {}
 extension Notification: Sendable {}

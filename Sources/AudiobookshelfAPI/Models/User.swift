@@ -73,7 +73,7 @@ public struct User {
 
 extension User {
     
-    public enum UserType: String, Decodable, Sendable {
+    public enum UserType: String, Decodable, Encodable, Sendable {
         
         case root
         
