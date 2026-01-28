@@ -1,15 +1,15 @@
 //
-//  RemoveLibraryNarrator.swift
+//  DeleteGenre.swift
 //  AudiobookshelfAPI
 //
-//  Created by James Harquail on 2026-01-24.
+//  Created by Ragnar Henriksen on 2026-01-28.
 //
 
 import Foundation
 import RagnarNetworking
 
-/// Remove a narrator from a library.
-public struct RemoveLibraryNarrator: Interface {
+/// Delete a genre from all library items.
+public struct DeleteGenre: Interface {
 
     // MARK: Request
 
@@ -27,16 +27,15 @@ public struct RemoveLibraryNarrator: Interface {
 
         public let authentication: AuthenticationType = .bearer
 
-        /// Remove Library Narrator Parameters
+        /// Delete Genre Parameters
         ///
         /// - Parameters:
-        ///   - libraryId: The ID of the library.
-        ///   - narratorName: The narrator name to remove.
-        public init(libraryId: String, narratorName: String) {
-            let encodedNarrator = Data(narratorName.utf8)
+        ///   - genre: The genre name to delete.
+        public init(genre: String) {
+            let encodedGenre = Data(genre.utf8)
                 .base64EncodedString()
                 .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-            self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
+            self.path = "/api/genres/\(encodedGenre)"
         }
 
     }
@@ -45,7 +44,7 @@ public struct RemoveLibraryNarrator: Interface {
 
     public struct Response: Decodable, Sendable {
 
-        public let updated: Int
+        public let numItemsUpdated: Int
 
     }
 
@@ -53,17 +52,13 @@ public struct RemoveLibraryNarrator: Interface {
 
         case forbidden
 
-        case notFound
-
     }
 
     public static let responseCases: ResponseCases = [
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
-
-        404: .failure(AudiobookshelfError.notFound),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 

@@ -27,14 +27,23 @@ public struct UpdateLibraryNarrator: Interface {
 
         public let authentication: AuthenticationType = .bearer
 
+        /// Update Library Narrator Parameters
+        ///
+        /// - Parameters:
+        ///   - libraryId: The ID of the library.
+        ///   - narratorName: The current narrator name.
+        ///   - newName: The new narrator name.
         public init(
             libraryId: String,
-            narratorId: String,
-            name: String
+            narratorName: String,
+            newName: String
         ) throws {
-            self.path = "/api/libraries/\(libraryId)/narrators/\(narratorId)"
+            let encodedNarrator = Data(narratorName.utf8)
+                .base64EncodedString()
+                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+            self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
             self.body = try JSONEncoder().encode(
-                Body(name: name)
+                Body(name: newName)
             )
         }
 
@@ -42,7 +51,11 @@ public struct UpdateLibraryNarrator: Interface {
 
     // MARK: Response
 
-    public typealias Response = Data
+    public struct Response: Decodable, Sendable {
+
+        public let updated: Int
+
+    }
 
     public enum AudiobookshelfError: Error {
 

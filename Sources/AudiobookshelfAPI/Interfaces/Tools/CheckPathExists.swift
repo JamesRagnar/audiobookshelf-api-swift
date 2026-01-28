@@ -1,0 +1,90 @@
+//
+//  CheckPathExists.swift
+//  AudiobookshelfAPI
+//
+//  Created by Ragnar Henriksen on 2026-01-28.
+//
+
+import Foundation
+import RagnarNetworking
+
+/// Check if a directory path exists within a library folder.
+public struct CheckPathExists: Interface {
+
+    // MARK: Request
+
+    public struct Parameters: RequestParameters {
+
+        public let method: RequestMethod = .post
+
+        public let path: String = "/api/filesystem/pathexists"
+
+        public let queryItems: [String : String]? = nil
+
+        public let headers: [String : String]? = nil
+
+        public let body: Data?
+
+        public let authentication: AuthenticationType = .bearer
+
+        /// Check Path Exists Parameters
+        ///
+        /// - Parameters:
+        ///   - directory: The relative path to check.
+        ///   - folderPath: The library folder path.
+        public init(
+            directory: String,
+            folderPath: String
+        ) throws {
+            self.body = try JSONEncoder().encode(
+                Body(directory: directory, folderPath: folderPath)
+            )
+        }
+
+    }
+
+    // MARK: Response
+
+    public struct Response: Decodable, Sendable {
+
+        public let exists: Bool
+
+        public let libraryItemTitle: String?
+
+    }
+
+    public enum AudiobookshelfError: Error {
+
+        case badRequest
+
+        case forbidden
+
+        case notFound
+
+    }
+
+    public static let responseCases: ResponseCases = [
+
+        200: .success(Response.self),
+
+        400: .failure(AudiobookshelfError.badRequest),
+
+        403: .failure(AudiobookshelfError.forbidden),
+
+        404: .failure(AudiobookshelfError.notFound)
+
+    ]
+
+}
+
+extension CheckPathExists.Parameters {
+
+    struct Body: Encodable {
+
+        let directory: String
+
+        let folderPath: String
+
+    }
+
+}

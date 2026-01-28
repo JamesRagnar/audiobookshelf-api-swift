@@ -1,15 +1,15 @@
 //
-//  RemoveLibraryNarrator.swift
+//  DeleteMediaItemShare.swift
 //  AudiobookshelfAPI
 //
-//  Created by James Harquail on 2026-01-24.
+//  Created by Ragnar Henriksen on 2026-01-28.
 //
 
 import Foundation
 import RagnarNetworking
 
-/// Remove a narrator from a library.
-public struct RemoveLibraryNarrator: Interface {
+/// Delete a media item share.
+public struct DeleteMediaItemShare: Interface {
 
     // MARK: Request
 
@@ -27,27 +27,19 @@ public struct RemoveLibraryNarrator: Interface {
 
         public let authentication: AuthenticationType = .bearer
 
-        /// Remove Library Narrator Parameters
+        /// Delete Media Item Share Parameters
         ///
         /// - Parameters:
-        ///   - libraryId: The ID of the library.
-        ///   - narratorName: The narrator name to remove.
-        public init(libraryId: String, narratorName: String) {
-            let encodedNarrator = Data(narratorName.utf8)
-                .base64EncodedString()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-            self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
+        ///   - shareId: The ID of the share to delete.
+        public init(shareId: String) {
+            self.path = "/api/share/mediaitem/\(shareId)"
         }
 
     }
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
-
-        public let updated: Int
-
-    }
+    public typealias Response = Data
 
     public enum AudiobookshelfError: Error {
 
@@ -55,15 +47,19 @@ public struct RemoveLibraryNarrator: Interface {
 
         case notFound
 
+        case internalError
+
     }
 
     public static let responseCases: ResponseCases = [
 
-        200: .success(Response.self),
+        204: .success(Response.self),
 
         403: .failure(AudiobookshelfError.forbidden),
 
         404: .failure(AudiobookshelfError.notFound),
+
+        500: .failure(AudiobookshelfError.internalError)
 
     ]
 
