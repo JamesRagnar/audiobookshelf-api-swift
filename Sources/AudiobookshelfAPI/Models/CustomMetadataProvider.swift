@@ -18,6 +18,12 @@ public struct CustomMetadataProvider {
     /// The URL of the custom metadata provider.
     public let url: String
 
+    /// The media type this provider is for (book or podcast).
+    public let mediaType: String?
+
+    /// The slug identifier for the provider.
+    public let slug: String
+
 }
 
 extension CustomMetadataProvider: Decodable {}

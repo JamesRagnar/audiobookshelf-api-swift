@@ -12,8 +12,8 @@ public struct Series {
     /// The ID of the series.
     public let id: String
 
-    /// The ID of the library the series belongs to. Will be null if unknown.
-    public let libraryId: String?
+    /// The ID of the library the series belongs to.
+    public let libraryId: String
 
     /// The name of the series.
     public let name: String
@@ -27,20 +27,20 @@ public struct Series {
     /// The time (in ms since POSIX epoch) when the series was added.
     /// - Note: Series Num Books - Removed Attribute
     /// - Note: Series Sequence - Removed Attribute
-    public let addedAt: Int?
-    
+    public let addedAt: Int
+
     /// The time (in ms since POSIX epoch) when the series was last updated.
     /// - Note: Series Books - Removed Attribute
     /// - Note: Series Num Books - Removed Attribute
     /// - Note: Series Sequence - Removed Attribute
-    public let updatedAt: Int?
+    public let updatedAt: Int
     
     // MARK: Series Num Books + Books
     
     /// The name of the series with any prefix moved to the end.
     /// - Note: Series Books - Added Attribute
     /// - Note: Series Num Books - Added Attribute
-    public  let nameIgnorePrefix: String?
+    public let nameIgnorePrefix: String
     
     // MARK: Series Num Books
     
@@ -147,12 +147,12 @@ extension Series: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
-        self.libraryId = try container.decodeIfPresent(String.self, forKey: .libraryId)
+        self.libraryId = try container.decode(String.self, forKey: .libraryId)
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
-        self.addedAt = try container.decodeIfPresent(Int.self, forKey: .addedAt)
-        self.updatedAt = try container.decodeIfPresent(Int.self, forKey: .updatedAt)
-        self.nameIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefix)
+        self.addedAt = try container.decode(Int.self, forKey: .addedAt)
+        self.updatedAt = try container.decode(Int.self, forKey: .updatedAt)
+        self.nameIgnorePrefix = try container.decode(String.self, forKey: .nameIgnorePrefix)
         self.libraryItemIds = try container.decodeIfPresent([String].self, forKey: .libraryItemIds)
         self.numBooks = try container.decodeIfPresent(Int.self, forKey: .numBooks)
         self.nameIgnorePrefixSort = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefixSort)

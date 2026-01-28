@@ -44,16 +44,7 @@ public struct RSSFeedEpisode {
     
     /// The type of the RSS feed episode.
     public let episodeType: String?
-    
-    /// The ID of the library item the RSS feed is for.
-    public let libraryItemId: String
-    
-    /// The ID of the podcast episode the RSS feed episode is for. Will be null if the RSS feed is for a book.
-    public let episodeId: String?
-    
-    /// The RSS feed episode's track index.
-    public let trackIndex: Int
-    
+
     /// The path on the server of the audio file the RSS feed episode is for.
     public let fullPath: String
         

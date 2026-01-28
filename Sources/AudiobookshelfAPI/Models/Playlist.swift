@@ -23,10 +23,7 @@ public struct Playlist {
     
     /// The playlist's description.
     public let description: String?
-    
-    /// The path of the playlist's cover.
-    public let coverPath: String?
-    
+
     /// The items in the playlist.
     /// - Note: Playlist Expanded - items is Array of PlaylistItem Expanded
     public let items: [PlaylistItem]

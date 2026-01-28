@@ -10,10 +10,10 @@ import Foundation
 public struct DeviceInfo {
     
     /// Unique identifier.
-    public let id: UUID
-    
+    public let id: String
+
     /// User identifier.
-    public let userId: UUID
+    public let userId: String
     
     /// Device identifier, as provided in the request.
     public let deviceId: String
@@ -52,7 +52,7 @@ public struct DeviceInfo {
     public let clientName: String
     
     /// Version of the client, as provided in the request.
-    public let clientVersion: String
+    public let clientVersion: String?
     
 }
 

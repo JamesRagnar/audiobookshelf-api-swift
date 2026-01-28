@@ -34,13 +34,13 @@ public struct LibraryItem {
     public let isFile: Bool
     
     /// The time (in ms since POSIX epoch) when the library item was last modified on disk.
-    public let mtimeMs: Int
-    
+    public let mtimeMs: Int?
+
     /// The time (in ms since POSIX epoch) when the library item status was changed on disk.
-    public let ctimeMs: Int
-    
+    public let ctimeMs: Int?
+
     ///  The time (in ms since POSIX epoch) when the library item was created on disk. Will be 0 if unknown.
-    public let birthtimeMs: Int
+    public let birthtimeMs: Int?
     
     /// The time (in ms since POSIX epoch) when the library item was added to the library.
     public let addedAt: Int

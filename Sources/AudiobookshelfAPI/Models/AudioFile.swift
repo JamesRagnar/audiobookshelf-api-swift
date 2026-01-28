@@ -58,7 +58,7 @@ public struct AudioFile {
     public let language: String?
     
     /// The codec of the audio file.
-    public let codec: String
+    public let codec: String?
     
     /// The time base of the audio file.
     public let timeBase: String

@@ -2,7 +2,7 @@
 //  GetAllFeeds.swift
 //  AudiobookshelfAPI
 //
-//  Created by Ragnar Henriksen on 2026-01-28.
+//  Created by James Harquail on 2026-01-28.
 //
 
 import Foundation
@@ -47,9 +47,9 @@ public extension GetAllFeeds {
 
     struct RSSFeedListResponse: Decodable, Sendable {
 
-        public let feeds: [Feed]
+        public let feeds: [RSSFeed]
 
-        public let minified: [Feed]
+        public let minified: [RSSFeed]
 
     }
 

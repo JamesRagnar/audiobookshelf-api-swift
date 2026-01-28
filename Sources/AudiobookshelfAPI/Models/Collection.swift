@@ -14,10 +14,7 @@ public struct Collection {
     
     /// The ID of the library the collection belongs to.
     public let libraryId: String
-    
-    /// The ID of the user that created the collection.
-    public let userId: String?
-    
+
     /// The name of the collection.
     public let name: String
     

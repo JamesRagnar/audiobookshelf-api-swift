@@ -12,8 +12,8 @@ public struct Author {
     /// The ID of the author.
     public let id: String
 
-    /// The ID of the library the author belongs to. Will be null if unknown.
-    public let libraryId: String?
+    /// The ID of the library the author belongs to.
+    public let libraryId: String
 
     /// The ASIN of the author. Will be null if unknown.
     /// - Note: Author Minified - Removed Attribute
@@ -32,11 +32,11 @@ public struct Author {
     
     /// The time (in ms since POSIX epoch) when the author was added.
     /// - Note: Author Minified - Removed Attribute
-    public let addedAt: Int?
-    
+    public let addedAt: Int
+
     /// The time (in ms since POSIX epoch) when the author was last updated.
     /// - Note: Author Minified - Removed Attribute
-    public let updatedAt: Int?
+    public let updatedAt: Int
     
     // MARK: Author Expanded
     

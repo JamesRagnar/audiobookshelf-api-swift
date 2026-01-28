@@ -41,13 +41,58 @@ public struct ServerSettings {
     
     /// The length (in ms) of each login rate limit window.
     public let rateLimitLoginWindow: Int
-    
+
+    /// The active authentication methods enabled on the server.
+    public let authActiveAuthMethods: [String]?
+
+    /// OpenID Connect issuer URL.
+    public let authOpenIDIssuerURL: String?
+
+    /// OpenID Connect authorization URL.
+    public let authOpenIDAuthorizationURL: String?
+
+    /// OpenID Connect token URL.
+    public let authOpenIDTokenURL: String?
+
+    /// OpenID Connect user info URL.
+    public let authOpenIDUserinfoURL: String?
+
+    /// OpenID Connect JWKS URL.
+    public let authOpenIDJwksURL: String?
+
+    /// OpenID Connect logout URL.
+    public let authOpenIDLogoutURL: String?
+
+    /// OpenID Connect client ID.
+    public let authOpenIDClientID: String?
+
+    /// OpenID Connect client secret.
+    public let authOpenIDClientSecret: String?
+
+    /// OpenID Connect button text.
+    public let authOpenIDButtonText: String?
+
+    /// Whether OpenID authentication should auto-launch.
+    public let authOpenIDAutoLaunch: Bool?
+
+    /// Whether OpenID should auto-register new users.
+    public let authOpenIDAutoRegister: Bool?
+
+    /// Field to match existing users by for OpenID authentication.
+    public let authOpenIDMatchExistingBy: String?
+
+    /// Mobile redirect URIs for OpenID Connect.
+    public let authOpenIDMobileRedirectURIs: [String]?
+
     /// The cron expression for when to do automatic backups.
-//     let backupSchedule: String // TODO: Can also be bool
-    
+    public let backupSchedule: String?
+
+    /// The maximum number of days to keep backups.
+    public let backupMaxKeepDays: Int?
+
     /// The number of backups to keep.
     public let backupsToKeep: Int
-    
+
     /// The maximum backup size (in GB) before they fail, a safeguard against misconfiguration.
     public let maxBackupSize: Int
     

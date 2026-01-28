@@ -2,7 +2,7 @@
 //  CreateAPIKey.swift
 //  AudiobookshelfAPI
 //
-//  Created by Ragnar Henriksen on 2026-01-28.
+//  Created by James Harquail on 2026-01-28.
 //
 
 import Foundation
@@ -66,24 +66,6 @@ extension CreateAPIKey.Parameters {
     struct Body: Encodable {
 
         let expiresAt: Int?
-
-    }
-
-}
-
-public extension CreateAPIKey {
-
-    struct APIKey: Decodable, Sendable {
-
-        public let id: String
-
-        public let userId: String
-
-        public let key: String
-
-        public let expiresAt: Int?
-
-        public let createdAt: Int
 
     }
 

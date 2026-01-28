@@ -2,7 +2,7 @@
 //  DeleteAPIKey.swift
 //  AudiobookshelfAPI
 //
-//  Created by Ragnar Henriksen on 2026-01-28.
+//  Created by James Harquail on 2026-01-28.
 //
 
 import Foundation

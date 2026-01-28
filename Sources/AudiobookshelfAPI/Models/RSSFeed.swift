@@ -52,7 +52,10 @@ public struct RSSFeed {
     /// The time (in ms since POSIX epoch) when the RSS feed was last updated.
     /// - Note: RSS Feed Minified - Removed Attribute
     public let updatedAt: Int
-    
+
+    /// The time (in ms since POSIX epoch) when the entity (library item, collection, etc.) was last updated.
+    public let entityUpdatedAt: Int?
+
 }
 
 extension RSSFeed: Decodable {}

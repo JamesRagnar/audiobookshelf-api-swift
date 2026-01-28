@@ -19,7 +19,7 @@ public struct PlaybackSession {
     public let libraryId: String?
     
     /// The ID of the library item.
-    public let libraryItemId: String
+    public let libraryItemId: String?
     
     /// The ID of the podcast episode. Will be null if this playback session was started without an episode ID.
     public let episodeId: String?
@@ -34,7 +34,7 @@ public struct PlaybackSession {
     public let mediaMetadata: BookMetadata
     
     /// If the library item is a book, the chapters it contains.
-    public let chapters: [BookChapter]
+    public let chapters: [BookChapter]?
     
     /// The title of the playing item to show to the user.
     public let displayTitle: String

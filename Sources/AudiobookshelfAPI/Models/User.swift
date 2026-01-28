@@ -32,13 +32,7 @@ public struct User {
          message: "User.token will be removed in a future server version, no earlier than September 30, 2025. Please migrate to the new JWT authentication flow."
     )
     public let token: String
-    
-    /// JWT access token.
-    public let accessToken: String
-    
-    /// JWT refresh token.
-    public let refreshToken: String?
-    
+
     /// The user's media progress.
     public let mediaProgress: [MediaProgress]
     
@@ -97,8 +91,6 @@ extension User: Decodable {
         case hasOpenIDLink
         case type
         case token
-        case accessToken
-        case refreshToken
         case mediaProgress
         case seriesHideFromContinueListening
         case bookmarks

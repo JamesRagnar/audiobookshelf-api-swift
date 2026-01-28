@@ -2,7 +2,7 @@
 //  OpenFeedForSeries.swift
 //  AudiobookshelfAPI
 //
-//  Created by Ragnar Henriksen on 2026-01-28.
+//  Created by James Harquail on 2026-01-28.
 //
 
 import Foundation
@@ -64,7 +64,7 @@ public struct OpenFeedForSeries: Interface {
 
     public struct Response: Decodable, Sendable {
 
-        public let feed: Feed
+        public let feed: RSSFeed
 
     }
 
