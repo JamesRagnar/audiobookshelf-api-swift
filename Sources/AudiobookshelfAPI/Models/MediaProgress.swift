@@ -6,16 +6,25 @@
 //
 
 public struct MediaProgress {
-    
+
     /// The ID of the media progress. If the media progress is for a book, this will just be the libraryItemId. If for a podcast episode, it will be a hyphenated combination of the libraryItemId and episodeId.
     public let id: String
-    
+
+    /// The ID of the user the media progress is for.
+    public let userId: String
+
     /// The ID of the library item the media progress is of.
-    public let libraryItemId: String
-    
+    public let libraryItemId: String?
+
     /// The ID of the podcast episode the media progress is of. Will be null if the progress is for a book.
     public let episodeId: String?
-    
+
+    /// The ID of the media item.
+    public let mediaItemId: String
+
+    /// The type of the media item (book or podcastEpisode).
+    public let mediaItemType: String
+
     /// The total duration (in seconds) of the media. Will be 0 if the media was marked as finished without the user listening to it.
     public let duration: Float
     
@@ -67,11 +76,14 @@ extension MediaProgress {
 }
 
 extension MediaProgress: Decodable {
-    
+
     enum CodingKeys: CodingKey {
         case id
+        case userId
         case libraryItemId
         case episodeId
+        case mediaItemId
+        case mediaItemType
         case duration
         case progress
         case currentTime
@@ -85,13 +97,16 @@ extension MediaProgress: Decodable {
         case media
         case episode
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         id = try container.decode(String.self, forKey: .id)
-        libraryItemId = try container.decode(String.self, forKey: .libraryItemId)
+        userId = try container.decode(String.self, forKey: .userId)
+        libraryItemId = try container.decodeIfPresent(String.self, forKey: .libraryItemId)
         episodeId = try container.decodeIfPresent(String.self, forKey: .episodeId)
+        mediaItemId = try container.decode(String.self, forKey: .mediaItemId)
+        mediaItemType = try container.decode(String.self, forKey: .mediaItemType)
         duration = try container.decode(Float.self, forKey: .duration)
         progress = try container.decode(Float.self, forKey: .progress)
         currentTime = try container.decode(Float.self, forKey: .currentTime)
@@ -103,7 +118,7 @@ extension MediaProgress: Decodable {
         startedAt = try container.decode(Int.self, forKey: .startedAt)
         finishedAt = try container.decodeIfPresent(Int.self, forKey: .finishedAt)
         episode = try container.decodeIfPresent(PodcastEpisode.self, forKey: .episode)
-        
+
         if
             episodeId?.isEmpty == false,
             let podcast = try container.decodeIfPresent(Podcast.self, forKey: .media)
@@ -115,7 +130,7 @@ extension MediaProgress: Decodable {
             media = nil
         }
     }
-    
+
 }
 
 extension MediaProgress: Sendable {}

@@ -31,7 +31,7 @@ public struct GetLibraryFilterData: Interface {
         ///
         /// - Parameter libraryID: The ID of the library.
         public init(libraryID: String) {
-            self.path = "/api/libraries\(libraryID)/filterdata"
+            self.path = "/api/libraries/\(libraryID)/filterdata"
         }
         
     }

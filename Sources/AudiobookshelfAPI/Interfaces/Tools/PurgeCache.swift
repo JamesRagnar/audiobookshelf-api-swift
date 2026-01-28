@@ -15,7 +15,7 @@ public struct PurgeCache: Interface {
 
     public struct Parameters: RequestParameters {
 
-        public let method: RequestMethod = .delete
+        public let method: RequestMethod = .post
 
         public let path: String = "/api/cache/purge"
 

@@ -15,7 +15,7 @@ public struct GetOnlineUsers: Interface {
 
     public struct Parameters: RequestParameters {
 
-        public let method: RequestMethod = .post
+        public let method: RequestMethod = .get
 
         public let path: String = "/api/users/online"
 

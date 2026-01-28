@@ -8,37 +8,42 @@
 import Foundation
 import RagnarNetworking
 
-/// This endpoint removes a book from a collection and returns the collection.
+/// Remove a book from a collection.
+///
+/// **Important:** Despite the parameter name 'bookId' in the server endpoint,
+/// this endpoint actually expects a libraryItemId. This is a known server API
+/// quirk documented in CollectionController.js:255.
 public struct CollectionRemoveBook: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .delete
 
         public let path: String
-        
+
         public let queryItems: [String : String]? = nil
-        
+
         public let headers: [String : String]? = nil
-        
+
         public let body: Data? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
-        
-        /// Collection Remove Book Parameters
+
+        /// Remove Book from Collection Parameters
         ///
         /// - Parameters:
         ///   - collectionID: The ID of the collection.
-        ///   - bookID: The ID of the book library item to remove from the collection.
+        ///   - bookID: The ID of the library item to remove.
+        ///             Note: Despite the name, pass the libraryItemId here.
         public init(
             collectionID: String,
             bookID: String
         ) {
-            self.path = "/api/collections/\(collectionID)/books/\(bookID)"
+            self.path = "/api/collections/\(collectionID)/book/\(bookID)"
         }
-        
+
     }
     
     // MARK: Response

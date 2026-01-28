@@ -31,7 +31,7 @@ public struct GetLibraryStats: Interface {
         ///
         /// - Parameter libraryID: The ID of the library.
         public init(libraryID: String) {
-            self.path = "/api/libraries\(libraryID)/stats"
+            self.path = "/api/libraries/\(libraryID)/stats"
         }
         
     }

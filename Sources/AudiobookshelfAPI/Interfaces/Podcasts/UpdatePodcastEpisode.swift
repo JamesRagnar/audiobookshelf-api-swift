@@ -31,17 +31,27 @@ public struct UpdatePodcastEpisode: Interface {
         ///
         /// - Parameters:
         ///   - podcastId: The ID of the podcast library item.
-        ///   - episodeId: The ID of the podcast episode.
-        ///   - title: The new title of the episode.
-        ///   - subtitle: The new subtitle of the episode.
-        ///   - description: The new description of the episode.
-        ///   - publishedAt: The time (in ms since POSIX epoch) when the episode was published.
+        ///   - episodeId: The ID of the episode.
+        ///   - title: Episode title (optional).
+        ///   - subtitle: Episode subtitle (optional).
+        ///   - description: Episode description (optional).
+        ///   - enclosure: Episode enclosure data (optional).
+        ///   - pubDate: Publication date (optional).
+        ///   - season: Season identifier (optional).
+        ///   - episode: Episode number (optional).
+        ///   - episodeType: Episode type (optional).
+        ///   - publishedAt: Publication timestamp (optional).
         public init(
             podcastId: String,
             episodeId: String,
             title: String? = nil,
             subtitle: String? = nil,
             description: String? = nil,
+            enclosure: EnclosurePayload? = nil,
+            pubDate: String? = nil,
+            season: String? = nil,
+            episode: String? = nil,
+            episodeType: String? = nil,
             publishedAt: Int? = nil
         ) throws {
             self.path = "/api/podcasts/\(podcastId)/episode/\(episodeId)"
@@ -50,6 +60,11 @@ public struct UpdatePodcastEpisode: Interface {
                     title: title,
                     subtitle: subtitle,
                     description: description,
+                    enclosure: enclosure,
+                    pubDate: pubDate,
+                    season: season,
+                    episode: episode,
+                    episodeType: episodeType,
                     publishedAt: publishedAt
                 )
             )
@@ -62,17 +77,16 @@ public struct UpdatePodcastEpisode: Interface {
     public typealias Response = PodcastEpisode
 
     public enum AudiobookshelfError: Error {
-
+        case badRequest
+        case forbidden
         case notFound
-
     }
 
     public static let responseCases: ResponseCases = [
-
         200: .success(Response.self),
-
-        404: .failure(AudiobookshelfError.notFound),
-
+        400: .failure(AudiobookshelfError.badRequest),
+        403: .failure(AudiobookshelfError.forbidden),
+        404: .failure(AudiobookshelfError.notFound)
     ]
 
 }
@@ -80,15 +94,27 @@ public struct UpdatePodcastEpisode: Interface {
 extension UpdatePodcastEpisode.Parameters {
 
     struct Body: Encodable {
-
         let title: String?
-
         let subtitle: String?
-
         let description: String?
-
+        let enclosure: EnclosurePayload?
+        let pubDate: String?
+        let season: String?
+        let episode: String?
+        let episodeType: String?
         let publishedAt: Int?
+    }
 
+    public struct EnclosurePayload: Encodable {
+        let url: String?
+        let type: String?
+        let length: String?
+
+        public init(url: String? = nil, type: String? = nil, length: String? = nil) {
+            self.url = url
+            self.type = type
+            self.length = length
+        }
     }
 
 }

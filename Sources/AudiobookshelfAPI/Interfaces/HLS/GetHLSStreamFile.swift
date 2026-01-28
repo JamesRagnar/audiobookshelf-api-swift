@@ -1,15 +1,15 @@
 //
-//  GetSession.swift
+//  GetHLSStreamFile.swift
 //  AudiobookshelfAPI
 //
-//  Created by James Harquail on 2026-01-24.
+//  Created by James Harquail on 2026-01-27.
 //
 
 import Foundation
 import RagnarNetworking
 
-/// Retrieves a specific playback session by ID.
-public struct GetSession: Interface {
+/// Get HLS stream file (playlist or segment).
+public struct GetHLSStreamFile: Interface {
 
     // MARK: Request
 
@@ -27,28 +27,28 @@ public struct GetSession: Interface {
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(sessionId: String) {
-            self.path = "/api/sessions/\(sessionId)"
+        /// Get HLS Stream File Parameters
+        ///
+        /// - Parameters:
+        ///   - streamId: The stream ID (UUID).
+        ///   - file: The filename (must end with .ts or .m3u8).
+        public init(streamId: String, file: String) {
+            self.path = "/hls/\(streamId)/\(file)"
         }
-
     }
 
     // MARK: Response
 
-    public typealias Response = PlaybackSession
+    public typealias Response = Data
 
     public enum AudiobookshelfError: Error {
-
+        case badRequest
         case notFound
-
     }
 
     public static let responseCases: ResponseCases = [
-
         200: .success(Response.self),
-
-        404: .failure(AudiobookshelfError.notFound),
-
+        400: .failure(AudiobookshelfError.badRequest),
+        404: .failure(AudiobookshelfError.notFound)
     ]
-
 }

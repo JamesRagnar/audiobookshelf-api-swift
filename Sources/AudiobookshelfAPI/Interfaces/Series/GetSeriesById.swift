@@ -1,5 +1,5 @@
 //
-//  GetSeries.swift
+//  GetSeriesById.swift
 //  AudiobookshelfAPI
 //
 //  Created by James Harquail on 2024-11-21.
@@ -9,8 +9,8 @@
 import Foundation
 import RagnarNetworking
 
-/// This endpoint retrieves a series.
-public struct GetSeries: Interface {
+/// Get a single series by ID.
+public struct GetSeriesById: Interface {
     
     // MARK: Request
     
@@ -36,11 +36,11 @@ public struct GetSeries: Interface {
 
         public let authentication: AuthenticationType = .bearer
 
-        /// Get Series Parameters
+        /// Get Series by ID Parameters
         ///
         /// - Parameters:
         ///   - seriesID: The ID of the series.
-        ///   - include: A comma separated list of what to include with the series.
+        ///   - include: Optional includes (progress, rssfeed).
         public init(
             seriesID: String,
             include: Set<Include>? = nil
