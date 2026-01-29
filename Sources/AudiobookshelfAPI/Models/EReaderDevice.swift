@@ -20,5 +20,5 @@ public struct EReaderDevice {
 
 }
 
-extension EReaderDevice: Decodable {}
+extension EReaderDevice: Codable {}
 extension EReaderDevice: Sendable {}
