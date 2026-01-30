@@ -53,16 +53,6 @@ public struct SearchCovers: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
-        public let results: [CoverResult]
-    }
-
-    public struct CoverResult: Decodable, Sendable {
-        public let title: String
-        public let author: String?
-        public let cover: String
-    }
-
     public enum AudiobookshelfError: Error {
         case badRequest
         case internalError
@@ -73,4 +63,24 @@ public struct SearchCovers: Interface {
         400: .failure(AudiobookshelfError.badRequest),
         500: .failure(AudiobookshelfError.internalError)
     ]
+}
+
+public extension SearchCovers {
+
+    struct Response: Decodable, Sendable {
+
+        public let results: [CoverResult]
+
+    }
+
+    struct CoverResult: Decodable, Sendable {
+
+        public let title: String
+
+        public let author: String?
+
+        public let cover: String
+
+    }
+
 }

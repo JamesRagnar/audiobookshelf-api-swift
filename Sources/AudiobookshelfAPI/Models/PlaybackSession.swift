@@ -122,6 +122,9 @@ extension PlaybackSession {
 
     }
 
+    /// Placeholder for future video playback support.
+    /// The audiobookshelf server does not currently support video media types.
+    /// This struct is intentionally empty and will always be null in API responses.
     public struct VideoTrack: Decodable, Sendable {
 
     }

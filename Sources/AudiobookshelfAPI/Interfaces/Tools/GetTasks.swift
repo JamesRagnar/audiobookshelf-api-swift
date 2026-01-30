@@ -63,7 +63,27 @@ public extension GetTasks {
 
     struct QueuedTaskData: Decodable, Sendable {
 
-        // Queued task data structure
+        /// Queued metadata embedding tasks.
+        public let embedMetadata: [EmbedMetadataTask]
+
+    }
+
+    struct EmbedMetadataTask: Decodable, Sendable {
+
+        /// The ID of the library item.
+        public let libraryItemId: String
+
+        /// The directory path of the library item.
+        public let libraryItemDir: String?
+
+        /// The ID of the user who queued the task.
+        public let userId: String?
+
+        /// The cover path for the library item.
+        public let coverPath: String?
+
+        /// The total duration of the audio content.
+        public let duration: Double?
 
     }
 

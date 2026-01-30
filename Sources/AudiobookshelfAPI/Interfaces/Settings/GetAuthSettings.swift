@@ -33,7 +33,17 @@ public struct GetAuthSettings: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public static let responseCases: ResponseCases = [
+
+        200: .success(Response.self)
+
+    ]
+
+}
+
+public extension GetAuthSettings {
+
+    struct Response: Decodable, Sendable {
 
         public let authLoginCustomMessage: String?
 
@@ -64,11 +74,5 @@ public struct GetAuthSettings: Interface {
         public let authOpenIDSubfolderForRedirectURLs: String?
 
     }
-
-    public static let responseCases: ResponseCases = [
-
-        200: .success(Response.self)
-
-    ]
 
 }

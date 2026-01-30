@@ -54,20 +54,30 @@ public struct SearchChapters: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
-        public let results: [ChapterResult]
-    }
-
-    public struct ChapterResult: Decodable, Sendable {
-        public let libraryItem: LibraryItem
-        public let matchKey: String
-        public let matchText: String
-    }
-
     public enum AudiobookshelfError: Error {
     }
 
     public static let responseCases: ResponseCases = [
         200: .success(Response.self)
     ]
+}
+
+public extension SearchChapters {
+
+    struct Response: Decodable, Sendable {
+
+        public let results: [ChapterResult]
+
+    }
+
+    struct ChapterResult: Decodable, Sendable {
+
+        public let libraryItem: LibraryItem
+
+        public let matchKey: String
+
+        public let matchText: String
+
+    }
+
 }
