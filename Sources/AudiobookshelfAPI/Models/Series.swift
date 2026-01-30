@@ -13,7 +13,7 @@ public struct Series {
     public let id: String
 
     /// The ID of the library the series belongs to.
-    public let libraryId: String
+    public let libraryId: String?
 
     /// The name of the series.
     public let name: String
@@ -147,7 +147,7 @@ extension Series: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
-        self.libraryId = try container.decode(String.self, forKey: .libraryId)
+        self.libraryId = try container.decodeIfPresent(String.self, forKey: .libraryId)
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
         self.addedAt = try container.decode(Int.self, forKey: .addedAt)
