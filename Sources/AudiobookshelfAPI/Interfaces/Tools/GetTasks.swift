@@ -45,7 +45,7 @@ public struct GetTasks: Interface {
 
     public struct Response: Decodable, Sendable {
 
-        public let tasks: [Task]
+        public let tasks: [BackgroundTask]
 
         public let queuedTaskData: QueuedTaskData?
 
@@ -60,12 +60,6 @@ public struct GetTasks: Interface {
 }
 
 public extension GetTasks {
-
-    struct Task: Decodable, Sendable {
-
-        // Task structure from TaskManager (flexible for various task types)
-
-    }
 
     struct QueuedTaskData: Decodable, Sendable {
 

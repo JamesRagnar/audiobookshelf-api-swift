@@ -121,5 +121,9 @@ extension PlaybackSession {
         case local = 3
 
     }
-    
+
+    public struct VideoTrack: Decodable, Sendable {
+
+    }
+
 }

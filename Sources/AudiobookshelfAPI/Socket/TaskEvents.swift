@@ -13,7 +13,7 @@ public struct TaskStarted: SocketEvent {
 
     public static let name = "task_started"
 
-    public typealias Schema = Task
+    public typealias Schema = BackgroundTask
 
 }
 
@@ -22,7 +22,7 @@ public struct TaskFinished: SocketEvent {
 
     public static let name = "task_finished"
 
-    public typealias Schema = Task
+    public typealias Schema = BackgroundTask
 
 }
 
@@ -40,7 +40,7 @@ public extension TaskProgress {
     struct CustomResponse: Decodable, Sendable {
 
         /// The task being updated.
-        public let task: Task
+        public let task: BackgroundTask
 
         /// Progress description message.
         public let description: String?
