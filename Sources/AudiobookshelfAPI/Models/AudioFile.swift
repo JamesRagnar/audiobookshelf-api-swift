@@ -52,7 +52,7 @@ public struct AudioFile {
     public let duration: Float
     
     /// The bit rate (in bit/s) of the audio file.
-    public let bitRate: Int
+    public let bitRate: Int?
     
     /// The language of the audio file.
     public let language: String?

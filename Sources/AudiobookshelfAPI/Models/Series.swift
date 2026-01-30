@@ -40,7 +40,7 @@ public struct Series {
     /// The name of the series with any prefix moved to the end.
     /// - Note: Series Books - Added Attribute
     /// - Note: Series Num Books - Added Attribute
-    public let nameIgnorePrefix: String
+    public let nameIgnorePrefix: String?
     
     // MARK: Series Num Books
     

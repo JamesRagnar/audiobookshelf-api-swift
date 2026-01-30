@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// A custom metadata provider for fetching book/podcast metadata.
+///
+/// Note: The server filters sensitive fields in `toClientJson()`.
+/// The `url` and `authHeaderValue` properties are NOT sent to clients for security.
 public struct CustomMetadataProvider {
 
     /// The ID of the custom metadata provider.
@@ -15,13 +19,10 @@ public struct CustomMetadataProvider {
     /// The name of the custom metadata provider.
     public let name: String
 
-    /// The URL of the custom metadata provider.
-    public let url: String
-
     /// The media type this provider is for (book or podcast).
     public let mediaType: String?
 
-    /// The slug identifier for the provider.
+    /// The slug identifier for the provider (computed from id as "custom-{id}").
     public let slug: String
 
 }

@@ -36,7 +36,7 @@ public struct Podcast {
     public let autoDownloadEpisodes: Bool
     
     /// The cron expression for when to automatically download podcast episodes.
-    public let autoDownloadSchedule: String
+    public let autoDownloadSchedule: String?
     
     /// The time (in ms since POSIX epoch) when the podcast was checked for new episodes.
     public let lastEpisodeCheck: Int?

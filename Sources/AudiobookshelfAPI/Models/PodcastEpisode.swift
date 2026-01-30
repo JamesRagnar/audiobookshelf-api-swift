@@ -28,7 +28,7 @@ public struct PodcastEpisode {
     public let episodeType: String?
     
     /// The title of the podcast episode.
-    public let title: String
+    public let title: String?
     
     /// The subtitle of the podcast episode.
     public let subtitle: String?

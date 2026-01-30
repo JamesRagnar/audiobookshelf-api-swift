@@ -16,7 +16,7 @@ public struct Collection {
     public let libraryId: String
 
     /// The name of the collection.
-    public let name: String
+    public let name: String?
     
     /// The collection's description. Will be null if there is none.
     public let description: String?

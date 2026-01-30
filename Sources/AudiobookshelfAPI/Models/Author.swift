@@ -32,11 +32,11 @@ public struct Author {
     
     /// The time (in ms since POSIX epoch) when the author was added.
     /// - Note: Author Minified - Removed Attribute
-    public let addedAt: Int
+    public let addedAt: Int?
 
     /// The time (in ms since POSIX epoch) when the author was last updated.
     /// - Note: Author Minified - Removed Attribute
-    public let updatedAt: Int
+    public let updatedAt: Int?
     
     // MARK: Author Expanded
     

@@ -61,7 +61,7 @@ public struct User {
     public let librariesAccessible: [String]
     
     /// The tags accessible to the user. An empty array means all tags are accessible.
-    public let itemTagsSelected: [String]?
+    public let itemTagsSelected: [String]
     
 }
 

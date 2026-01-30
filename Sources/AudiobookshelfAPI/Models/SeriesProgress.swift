@@ -8,15 +8,15 @@
 import Foundation
 
 public struct SeriesProgress {
-    
+
     /// The IDs of the library items in the series.
-    let libraryItemIds: [String]
-    
+    public let libraryItemIds: [String]
+
     /// The IDs of the library items in the series that are finished.
-    let libraryItemIdsFinished: [String]
-    
+    public let libraryItemIdsFinished: [String]
+
     /// Whether the series is finished.
-    let isFinished: Bool
+    public let isFinished: Bool
 
 }
 

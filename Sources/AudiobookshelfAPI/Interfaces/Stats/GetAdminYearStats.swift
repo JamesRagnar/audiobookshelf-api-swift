@@ -38,7 +38,7 @@ public struct GetAdminYearStats: Interface {
 
     // MARK: Response
 
-    public typealias Response = AdminYearStats
+    public typealias Response = YearStats
 
     public static let responseCases: ResponseCases = [
 
@@ -46,13 +46,4 @@ public struct GetAdminYearStats: Interface {
 
     ]
 
-}
-
-/// Admin-level yearly statistics
-public struct AdminYearStats: Decodable, Sendable {
-    // Note: Server response structure needs to be verified
-    // Placeholder structure - may need adjustment based on actual response
-    public let year: Int
-    public let totalListeningTime: Int?
-    public let userStats: [String: Int]?
 }

@@ -7,37 +7,60 @@
 
 import Foundation
 
+/// Statistics for admin-level yearly overview.
+///
+/// Note: This matches the server's `getStatsForYear()` response structure
+/// from `server/utils/queries/adminStats.js`.
 public struct YearStats {
 
-    /// The year for these statistics.
-    public let year: Int
+    /// Information about a top author, narrator, or genre.
+    public struct TopItem: Decodable, Sendable {
+        /// The name of the author or narrator, or the genre name.
+        public let name: String?
+        /// The genre (only present for top genres).
+        public let genre: String?
+        /// Total listening time in seconds for this item.
+        public let time: Int
+    }
 
-    /// Total listening time in seconds.
-    public let totalTime: Double
+    /// The number of listening sessions in the year.
+    public let numListeningSessions: Int
 
-    /// Total number of days listened.
-    public let totalDays: Int
+    /// The number of books added in the year.
+    public let numBooksAdded: Int
 
-    /// Number of book items listened to.
-    public let numListenedBooks: Int?
+    /// The number of authors added in the year.
+    public let numAuthorsAdded: Int
 
-    /// Number of podcast episodes listened to.
-    public let numListenedEpisodes: Int?
+    /// The total size (in bytes) of books added in the year.
+    public let totalBooksAddedSize: Int
 
-    /// Total number of finished items.
-    public let numFinishedBooks: Int?
+    /// The total duration (in seconds) of books added in the year.
+    public let totalBooksAddedDuration: Int
 
-    /// Total number of finished podcast episodes.
-    public let numFinishedEpisodes: Int?
+    /// Array of library item IDs for books added with covers (max 25).
+    public let booksAddedWithCovers: [String]
 
-    /// Most listened to genre.
-    public let mostListenedGenre: String?
+    /// The total size (in bytes) of all books at the end of the year.
+    public let totalBooksSize: Int
 
-    /// Most listened to author.
-    public let mostListenedAuthor: String?
+    /// The total duration (in seconds) of all books at the end of the year.
+    public let totalBooksDuration: Int
 
-    /// Total number of sessions.
-    public let totalSessions: Int?
+    /// Total listening time (in seconds) for the year.
+    public let totalListeningTime: Int
+
+    /// Total number of books at the end of the year.
+    public let numBooks: Int
+
+    /// Top 3 authors by listening time.
+    public let topAuthors: [TopItem]
+
+    /// Top 3 narrators by listening time.
+    public let topNarrators: [TopItem]
+
+    /// Top 3 genres by listening time.
+    public let topGenres: [TopItem]
 
 }
 

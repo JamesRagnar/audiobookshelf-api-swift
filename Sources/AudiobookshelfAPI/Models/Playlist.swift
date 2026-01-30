@@ -19,7 +19,7 @@ public struct Playlist {
     public let userId: String
     
     /// The playlist's name.
-    public let name: String
+    public let name: String?
     
     /// The playlist's description.
     public let description: String?

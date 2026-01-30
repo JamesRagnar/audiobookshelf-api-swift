@@ -45,6 +45,9 @@ public struct ServerSettings {
     /// The active authentication methods enabled on the server.
     public let authActiveAuthMethods: [String]?
 
+    /// Custom message displayed on the login page.
+    public let authLoginCustomMessage: String?
+
     /// OpenID Connect issuer URL.
     public let authOpenIDIssuerURL: String?
 
@@ -69,6 +72,9 @@ public struct ServerSettings {
     /// OpenID Connect client secret.
     public let authOpenIDClientSecret: String?
 
+    /// Token signing algorithm for OpenID Connect (e.g., RS256).
+    public let authOpenIDTokenSigningAlgorithm: String?
+
     /// OpenID Connect button text.
     public let authOpenIDButtonText: String?
 
@@ -83,6 +89,12 @@ public struct ServerSettings {
 
     /// Mobile redirect URIs for OpenID Connect.
     public let authOpenIDMobileRedirectURIs: [String]?
+
+    /// OpenID Connect group claim for role mapping.
+    public let authOpenIDGroupClaim: String?
+
+    /// OpenID Connect advanced permissions claim.
+    public let authOpenIDAdvancedPermsClaim: String?
 
     /// The cron expression for when to do automatic backups.
     public let backupSchedule: String?
@@ -107,7 +119,10 @@ public struct ServerSettings {
     
     /// Whether other bookshelf pages should use a skeuomorphic design with wooden shelves.
     public let bookshelfView: Int
-    
+
+    /// The cron expression for automatic podcast episode checks (e.g., "0 * * * *" for hourly).
+    public let podcastEpisodeSchedule: String?
+
     /// Whether to ignore prefixes when sorting. For example, for the prefix the, the book title The Book Title would sort as Book Title, The.
     public let sortingIgnorePrefix: Bool
     
@@ -125,7 +140,10 @@ public struct ServerSettings {
     
     /// The default server language.
     public let language: String
-    
+
+    /// Allowed CORS origins for the server.
+    public let allowedOrigins: [String]?
+
     /// What log level the server should use when logging. 1 for debug, 2 for info, or 3 for warnings.
     public let logLevel: Int
     

@@ -17,10 +17,10 @@ public struct Device {
     public let userId: String
 
     /// Device identifier string
-    public let deviceId: String
+    public let deviceId: String?
 
     /// Device name
-    public let deviceName: String
+    public let deviceName: String?
 
     /// Device type
     public let deviceType: String?
@@ -29,7 +29,7 @@ public struct Device {
     public let deviceVersion: String?
 
     /// Client name
-    public let clientName: String
+    public let clientName: String?
 
     /// Client version
     public let clientVersion: String?
