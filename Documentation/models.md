@@ -23,41 +23,6 @@ Parameters follow Swift naming patterns, with types and optionality derived from
 
 ## Common Patterns
 
-### Scope Annotations
-
-The audiobookshelf server returns models in different "scopes" depending on the endpoint:
-- **Base/Full**: Default serialization (`toOldJSON()`) - includes all standard properties
-- **Minified**: Reduced data for list views (`toOldJSONMinified()`) - removes expensive properties
-- **Expanded**: Maximum detail (`toOldJSONExpanded()`) - adds computed/related data
-
-Swift models handle all scopes in a single struct using optional properties:
-- Properties removed in some scopes → optional with annotation
-- Properties added in some scopes → optional with annotation
-- Properties present in all scopes → required (unless genuinely nullable)
-
-Use `/// - Note:` comments to document scope variations:
-
-```swift
-public struct Series {
-    /// The ID of the series.
-    public let id: String  // Always present
-
-    /// The name of the series with any prefix moved to the end.
-    /// - Note: Series Books - Added Attribute
-    /// - Note: Series Num Books - Added Attribute
-    public let nameIgnorePrefix: String?  // Only in Books/Num Books scopes
-
-    /// A description for the series. Will be null if there is none.
-    /// - Note: Series Num Books - Removed Attribute
-    /// - Note: Series Sequence - Removed Attribute
-    public let description: String?  // Removed in some scopes
-}
-```
-
-**Annotation Format:**
-- `/// - Note: [Model Name] [Scope Name] - Added Attribute` - Property only exists in this scope
-- `/// - Note: [Model Name] [Scope Name] - Removed Attribute` - Property removed in this scope
-
 ### Coding Keys
 
 In the event that a server definition does not match Swift naming conventions, CodingKeys should be used to map the server value to the Model definition. These keys are defined in an extension to the Model, and are not marked as public. This extension can include the Decodable conformance, as this logic is directly related.
