@@ -161,5 +161,129 @@ public struct ServerSettings {
 
 }
 
-extension ServerSettings: Decodable {}
+extension ServerSettings: Decodable {
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case scannerFindCovers
+        case scannerCoverProvider
+        case scannerParseSubtitle
+        case scannerPreferMatchedMetadata
+        case scannerDisableWatcher
+        case storeCoverWithItem
+        case storeMetadataWithItem
+        case metadataFileFormat
+        case rateLimitLoginRequests
+        case rateLimitLoginWindow
+        case authActiveAuthMethods
+        case authLoginCustomMessage
+        case authOpenIDIssuerURL
+        case authOpenIDAuthorizationURL
+        case authOpenIDTokenURL
+        case authOpenIDUserinfoURL
+        case authOpenIDJwksURL
+        case authOpenIDLogoutURL
+        case authOpenIDClientID
+        case authOpenIDClientSecret
+        case authOpenIDTokenSigningAlgorithm
+        case authOpenIDButtonText
+        case authOpenIDAutoLaunch
+        case authOpenIDAutoRegister
+        case authOpenIDMatchExistingBy
+        case authOpenIDMobileRedirectURIs
+        case authOpenIDGroupClaim
+        case authOpenIDAdvancedPermsClaim
+        case backupSchedule
+        case backupMaxKeepDays
+        case backupsToKeep
+        case maxBackupSize
+        case loggerDailyLogsToKeep
+        case loggerScannerLogsToKeep
+        case homeBookshelfView
+        case bookshelfView
+        case podcastEpisodeSchedule
+        case sortingIgnorePrefix
+        case sortingPrefixes
+        case chromecastEnabled
+        case dateFormat
+        case timeFormat
+        case language
+        case allowedOrigins
+        case logLevel
+        case version
+        case buildNumber
+        case allowIframe
+        case authOpenIDSubfolderForRedirectURLs
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        scannerFindCovers = try container.decode(Bool.self, forKey: .scannerFindCovers)
+        scannerCoverProvider = try container.decode(String.self, forKey: .scannerCoverProvider)
+        scannerParseSubtitle = try container.decode(Bool.self, forKey: .scannerParseSubtitle)
+        scannerPreferMatchedMetadata = try container.decode(Bool.self, forKey: .scannerPreferMatchedMetadata)
+        scannerDisableWatcher = try container.decode(Bool.self, forKey: .scannerDisableWatcher)
+        storeCoverWithItem = try container.decode(Bool.self, forKey: .storeCoverWithItem)
+        storeMetadataWithItem = try container.decode(Bool.self, forKey: .storeMetadataWithItem)
+        metadataFileFormat = try container.decode(String.self, forKey: .metadataFileFormat)
+        rateLimitLoginRequests = try container.decode(Int.self, forKey: .rateLimitLoginRequests)
+        rateLimitLoginWindow = try container.decode(Int.self, forKey: .rateLimitLoginWindow)
+        authActiveAuthMethods = try container.decodeIfPresent([String].self, forKey: .authActiveAuthMethods)
+        authLoginCustomMessage = try container.decodeIfPresent(String.self, forKey: .authLoginCustomMessage)
+        authOpenIDIssuerURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDIssuerURL)
+        authOpenIDAuthorizationURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDAuthorizationURL)
+        authOpenIDTokenURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDTokenURL)
+        authOpenIDUserinfoURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDUserinfoURL)
+        authOpenIDJwksURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDJwksURL)
+        authOpenIDLogoutURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDLogoutURL)
+        authOpenIDClientID = try container.decodeIfPresent(String.self, forKey: .authOpenIDClientID)
+        authOpenIDClientSecret = try container.decodeIfPresent(String.self, forKey: .authOpenIDClientSecret)
+        authOpenIDTokenSigningAlgorithm = try container.decodeIfPresent(String.self, forKey: .authOpenIDTokenSigningAlgorithm)
+        authOpenIDButtonText = try container.decodeIfPresent(String.self, forKey: .authOpenIDButtonText)
+        authOpenIDAutoLaunch = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDAutoLaunch)
+        authOpenIDAutoRegister = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDAutoRegister)
+        authOpenIDMatchExistingBy = try container.decodeIfPresent(String.self, forKey: .authOpenIDMatchExistingBy)
+        authOpenIDMobileRedirectURIs = try container.decodeIfPresent([String].self, forKey: .authOpenIDMobileRedirectURIs)
+        authOpenIDGroupClaim = try container.decodeIfPresent(String.self, forKey: .authOpenIDGroupClaim)
+        authOpenIDAdvancedPermsClaim = try container.decodeIfPresent(String.self, forKey: .authOpenIDAdvancedPermsClaim)
+
+        // backupSchedule can be either a String (cron expression) or Bool (false when disabled)
+        if let schedule = try? container.decode(String.self, forKey: .backupSchedule) {
+            backupSchedule = schedule
+        } else {
+            backupSchedule = nil
+        }
+
+        backupMaxKeepDays = try container.decodeIfPresent(Int.self, forKey: .backupMaxKeepDays)
+        backupsToKeep = try container.decode(Int.self, forKey: .backupsToKeep)
+        maxBackupSize = try container.decode(Int.self, forKey: .maxBackupSize)
+        loggerDailyLogsToKeep = try container.decode(Int.self, forKey: .loggerDailyLogsToKeep)
+        loggerScannerLogsToKeep = try container.decode(Int.self, forKey: .loggerScannerLogsToKeep)
+        homeBookshelfView = try container.decode(Int.self, forKey: .homeBookshelfView)
+        bookshelfView = try container.decode(Int.self, forKey: .bookshelfView)
+
+        // podcastEpisodeSchedule can be either a String (cron expression) or Bool (false when disabled)
+        if let schedule = try? container.decode(String.self, forKey: .podcastEpisodeSchedule) {
+            podcastEpisodeSchedule = schedule
+        } else {
+            podcastEpisodeSchedule = nil
+        }
+
+        sortingIgnorePrefix = try container.decode(Bool.self, forKey: .sortingIgnorePrefix)
+        sortingPrefixes = try container.decode([String].self, forKey: .sortingPrefixes)
+        chromecastEnabled = try container.decode(Bool.self, forKey: .chromecastEnabled)
+        dateFormat = try container.decode(String.self, forKey: .dateFormat)
+        timeFormat = try container.decode(String.self, forKey: .timeFormat)
+        language = try container.decode(String.self, forKey: .language)
+        allowedOrigins = try container.decodeIfPresent([String].self, forKey: .allowedOrigins)
+        logLevel = try container.decode(Int.self, forKey: .logLevel)
+        version = try container.decode(String.self, forKey: .version)
+        buildNumber = try container.decodeIfPresent(String.self, forKey: .buildNumber)
+        allowIframe = try container.decodeIfPresent(Bool.self, forKey: .allowIframe)
+        authOpenIDSubfolderForRedirectURLs = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDSubfolderForRedirectURLs)
+    }
+}
+
 extension ServerSettings: Sendable {}
