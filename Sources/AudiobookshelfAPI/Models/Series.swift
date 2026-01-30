@@ -27,13 +27,13 @@ public struct Series {
     /// The time (in ms since POSIX epoch) when the series was added.
     /// - Note: Series Num Books - Removed Attribute
     /// - Note: Series Sequence - Removed Attribute
-    public let addedAt: Int
+    public let addedAt: Int?
 
     /// The time (in ms since POSIX epoch) when the series was last updated.
     /// - Note: Series Books - Removed Attribute
     /// - Note: Series Num Books - Removed Attribute
     /// - Note: Series Sequence - Removed Attribute
-    public let updatedAt: Int
+    public let updatedAt: Int?
     
     // MARK: Series Num Books + Books
     
@@ -150,8 +150,8 @@ extension Series: Decodable {
         self.libraryId = try container.decodeIfPresent(String.self, forKey: .libraryId)
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
-        self.addedAt = try container.decode(Int.self, forKey: .addedAt)
-        self.updatedAt = try container.decode(Int.self, forKey: .updatedAt)
+        self.addedAt = try container.decodeIfPresent(Int.self, forKey: .addedAt)
+        self.updatedAt = try container.decodeIfPresent(Int.self, forKey: .updatedAt)
         self.nameIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefix)
         self.libraryItemIds = try container.decodeIfPresent([String].self, forKey: .libraryItemIds)
         self.numBooks = try container.decodeIfPresent(Int.self, forKey: .numBooks)
