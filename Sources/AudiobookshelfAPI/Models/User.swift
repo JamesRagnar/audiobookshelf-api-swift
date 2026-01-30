@@ -24,14 +24,12 @@ public struct User {
     /// The type of the user.
     /// There will be only one root user which is created when the server first starts.
     public let type: UserType
-    
-    /// The authentication token of the user.
-    @available(
-        *,
-         deprecated,
-         message: "User.token will be removed in a future server version, no earlier than September 30, 2025. Please migrate to the new JWT authentication flow."
-    )
-    public let token: String
+
+    /// JWT access token.
+    public let accessToken: String?
+
+    /// JWT refresh token.
+    public let refreshToken: String?
 
     /// The user's media progress.
     public let mediaProgress: [MediaProgress]
@@ -81,27 +79,5 @@ extension User {
 }
 
 extension User: Sendable {}
-
-extension User: Decodable {
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case username
-        case email
-        case hasOpenIDLink
-        case type
-        case token
-        case mediaProgress
-        case seriesHideFromContinueListening
-        case bookmarks
-        case isActive
-        case isLocked
-        case lastSeen
-        case createdAt
-        case permissions
-        case librariesAccessible
-        case itemTagsSelected
-    }
-
-}
+extension User: Decodable {}
 

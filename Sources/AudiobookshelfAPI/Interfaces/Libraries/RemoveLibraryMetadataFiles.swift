@@ -8,7 +8,7 @@
 import Foundation
 import RagnarNetworking
 
-/// Remove all metadata.json files from a library.
+/// Remove all metadata files from a library.
 public struct RemoveLibraryMetadataFiles: Interface {
 
     // MARK: Request

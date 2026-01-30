@@ -9,10 +9,6 @@ import Foundation
 import RagnarNetworking
 
 /// Remove a book from a collection.
-///
-/// **Important:** Despite the parameter name 'bookId' in the server endpoint,
-/// this endpoint actually expects a libraryItemId. This is a known server API
-/// quirk documented in CollectionController.js:255.
 public struct CollectionRemoveBook: Interface {
 
     // MARK: Request

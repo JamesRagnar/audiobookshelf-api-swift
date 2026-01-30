@@ -116,19 +116,3 @@ public struct YearStats {
 
 extension YearStats: Decodable {}
 extension YearStats: Sendable {}
-
-// MARK: - Convenience Properties
-
-extension YearStats {
-
-    /// Most listened author (top of topAuthors array).
-    public var mostListenedAuthor: String? {
-        topAuthors.first?.name
-    }
-
-    /// Most listened genre (top of topGenres array).
-    public var mostListenedGenre: String? {
-        topGenres.first?.genre
-    }
-
-}
