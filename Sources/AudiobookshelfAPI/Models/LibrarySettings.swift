@@ -25,16 +25,16 @@ public struct LibrarySettings {
     public let autoScanCronExpression: String?
 
     /// Whether the library should only show audiobooks (hide ebook-only items).
-    public let audiobooksOnly: Bool
+    public let audiobooksOnly: Bool?
 
     /// Whether EPUBs are allowed to run scripted content.
     public let epubsAllowScriptedContent: Bool?
 
     /// Whether to hide series with only one book.
-    public let hideSingleBookSeries: Bool
+    public let hideSingleBookSeries: Bool?
 
     /// Whether to only show later books in the "Continue Series" shelf.
-    public let onlyShowLaterBooksInContinueSeries: Bool
+    public let onlyShowLaterBooksInContinueSeries: Bool?
 
     /// The order of precedence for metadata sources.
     public let metadataPrecedence: [String]?
