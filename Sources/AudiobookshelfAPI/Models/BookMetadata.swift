@@ -53,7 +53,8 @@ public struct BookMetadata {
     public let language: String?
     
     /// Whether the book has been marked as explicit.
-    public let explicit: Bool
+    /// - Note: Can be null in minified responses (oldMetadataToJSONMinified passes raw value)
+    public let explicit: Bool?
 
     /// Whether the book is abridged.
     public let abridged: Bool?
@@ -126,7 +127,7 @@ extension BookMetadata: Decodable {
         self.isbn = try container.decodeIfPresent(String.self, forKey: .isbn)
         self.asin = try container.decodeIfPresent(String.self, forKey: .asin)
         self.language = try container.decodeIfPresent(String.self, forKey: .language)
-        self.explicit = try container.decode(Bool.self, forKey: .explicit)
+        self.explicit = try container.decodeIfPresent(Bool.self, forKey: .explicit)
         self.abridged = try container.decodeIfPresent(Bool.self, forKey: .abridged)
         self.titleIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .titleIgnorePrefix)
         self.authorName = try container.decodeIfPresent(String.self, forKey: .authorName)

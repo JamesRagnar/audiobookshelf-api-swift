@@ -13,7 +13,7 @@ public struct Library {
     public let id: String
     
     /// The name of the library.
-    public let name: String?
+    public let name: String
 
     /// The folders that the library is composed of on the server.
     public let folders: [Folder]
@@ -25,13 +25,13 @@ public struct Library {
     public let icon: Icon?
 
     /// The type of media that the library contains. Will be book or podcast. (Read Only)
-    public let mediaType: MediaType?
+    public let mediaType: MediaType
 
     /// Preferred metadata provider for the library. See Metadata Providers for a list of possible providers.
     public let provider: String?
 
     /// The settings for the library.
-    public let settings: LibrarySettings?
+    public let settings: LibrarySettings
     
     /// The time (in ms since POSIX epoch) when the library was created. (Read Only)
     public let createdAt: Int

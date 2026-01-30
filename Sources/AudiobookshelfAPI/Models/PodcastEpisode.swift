@@ -11,7 +11,10 @@ public struct PodcastEpisode {
     
     /// The ID of the library item that contains the podcast.
     public let libraryItemId: String
-    
+
+    /// The ID of the podcast.
+    public let podcastId: String
+
     /// The ID of the podcast episode.
     public let id: String
     

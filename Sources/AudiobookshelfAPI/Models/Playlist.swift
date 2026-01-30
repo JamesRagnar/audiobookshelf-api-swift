@@ -25,8 +25,9 @@ public struct Playlist {
     public let description: String?
 
     /// The items in the playlist.
+    /// - Note: Only present in expanded responses (Playlist Expanded)
     /// - Note: Playlist Expanded - items is Array of PlaylistItem Expanded
-    public let items: [PlaylistItem]
+    public let items: [PlaylistItem]?
     
     /// The time (in ms since POSIX epoch) when the playlist was last updated.
     public let lastUpdate: Int

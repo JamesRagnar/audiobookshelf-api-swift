@@ -20,19 +20,19 @@ public struct MediaProgress {
     public let episodeId: String?
 
     /// The ID of the media item.
-    public let mediaItemId: String?
+    public let mediaItemId: String
 
     /// The type of the media item (book or podcastEpisode).
-    public let mediaItemType: String?
+    public let mediaItemType: String
 
     /// The total duration (in seconds) of the media. Will be 0 if the media was marked as finished without the user listening to it.
-    public let duration: Float?
+    public let duration: Float
 
     /// The percentage completion progress of the media. Will be 1 if the media is finished.
-    public let progress: Float?
+    public let progress: Float
 
     /// The current time (in seconds) of the user's progress. If the media has been marked as finished, this will be the time the user was at beforehand.
-    public let currentTime: Float?
+    public let currentTime: Float
 
     /// The ebook location (for ebook progress tracking).
     public let ebookLocation: String?
@@ -41,10 +41,10 @@ public struct MediaProgress {
     public let ebookProgress: Float?
 
     /// Whether the media is finished.
-    public let isFinished: Bool?
+    public let isFinished: Bool
 
     /// Whether the media will be hidden from the "Continue Listening" shelf.
-    public let hideFromContinueListening: Bool?
+    public let hideFromContinueListening: Bool
     
     /// The time (in ms since POSIX epoch) when the media progress was last updated.
     public let lastUpdate: Int
@@ -107,8 +107,8 @@ extension MediaProgress: Decodable {
         userId = try container.decode(String.self, forKey: .userId)
         libraryItemId = try container.decodeIfPresent(String.self, forKey: .libraryItemId)
         episodeId = try container.decodeIfPresent(String.self, forKey: .episodeId)
-        mediaItemId = try container.decodeIfPresent(String.self, forKey: .mediaItemId)
-        mediaItemType = try container.decodeIfPresent(String.self, forKey: .mediaItemType)
+        mediaItemId = try container.decode(String.self, forKey: .mediaItemId)
+        mediaItemType = try container.decode(String.self, forKey: .mediaItemType)
         duration = try container.decode(Float.self, forKey: .duration)
         progress = try container.decode(Float.self, forKey: .progress)
         currentTime = try container.decode(Float.self, forKey: .currentTime)

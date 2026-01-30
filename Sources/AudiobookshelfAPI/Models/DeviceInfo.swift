@@ -46,7 +46,7 @@ public struct DeviceInfo {
     public let model: String?
     
     /// For an Android device, the Android SDK version of the client, as provided in the request.
-    public let sdkVersion: Int?
+    public let sdkVersion: String?
     
     /// Name of the client, as provided in the request.
     public let clientName: String

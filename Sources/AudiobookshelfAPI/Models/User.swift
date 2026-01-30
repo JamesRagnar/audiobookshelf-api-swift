@@ -32,13 +32,15 @@ public struct User {
     public let refreshToken: String?
 
     /// The user's media progress.
-    public let mediaProgress: [MediaProgress]
+    /// - Note: Excluded in minimal user responses (e.g., when listing all users)
+    public let mediaProgress: [MediaProgress]?
     
     /// The IDs of series to hide from the user's "Continue Series" shelf.
     public let seriesHideFromContinueListening: [String]
     
     /// The user's bookmarks.
-    public let bookmarks: [AudioBookmark]
+    /// - Note: Excluded in minimal user responses (e.g., when listing all users)
+    public let bookmarks: [AudioBookmark]?
     
     /// Whether the user's account is active.
     public let isActive: Bool

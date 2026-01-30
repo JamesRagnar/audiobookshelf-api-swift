@@ -13,41 +13,48 @@ public struct Device {
     /// Unique device identifier
     public let id: String
 
+    /// Device identifier string
+    public let deviceId: String
+
     /// User ID this device belongs to
     public let userId: String
 
-    /// Device identifier string
-    public let deviceId: String?
+    /// IP address of the device
+    public let ipAddress: String
 
-    /// Device name
-    public let deviceName: String?
+    /// Browser name (web clients only)
+    public let browserName: String?
 
-    /// Device type
-    public let deviceType: String?
+    /// Browser version (web clients only)
+    /// - Note: Populated from deviceVersion for non-Android clients
+    /// - Note: Will be null for Android clients (sdkVersion will be populated instead)
+    public let browserVersion: String?
 
-    /// Device version
-    public let deviceVersion: String?
+    /// Operating system name
+    public let osName: String?
 
-    /// Client name
-    public let clientName: String?
+    /// Operating system version
+    public let osVersion: String?
 
     /// Client version
     public let clientVersion: String?
 
-    /// Manufacturer name
+    /// Device manufacturer
     public let manufacturer: String?
 
-    /// Model name
+    /// Device model
     public let model: String?
 
-    /// SDK version
-    public let sdkVersion: Int?
+    /// Android SDK version (Android clients only)
+    /// - Note: Populated from deviceVersion for Android clients (when clientName == "Abs Android")
+    /// - Note: Will be null for non-Android clients (browserVersion will be populated instead)
+    public let sdkVersion: String?
 
-    /// Device creation timestamp
-    public let createdAt: Int
+    /// Device name (e.g., "Windows 10 Chrome", "Google Pixel 6")
+    public let deviceName: String
 
-    /// Device last update timestamp
-    public let updatedAt: Int
+    /// Client name (e.g., "Abs Web", "Abs Android")
+    public let clientName: String
 
 }
 
