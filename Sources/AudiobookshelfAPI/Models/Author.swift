@@ -13,7 +13,7 @@ public struct Author {
     public let id: String
 
     /// The ID of the library the author belongs to.
-    public let libraryId: String
+    public let libraryId: String?
 
     /// The ASIN of the author. Will be null if unknown.
     /// - Note: Author Minified - Removed Attribute
