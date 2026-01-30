@@ -134,13 +134,13 @@ extension BookMetadata: Decodable {
         self.narratorName = try container.decodeIfPresent(String.self, forKey: .narratorName)
         self.seriesName = try container.decodeIfPresent(String.self, forKey: .seriesName)
         
-        do {
-            // Author returns Series as a single object
-            let singleSeries = try container.decode(Series.self, forKey: .series)
+        // Series can be either an array or a single object
+        if let seriesArray = try? container.decode([Series].self, forKey: .series) {
+            self.series = seriesArray
+        } else if let singleSeries = try? container.decode(Series.self, forKey: .series) {
             self.series = [singleSeries]
-        } catch {
-            // It can also be an array of Series
-            self.series = try container.decodeIfPresent([Series].self, forKey: .series)
+        } else {
+            self.series = nil
         }
     }
     

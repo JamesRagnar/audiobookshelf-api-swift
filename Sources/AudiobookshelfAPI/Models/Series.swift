@@ -152,7 +152,7 @@ extension Series: Decodable {
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
         self.addedAt = try container.decode(Int.self, forKey: .addedAt)
         self.updatedAt = try container.decode(Int.self, forKey: .updatedAt)
-        self.nameIgnorePrefix = try container.decode(String.self, forKey: .nameIgnorePrefix)
+        self.nameIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefix)
         self.libraryItemIds = try container.decodeIfPresent([String].self, forKey: .libraryItemIds)
         self.numBooks = try container.decodeIfPresent(Int.self, forKey: .numBooks)
         self.nameIgnorePrefixSort = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefixSort)
