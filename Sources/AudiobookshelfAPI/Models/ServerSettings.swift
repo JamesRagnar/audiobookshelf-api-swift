@@ -280,7 +280,16 @@ extension ServerSettings: Decodable {
         allowedOrigins = try container.decodeIfPresent([String].self, forKey: .allowedOrigins)
         logLevel = try container.decode(Int.self, forKey: .logLevel)
         version = try container.decode(String.self, forKey: .version)
-        buildNumber = try container.decodeIfPresent(String.self, forKey: .buildNumber)
+
+        // buildNumber can be either a String or Int
+        if let buildString = try? container.decode(String.self, forKey: .buildNumber) {
+            buildNumber = buildString
+        } else if let buildInt = try? container.decode(Int.self, forKey: .buildNumber) {
+            buildNumber = String(buildInt)
+        } else {
+            buildNumber = nil
+        }
+
         allowIframe = try container.decodeIfPresent(Bool.self, forKey: .allowIframe)
         authOpenIDSubfolderForRedirectURLs = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDSubfolderForRedirectURLs)
     }
