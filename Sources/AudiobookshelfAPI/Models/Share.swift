@@ -20,10 +20,10 @@ public struct Share {
     public let slug: String
 
     /// The type of media being shared (book or podcastEpisode).
-    public let mediaItemType: String?
+    public let mediaItemType: String
 
     /// The ID of the media item being shared.
-    public let mediaItemId: String?
+    public let mediaItemId: String
 
     /// The time (in ms since POSIX epoch) when the share expires. Will be null if no expiration.
     public let expiresAt: Int?

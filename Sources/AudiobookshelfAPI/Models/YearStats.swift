@@ -7,62 +7,128 @@
 
 import Foundation
 
-/// Statistics for admin-level yearly overview.
-///
-/// Note: This matches the server's `getStatsForYear()` response structure
-/// from `server/utils/queries/adminStats.js`.
+/// Yearly listening statistics for a user.
 public struct YearStats {
 
-    /// Information about a top author, narrator, or genre.
-    public struct TopItem: Decodable, Sendable {
-        /// The name of the author or narrator, or the genre name.
-        public let name: String?
-        /// The genre (only present for top genres).
-        public let genre: String?
-        /// Total listening time in seconds for this item.
+    /// Top author statistics for a year.
+    public struct TopAuthor: Decodable, Sendable {
+        /// The author ID.
+        public let id: String
+        /// The author name.
+        public let name: String
+        /// Number of books listened from this author.
+        public let count: Int
+    }
+
+    /// Top genre statistics for a year.
+    public struct TopGenre: Decodable, Sendable {
+        /// The genre name.
+        public let genre: String
+        /// Number of items in this genre.
+        public let count: Int
+    }
+
+    /// Most listened narrator for a year.
+    public struct MostListenedNarrator: Decodable, Sendable {
+        /// The narrator name.
+        public let name: String
+        /// Listening time in milliseconds.
         public let time: Int
     }
 
-    /// The number of listening sessions in the year.
-    public let numListeningSessions: Int
+    /// Most listened month for a year.
+    public struct MostListenedMonth: Decodable, Sendable {
+        /// The month (1-12).
+        public let month: Int
+        /// Listening time in milliseconds.
+        public let time: Int
+    }
 
-    /// The number of books added in the year.
-    public let numBooksAdded: Int
+    /// Longest audiobook finished in a year.
+    public struct LongestAudiobook: Decodable, Sendable {
+        /// The book ID.
+        public let id: String
+        /// The book title.
+        public let title: String
+        /// Duration in seconds.
+        public let duration: Float
+    }
 
-    /// The number of authors added in the year.
-    public let numAuthorsAdded: Int
+    // MARK: - Counts
 
-    /// The total size (in bytes) of books added in the year.
-    public let totalBooksAddedSize: Int
+    /// Total number of unique items in user's library.
+    public let totalItems: Int
 
-    /// The total duration (in seconds) of books added in the year.
-    public let totalBooksAddedDuration: Int
+    /// Total number of unique authors in user's library.
+    public let totalAuthors: Int
 
-    /// Array of library item IDs for books added with covers (max 25).
-    public let booksAddedWithCovers: [String]
+    /// Total number of unique genres in user's library.
+    public let totalGenres: Int
 
-    /// The total size (in bytes) of all books at the end of the year.
-    public let totalBooksSize: Int
+    /// Number of books listened to (started or continued).
+    public let numListenedBooks: Int
 
-    /// The total duration (in seconds) of all books at the end of the year.
-    public let totalBooksDuration: Int
+    /// Number of books finished.
+    public let numFinishedBooks: Int
 
-    /// Total listening time (in seconds) for the year.
-    public let totalListeningTime: Int
+    // MARK: - Durations
 
-    /// Total number of books at the end of the year.
-    public let numBooks: Int
+    /// Total duration of book content in user's library (seconds).
+    public let totalBookDuration: Float
 
-    /// Top 3 authors by listening time.
-    public let topAuthors: [TopItem]
+    /// Total duration of podcast content in user's library (seconds).
+    public let totalPodcastDuration: Float
 
-    /// Top 3 narrators by listening time.
-    public let topNarrators: [TopItem]
+    /// Total time spent listening to books (milliseconds).
+    public let totalBookListeningTime: Int
 
-    /// Top 3 genres by listening time.
-    public let topGenres: [TopItem]
+    /// Total time spent listening to podcasts (milliseconds).
+    public let totalPodcastListeningTime: Int
+
+    // MARK: - Top Lists
+
+    /// Top authors by listening time.
+    public let topAuthors: [TopAuthor]
+
+    /// Top genres by listening time.
+    public let topGenres: [TopGenre]
+
+    // MARK: - Most Listened
+
+    /// Most listened narrator (if any).
+    public let mostListenedNarrator: MostListenedNarrator?
+
+    /// Most listened month (if any).
+    public let mostListenedMonth: MostListenedMonth?
+
+    // MARK: - Records
+
+    /// Longest audiobook finished this year (if any).
+    public let longestAudiobookFinished: LongestAudiobook?
+
+    /// Number of books with covers.
+    public let booksWithCovers: Int
+
+    /// Number of finished books with covers.
+    public let finishedBooksWithCovers: Int
 
 }
 
 extension YearStats: Decodable {}
 extension YearStats: Sendable {}
+
+// MARK: - Convenience Properties
+
+extension YearStats {
+
+    /// Most listened author (top of topAuthors array).
+    public var mostListenedAuthor: String? {
+        topAuthors.first?.name
+    }
+
+    /// Most listened genre (top of topGenres array).
+    public var mostListenedGenre: String? {
+        topGenres.first?.genre
+    }
+
+}

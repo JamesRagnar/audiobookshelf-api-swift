@@ -20,7 +20,7 @@ public struct CustomMetadataProvider {
     public let name: String
 
     /// The media type this provider is for (book or podcast).
-    public let mediaType: String?
+    public let mediaType: String
 
     /// The slug identifier for the provider (computed from id as "custom-{id}").
     public let slug: String

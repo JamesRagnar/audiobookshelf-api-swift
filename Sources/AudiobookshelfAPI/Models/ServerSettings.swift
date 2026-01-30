@@ -149,7 +149,16 @@ public struct ServerSettings {
     
     /// The server's version.
     public let version: String
-    
+
+    /// The server's build number.
+    public let buildNumber: String?
+
+    /// Whether to allow the server to be embedded in an iframe.
+    public let allowIframe: Bool?
+
+    /// Whether to use subfolder for OpenID redirect URLs.
+    public let authOpenIDSubfolderForRedirectURLs: Bool?
+
 }
 
 extension ServerSettings: Decodable {}

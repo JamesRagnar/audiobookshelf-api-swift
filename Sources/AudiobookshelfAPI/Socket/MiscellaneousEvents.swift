@@ -81,32 +81,55 @@ public struct PongEvent: SocketEvent {
 
 }
 
+/// Metadata embedding queue status update (admin only).
+public struct MetadataEmbedQueueUpdate: SocketEvent {
+
+    public static let name = "metadata_embed_queue_update"
+
+    public typealias Schema = CustomResponse
+
+}
+
+public extension MetadataEmbedQueueUpdate {
+
+    struct CustomResponse: Decodable, Sendable {
+
+        /// Number of items in the embedding queue.
+        public let queueLength: Int
+
+        /// Current item being processed.
+        public let currentItemId: String?
+
+    }
+
+}
+
 public struct LogEventObject: Decodable {
-    
+
     public enum LogName: String, Decodable {
         case debug = "DEBUG"
         case info = "INFO"
         case warn = "WARN"
         case error = "ERROR"
     }
-    
+
     public enum LogLevel: Int, Decodable {
         case debug = 1
         case info
         case warning
         case error
     }
-    
+
     /// The date and time of the log event.
     public let timestamp: String
-    
+
     /// The log event's message.
     public let message: String
-    
+
     /// The name of the log level
     public let levelName: LogName
-    
+
     /// The log event's log level.
     public let level: LogLevel
-    
+
 }
