@@ -73,7 +73,7 @@ public struct EncodeLibraryItemM4B: Interface {
 
 }
 
-extension EncodeLibraryItemM4B.Parameters {
+public extension EncodeLibraryItemM4B.Parameters {
 
     struct Body: Encodable {
 

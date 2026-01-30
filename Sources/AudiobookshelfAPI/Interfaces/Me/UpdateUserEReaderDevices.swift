@@ -49,7 +49,7 @@ public struct UpdateUserEReaderDevices: Interface {
     ]
 }
 
-extension UpdateUserEReaderDevices.Parameters {
+public extension UpdateUserEReaderDevices.Parameters {
 
     struct Body: Encodable {
         let ereaderDevices: [EReaderDevice]

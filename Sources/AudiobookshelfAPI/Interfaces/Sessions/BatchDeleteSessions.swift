@@ -65,7 +65,7 @@ public struct BatchDeleteSessions: Interface {
 
 }
 
-extension BatchDeleteSessions.Parameters {
+public extension BatchDeleteSessions.Parameters {
 
     struct Body: Encodable {
 

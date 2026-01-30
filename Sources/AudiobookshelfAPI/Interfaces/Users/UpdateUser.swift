@@ -81,7 +81,7 @@ public struct UpdateUser: Interface {
 
 }
 
-extension UpdateUser.Parameters {
+public extension UpdateUser.Parameters {
 
     struct Body: Encodable {
 

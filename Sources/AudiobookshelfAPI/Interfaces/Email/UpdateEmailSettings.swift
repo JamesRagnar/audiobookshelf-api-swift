@@ -85,7 +85,7 @@ public struct UpdateEmailSettings: Interface {
 
 }
 
-extension UpdateEmailSettings.Parameters {
+public extension UpdateEmailSettings.Parameters {
 
     struct Body: Encodable {
 

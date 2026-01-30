@@ -80,7 +80,7 @@ public struct CreatePodcastsFromOPML: Interface {
 
 }
 
-extension CreatePodcastsFromOPML.Parameters {
+public extension CreatePodcastsFromOPML.Parameters {
 
     struct Body: Encodable {
 

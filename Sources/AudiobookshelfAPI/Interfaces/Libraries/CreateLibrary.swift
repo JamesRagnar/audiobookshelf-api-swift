@@ -75,7 +75,7 @@ public struct CreateLibrary: Interface {
 
 }
 
-extension CreateLibrary.Parameters {
+public extension CreateLibrary.Parameters {
 
     struct Body: Encodable {
 

@@ -15,19 +15,7 @@ public struct UpdatePlaylist: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let name: String
-            
-            let description: String?
-            
-            let coverPath: String?
-            
-            // TODO: Verify items should be included
-            // let items: [Item]?
-        }
-        
+
         public let method: RequestMethod = .patch
 
         public let path: String
@@ -89,5 +77,22 @@ public struct UpdatePlaylist: Interface {
         404: .failure(AudiobookshelfError.notFound),
         
     ]
-    
+
+}
+
+public extension UpdatePlaylist.Parameters {
+
+    struct Body: Encodable {
+
+        let name: String
+
+        let description: String?
+
+        let coverPath: String?
+
+        // TODO: Verify items should be included
+        // let items: [Item]?
+
+    }
+
 }

@@ -61,7 +61,7 @@ public struct UpdateBackupPath: Interface {
 
 }
 
-extension UpdateBackupPath.Parameters {
+public extension UpdateBackupPath.Parameters {
 
     struct Body: Encodable {
 

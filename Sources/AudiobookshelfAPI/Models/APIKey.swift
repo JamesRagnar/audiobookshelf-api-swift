@@ -2,7 +2,7 @@
 //  APIKey.swift
 //  AudiobookshelfAPI
 //
-//  Created by Claude on 2026-01-28.
+//  Created by James Harquail on 2026-01-28.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ import Foundation
 public struct APIKey {
 
     /// User permissions structure for API keys.
-    public struct Permissions: Codable, Sendable {
+    public struct Permissions {
         public let download: Bool
         public let update: Bool
         public let delete: Bool
@@ -64,3 +64,6 @@ public struct APIKey {
 
 extension APIKey: Decodable {}
 extension APIKey: Sendable {}
+
+extension APIKey.Permissions: Codable {}
+extension APIKey.Permissions: Sendable {}

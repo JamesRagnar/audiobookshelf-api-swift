@@ -11,7 +11,7 @@ import Foundation
 public struct YearStats {
 
     /// Top author statistics for a year.
-    public struct TopAuthor: Decodable, Sendable {
+    public struct TopAuthor {
         /// The author ID.
         public let id: String
         /// The author name.
@@ -21,7 +21,7 @@ public struct YearStats {
     }
 
     /// Top genre statistics for a year.
-    public struct TopGenre: Decodable, Sendable {
+    public struct TopGenre {
         /// The genre name.
         public let genre: String
         /// Number of items in this genre.
@@ -29,7 +29,7 @@ public struct YearStats {
     }
 
     /// Most listened narrator for a year.
-    public struct MostListenedNarrator: Decodable, Sendable {
+    public struct MostListenedNarrator {
         /// The narrator name.
         public let name: String
         /// Listening time in milliseconds.
@@ -37,7 +37,7 @@ public struct YearStats {
     }
 
     /// Most listened month for a year.
-    public struct MostListenedMonth: Decodable, Sendable {
+    public struct MostListenedMonth {
         /// The month (1-12).
         public let month: Int
         /// Listening time in milliseconds.
@@ -45,7 +45,7 @@ public struct YearStats {
     }
 
     /// Longest audiobook finished in a year.
-    public struct LongestAudiobook: Decodable, Sendable {
+    public struct LongestAudiobook {
         /// The book ID.
         public let id: String
         /// The book title.
@@ -116,3 +116,18 @@ public struct YearStats {
 
 extension YearStats: Decodable {}
 extension YearStats: Sendable {}
+
+extension YearStats.TopAuthor: Decodable {}
+extension YearStats.TopAuthor: Sendable {}
+
+extension YearStats.TopGenre: Decodable {}
+extension YearStats.TopGenre: Sendable {}
+
+extension YearStats.MostListenedNarrator: Decodable {}
+extension YearStats.MostListenedNarrator: Sendable {}
+
+extension YearStats.MostListenedMonth: Decodable {}
+extension YearStats.MostListenedMonth: Sendable {}
+
+extension YearStats.LongestAudiobook: Decodable {}
+extension YearStats.LongestAudiobook: Sendable {}

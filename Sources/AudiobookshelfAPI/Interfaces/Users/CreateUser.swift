@@ -73,7 +73,7 @@ public struct CreateUser: Interface {
 
 }
 
-extension CreateUser.Parameters {
+public extension CreateUser.Parameters {
 
     struct Body: Encodable {
 

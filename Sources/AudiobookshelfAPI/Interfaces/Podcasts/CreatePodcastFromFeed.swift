@@ -69,7 +69,7 @@ public struct CreatePodcastFromFeed: Interface {
     ]
 }
 
-extension CreatePodcastFromFeed.Parameters {
+public extension CreatePodcastFromFeed.Parameters {
 
     struct Body: Encodable {
         let rssFeed: String

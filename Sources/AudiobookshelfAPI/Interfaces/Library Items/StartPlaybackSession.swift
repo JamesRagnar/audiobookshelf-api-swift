@@ -73,7 +73,7 @@ public struct StartPlaybackSession: Interface {
     ]
 }
 
-extension StartPlaybackSession.Parameters {
+public extension StartPlaybackSession.Parameters {
 
     struct Body: Encodable {
         let deviceInfo: DeviceInfo?
@@ -83,7 +83,7 @@ extension StartPlaybackSession.Parameters {
         let supportedMimeTypes: [String]?
     }
 
-    public struct DeviceInfo: Encodable {
+    struct DeviceInfo: Encodable {
         public let deviceId: String?
         public let clientVersion: String?
         public let deviceName: String?

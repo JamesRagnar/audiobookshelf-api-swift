@@ -33,13 +33,7 @@ public struct PlaylistBatchRemoveItems: Interface {
             }
 
         }
-        
-        struct Body: Encodable {
-            
-            let items: [Item]
 
-        }
-        
         public let method: RequestMethod = .post
 
         public let path: String
@@ -101,6 +95,16 @@ public struct PlaylistBatchRemoveItems: Interface {
         500: .failure(AudiobookshelfError.internalError)
         
     ]
-    
+
+}
+
+public extension PlaylistBatchRemoveItems.Parameters {
+
+    struct Body: Encodable {
+
+        let items: [Item]
+
+    }
+
 }
 

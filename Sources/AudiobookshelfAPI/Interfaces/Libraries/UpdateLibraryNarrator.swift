@@ -81,7 +81,7 @@ public struct UpdateLibraryNarrator: Interface {
 
 }
 
-extension UpdateLibraryNarrator.Parameters {
+public extension UpdateLibraryNarrator.Parameters {
 
     struct Body: Encodable {
 

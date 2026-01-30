@@ -58,7 +58,7 @@ public struct BatchGetLibraryItems: Interface {
 
 }
 
-extension BatchGetLibraryItems.Parameters {
+public extension BatchGetLibraryItems.Parameters {
 
     struct Body: Encodable {
 

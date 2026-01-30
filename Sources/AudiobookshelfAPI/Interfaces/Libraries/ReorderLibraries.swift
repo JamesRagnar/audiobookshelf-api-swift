@@ -76,7 +76,7 @@ public extension ReorderLibraries {
 
 }
 
-extension ReorderLibraries.Parameters {
+public extension ReorderLibraries.Parameters {
 
     struct Body: Encodable {
 

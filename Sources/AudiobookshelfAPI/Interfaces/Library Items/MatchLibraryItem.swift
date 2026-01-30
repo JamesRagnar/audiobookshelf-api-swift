@@ -77,7 +77,7 @@ public struct MatchLibraryItem: Interface {
 
 }
 
-extension MatchLibraryItem.Parameters {
+public extension MatchLibraryItem.Parameters {
 
     struct Body: Encodable {
 

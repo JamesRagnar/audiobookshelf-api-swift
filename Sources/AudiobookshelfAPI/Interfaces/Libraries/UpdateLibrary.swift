@@ -79,7 +79,7 @@ public struct UpdateLibrary: Interface {
 
 }
 
-extension UpdateLibrary.Parameters {
+public extension UpdateLibrary.Parameters {
 
     struct Body: Encodable {
 

@@ -2,7 +2,7 @@
 //  Device.swift
 //  AudiobookshelfAPI
 //
-//  Created by Claude on 2026-01-28.
+//  Created by James Harquail on 2026-01-28.
 //
 
 import Foundation

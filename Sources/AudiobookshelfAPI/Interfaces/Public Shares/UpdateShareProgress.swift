@@ -68,7 +68,7 @@ public struct UpdateShareProgress: Interface {
 
 }
 
-extension UpdateShareProgress.Parameters {
+public extension UpdateShareProgress.Parameters {
 
     struct Body: Encodable {
 

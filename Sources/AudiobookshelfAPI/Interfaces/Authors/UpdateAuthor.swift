@@ -75,7 +75,7 @@ public struct UpdateAuthor: Interface {
 
 }
 
-extension UpdateAuthor.Parameters {
+public extension UpdateAuthor.Parameters {
 
     struct Body: Encodable {
 

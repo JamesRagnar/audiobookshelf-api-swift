@@ -65,7 +65,7 @@ public struct AddCustomMetadataProvider: Interface {
 
 }
 
-extension AddCustomMetadataProvider.Parameters {
+public extension AddCustomMetadataProvider.Parameters {
 
     struct Body: Encodable {
 

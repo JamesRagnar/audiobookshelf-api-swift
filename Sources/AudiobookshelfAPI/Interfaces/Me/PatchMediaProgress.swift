@@ -108,7 +108,7 @@ public struct PatchMediaProgress: Interface {
 
 }
 
-extension PatchMediaProgress.Parameters {
+public extension PatchMediaProgress.Parameters {
 
     struct Body: Encodable {
 

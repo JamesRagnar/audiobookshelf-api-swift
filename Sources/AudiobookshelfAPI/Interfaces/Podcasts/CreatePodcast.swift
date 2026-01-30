@@ -69,7 +69,7 @@ public struct CreatePodcast: Interface {
     ]
 }
 
-extension CreatePodcast.Parameters {
+public extension CreatePodcast.Parameters {
 
     struct Body: Encodable {
         let libraryId: String
@@ -82,7 +82,7 @@ extension CreatePodcast.Parameters {
         let metadata: PodcastMetadataPayload
     }
 
-    public struct PodcastMetadataPayload: Encodable {
+    struct PodcastMetadataPayload: Encodable {
         let title: String?
         let author: String?
         let description: String?

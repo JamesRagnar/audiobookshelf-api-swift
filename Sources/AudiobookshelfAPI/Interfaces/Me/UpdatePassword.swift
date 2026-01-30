@@ -58,7 +58,7 @@ public struct UpdatePassword: Interface {
     ]
 }
 
-extension UpdatePassword.Parameters {
+public extension UpdatePassword.Parameters {
 
     struct Body: Encodable {
         let password: String?

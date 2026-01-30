@@ -10,29 +10,29 @@ import RagnarNetworking
 
 /// Successfully authenticated the socket. Response to auth client event.
 public struct InitEvent: SocketEvent {
-    
+
     public static let name = "init"
-    
-    public typealias Schema = InitEventObject
+
+    public typealias Schema = CustomResponse
 
 }
 
-extension InitEvent {
-    
-    public struct InitEventObject: Decodable {
-        
+public extension InitEvent {
+
+    struct CustomResponse: Decodable {
+
         /// The ID of the authenticated user.
         public let userId: String
-        
+
         /// The username of the authenticated user.
         public let username: String
-        
+
         /// The IDs of libraries currently being scanned.
         public let librariesScanning: [String]
-        
+
         /// Users that are currently online. Will only exist when the authenticated user is an admin.
         public let usersOnline: [User]?
-        
+
     }
 }
 

@@ -66,7 +66,7 @@ public struct MatchAuthor: Interface {
     ]
 }
 
-extension MatchAuthor.Parameters {
+public extension MatchAuthor.Parameters {
 
     struct Body: Encodable {
         let q: String?

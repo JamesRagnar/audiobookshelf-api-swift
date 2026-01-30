@@ -61,7 +61,7 @@ public struct BatchEmbedMetadata: Interface {
 
 }
 
-extension BatchEmbedMetadata.Parameters {
+public extension BatchEmbedMetadata.Parameters {
 
     struct Body: Encodable {
 

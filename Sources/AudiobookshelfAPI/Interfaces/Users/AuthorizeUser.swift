@@ -59,7 +59,7 @@ public struct AuthorizeUser: Interface {
 
 }
 
-extension AuthorizeUser.Parameters {
+public extension AuthorizeUser.Parameters {
 
     struct Body: Encodable {
 

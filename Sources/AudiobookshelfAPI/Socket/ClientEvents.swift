@@ -64,11 +64,11 @@ public struct MessageAllUsersEvent: SocketEvent {
     
 }
 
-extension MessageAllUsersEvent {
-    
-    public struct Body: Codable {
-        
-        let message: String
+public extension MessageAllUsersEvent {
+
+    struct Body: Codable {
+
+        public let message: String
 
     }
 

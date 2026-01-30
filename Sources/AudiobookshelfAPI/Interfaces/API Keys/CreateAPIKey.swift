@@ -61,7 +61,7 @@ public struct CreateAPIKey: Interface {
 
 }
 
-extension CreateAPIKey.Parameters {
+public extension CreateAPIKey.Parameters {
 
     struct Body: Encodable {
 

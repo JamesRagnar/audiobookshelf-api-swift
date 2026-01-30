@@ -130,17 +130,17 @@ public struct LibraryItem {
 }
 
 public extension LibraryItem {
-    
-    enum MediaType: String, Decodable, Sendable {
+
+    enum MediaType: String {
         case book
         case podcast
     }
-    
-    enum Media: Sendable {
+
+    enum Media {
         case book(Book)
         case podcast(Podcast)
     }
-    
+
 }
 
 extension LibraryItem: Decodable {
@@ -223,3 +223,8 @@ extension LibraryItem: Decodable {
 }
 
 extension LibraryItem: Sendable {}
+
+extension LibraryItem.MediaType: Decodable {}
+extension LibraryItem.MediaType: Sendable {}
+
+extension LibraryItem.Media: Sendable {}

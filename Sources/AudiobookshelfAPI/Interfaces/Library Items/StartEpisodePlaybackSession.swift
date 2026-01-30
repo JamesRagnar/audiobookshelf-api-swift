@@ -77,7 +77,7 @@ public struct StartEpisodePlaybackSession: Interface {
     ]
 }
 
-extension StartEpisodePlaybackSession.Parameters {
+public extension StartEpisodePlaybackSession.Parameters {
 
     struct Body: Encodable {
         let deviceInfo: StartPlaybackSession.Parameters.DeviceInfo?

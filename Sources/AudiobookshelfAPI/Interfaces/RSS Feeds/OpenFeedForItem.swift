@@ -96,7 +96,7 @@ public struct OpenFeedForItem: Interface {
 
 }
 
-extension OpenFeedForItem.Parameters {
+public extension OpenFeedForItem.Parameters {
 
     struct Body: Encodable {
 

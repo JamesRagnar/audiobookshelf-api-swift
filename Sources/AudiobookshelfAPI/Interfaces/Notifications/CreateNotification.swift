@@ -73,7 +73,7 @@ public struct CreateNotification: Interface {
 
 }
 
-extension CreateNotification.Parameters {
+public extension CreateNotification.Parameters {
 
     struct Body: Encodable {
 

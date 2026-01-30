@@ -74,7 +74,7 @@ public struct UploadAuthorImage: Interface {
 
 }
 
-extension UploadAuthorImage.Parameters {
+public extension UploadAuthorImage.Parameters {
 
     struct Body: Encodable {
 

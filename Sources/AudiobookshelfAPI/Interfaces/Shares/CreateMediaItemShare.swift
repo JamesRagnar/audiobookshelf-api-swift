@@ -109,7 +109,7 @@ public struct CreateMediaItemShare: Interface {
 
 }
 
-extension CreateMediaItemShare.Parameters {
+public extension CreateMediaItemShare.Parameters {
 
     struct Body: Encodable {
 

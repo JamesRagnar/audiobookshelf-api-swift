@@ -102,7 +102,7 @@ extension PlaybackSession: Sendable {}
 
 extension PlaybackSession {
 
-    public enum MediaType: String, Decodable, Sendable {
+    public enum MediaType: String {
 
         case book
 
@@ -110,7 +110,7 @@ extension PlaybackSession {
 
     }
 
-    public enum PlayMethod: Int, Decodable, Sendable {
+    public enum PlayMethod: Int {
 
         case directPlay = 0
 
@@ -125,8 +125,18 @@ extension PlaybackSession {
     /// Placeholder for future video playback support.
     /// The audiobookshelf server does not currently support video media types.
     /// This struct is intentionally empty and will always be null in API responses.
-    public struct VideoTrack: Decodable, Sendable {
+    public struct VideoTrack {
 
     }
 
 }
+
+extension PlaybackSession.MediaType: Decodable {}
+extension PlaybackSession.MediaType: Sendable {}
+
+extension PlaybackSession.PlayMethod: Decodable {}
+extension PlaybackSession.PlayMethod: Sendable {}
+
+extension PlaybackSession.VideoTrack: Decodable {}
+extension PlaybackSession.VideoTrack: Sendable {}
+

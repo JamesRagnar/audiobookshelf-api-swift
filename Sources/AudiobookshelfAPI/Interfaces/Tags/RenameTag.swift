@@ -73,7 +73,7 @@ public struct RenameTag: Interface {
 
 }
 
-extension RenameTag.Parameters {
+public extension RenameTag.Parameters {
 
     struct Body: Encodable {
 

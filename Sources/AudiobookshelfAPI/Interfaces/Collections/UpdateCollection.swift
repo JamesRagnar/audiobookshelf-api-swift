@@ -14,19 +14,7 @@ public struct UpdateCollection: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let libraryID: String
-            
-            let name: String
-            
-            let description: String?
-            
-            let books: [String]?
-            
-        }
-        
+
         public let method: RequestMethod = .patch
 
         public let path: String
@@ -92,6 +80,22 @@ public struct UpdateCollection: Interface {
         404: .failure(AudiobookshelfError.notFound),
         
     ]
-    
+
+}
+
+public extension UpdateCollection.Parameters {
+
+    struct Body: Encodable {
+
+        let libraryID: String
+
+        let name: String
+
+        let description: String?
+
+        let books: [String]?
+
+    }
+
 }
 

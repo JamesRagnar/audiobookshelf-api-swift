@@ -61,7 +61,7 @@ public struct UpdateEReaderDevices: Interface {
 
 }
 
-extension UpdateEReaderDevices.Parameters {
+public extension UpdateEReaderDevices.Parameters {
 
     struct Body: Encodable {
 

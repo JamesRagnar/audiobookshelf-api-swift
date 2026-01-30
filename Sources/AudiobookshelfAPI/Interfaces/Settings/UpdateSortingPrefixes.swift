@@ -67,7 +67,7 @@ public struct UpdateSortingPrefixes: Interface {
 
 }
 
-extension UpdateSortingPrefixes.Parameters {
+public extension UpdateSortingPrefixes.Parameters {
 
     struct Body: Encodable {
 

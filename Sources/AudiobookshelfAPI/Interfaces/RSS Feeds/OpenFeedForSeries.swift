@@ -92,7 +92,7 @@ public struct OpenFeedForSeries: Interface {
 
 }
 
-extension OpenFeedForSeries.Parameters {
+public extension OpenFeedForSeries.Parameters {
 
     struct Body: Encodable {
 

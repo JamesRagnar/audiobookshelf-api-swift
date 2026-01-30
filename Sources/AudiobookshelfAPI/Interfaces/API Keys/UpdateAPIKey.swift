@@ -67,7 +67,7 @@ public struct UpdateAPIKey: Interface {
 
 }
 
-extension UpdateAPIKey.Parameters {
+public extension UpdateAPIKey.Parameters {
 
     struct Body: Encodable {
 

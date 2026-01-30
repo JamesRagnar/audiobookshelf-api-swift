@@ -73,7 +73,7 @@ public struct RenameGenre: Interface {
 
 }
 
-extension RenameGenre.Parameters {
+public extension RenameGenre.Parameters {
 
     struct Body: Encodable {
 

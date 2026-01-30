@@ -48,16 +48,19 @@ public struct Library {
 }
 
 public extension Library {
-    
-    enum MediaType: String, Decodable, Sendable {
-        
+
+    enum MediaType: String {
+
         case book
-        
+
         case podcast
-        
+
     }
 
 }
 
 extension Library: Decodable {}
 extension Library: Sendable {}
+
+extension Library.MediaType: Decodable {}
+extension Library.MediaType: Sendable {}

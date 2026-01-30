@@ -91,7 +91,7 @@ public struct UpdatePodcastEpisode: Interface {
 
 }
 
-extension UpdatePodcastEpisode.Parameters {
+public extension UpdatePodcastEpisode.Parameters {
 
     struct Body: Encodable {
         let title: String?
@@ -105,12 +105,16 @@ extension UpdatePodcastEpisode.Parameters {
         let publishedAt: Int?
     }
 
-    public struct EnclosurePayload: Encodable {
+    struct EnclosurePayload: Encodable {
         let url: String?
         let type: String?
         let length: String?
 
-        public init(url: String? = nil, type: String? = nil, length: String? = nil) {
+        public init(
+            url: String? = nil,
+            type: String? = nil,
+            length: String? = nil
+        ) {
             self.url = url
             self.type = type
             self.length = length

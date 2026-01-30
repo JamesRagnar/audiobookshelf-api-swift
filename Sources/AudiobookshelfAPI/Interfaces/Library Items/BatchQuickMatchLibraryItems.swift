@@ -78,7 +78,7 @@ extension BatchQuickMatchLibraryItems {
 
 }
 
-extension BatchQuickMatchLibraryItems.Parameters {
+public extension BatchQuickMatchLibraryItems.Parameters {
 
     struct Body: Encodable {
 

@@ -65,7 +65,7 @@ public struct ParseOPML: Interface {
 
 }
 
-extension ParseOPML.Parameters {
+public extension ParseOPML.Parameters {
 
     struct Body: Encodable {
 

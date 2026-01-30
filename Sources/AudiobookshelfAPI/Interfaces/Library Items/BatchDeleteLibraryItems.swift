@@ -50,7 +50,7 @@ public struct BatchDeleteLibraryItems: Interface {
 
 }
 
-extension BatchDeleteLibraryItems.Parameters {
+public extension BatchDeleteLibraryItems.Parameters {
 
     struct Body: Encodable {
 

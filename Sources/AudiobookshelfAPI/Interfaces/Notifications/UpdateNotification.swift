@@ -77,7 +77,7 @@ public struct UpdateNotification: Interface {
 
 }
 
-extension UpdateNotification.Parameters {
+public extension UpdateNotification.Parameters {
 
     struct Body: Encodable {
 

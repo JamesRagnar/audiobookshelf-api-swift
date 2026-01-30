@@ -14,15 +14,7 @@ public struct PlaylistAddItem: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let libraryItemId: String
-            
-            let episodeId: String?
-            
-        }
-        
+
         public let method: RequestMethod = .post
 
         public let path: String
@@ -86,6 +78,18 @@ public struct PlaylistAddItem: Interface {
         404: .failure(AudiobookshelfError.notFound),
         
     ]
-    
+
+}
+
+public extension PlaylistAddItem.Parameters {
+
+    struct Body: Encodable {
+
+        let libraryItemId: String
+
+        let episodeId: String?
+
+    }
+
 }
 

@@ -77,7 +77,7 @@ public struct CheckPathExists: Interface {
 
 }
 
-extension CheckPathExists.Parameters {
+public extension CheckPathExists.Parameters {
 
     struct Body: Encodable {
 

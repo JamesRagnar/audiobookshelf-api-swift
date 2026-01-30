@@ -68,12 +68,14 @@ public struct MediaProgress {
 }
 
 extension MediaProgress {
-    
-    public enum Media: Sendable {
+
+    public enum Media {
         case book(Book)
         case podcast(Podcast)
     }
 }
+
+extension MediaProgress.Media: Sendable {}
 
 extension MediaProgress: Decodable {
 

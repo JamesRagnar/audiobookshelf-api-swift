@@ -64,7 +64,7 @@ public struct UpdateLibraryItemTracks: Interface {
 
 }
 
-extension UpdateLibraryItemTracks.Parameters {
+public extension UpdateLibraryItemTracks.Parameters {
 
     struct Body: Encodable {
 

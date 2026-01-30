@@ -64,20 +64,24 @@ public struct User {
 }
 
 extension User {
-    
-    public enum UserType: String, Decodable, Encodable, Sendable {
-        
+
+    public enum UserType: String {
+
         case root
-        
+
         case guest
-        
+
         case user
-        
+
         case admin
-        
+
     }
 }
 
 extension User: Sendable {}
 extension User: Decodable {}
+
+extension User.UserType: Decodable {}
+extension User.UserType: Encodable {}
+extension User.UserType: Sendable {}
 

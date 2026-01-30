@@ -67,7 +67,7 @@ public struct EmbedLibraryItemMetadata: Interface {
 
 }
 
-extension EmbedLibraryItemMetadata.Parameters {
+public extension EmbedLibraryItemMetadata.Parameters {
 
     struct Body: Encodable {
 

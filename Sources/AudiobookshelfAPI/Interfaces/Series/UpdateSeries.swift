@@ -69,7 +69,7 @@ public struct UpdateSeries: Interface {
 
 }
 
-extension UpdateSeries.Parameters {
+public extension UpdateSeries.Parameters {
 
     struct Body: Encodable {
 

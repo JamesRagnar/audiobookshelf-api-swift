@@ -92,7 +92,7 @@ public struct OpenFeedForCollection: Interface {
 
 }
 
-extension OpenFeedForCollection.Parameters {
+public extension OpenFeedForCollection.Parameters {
 
     struct Body: Encodable {
 

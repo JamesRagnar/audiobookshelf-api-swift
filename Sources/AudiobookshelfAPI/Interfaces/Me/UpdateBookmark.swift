@@ -58,7 +58,7 @@ public struct UpdateBookmark: Interface {
 
 }
 
-extension UpdateBookmark.Parameters {
+public extension UpdateBookmark.Parameters {
 
     struct Body: Encodable {
 

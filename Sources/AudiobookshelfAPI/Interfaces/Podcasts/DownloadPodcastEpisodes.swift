@@ -123,7 +123,7 @@ extension DownloadPodcastEpisodes {
 
 }
 
-extension DownloadPodcastEpisodes.Parameters {
+public extension DownloadPodcastEpisodes.Parameters {
 
     struct Body: Encodable {
 

@@ -75,7 +75,7 @@ public struct CollectionAddBook: Interface {
     
 }
 
-extension CollectionAddBook.Parameters {
+public extension CollectionAddBook.Parameters {
 
     struct Body: Encodable {
 

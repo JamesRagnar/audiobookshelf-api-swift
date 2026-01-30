@@ -76,7 +76,7 @@ public struct UpdateWatcher: Interface {
 
 }
 
-extension UpdateWatcher.Parameters {
+public extension UpdateWatcher.Parameters {
 
     struct Body: Encodable {
 

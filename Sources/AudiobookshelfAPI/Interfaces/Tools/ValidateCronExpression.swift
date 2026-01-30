@@ -63,7 +63,7 @@ public struct ValidateCronExpression: Interface {
 
 }
 
-extension ValidateCronExpression.Parameters {
+public extension ValidateCronExpression.Parameters {
 
     struct Body: Encodable {
 

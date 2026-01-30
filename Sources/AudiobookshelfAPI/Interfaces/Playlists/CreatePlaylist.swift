@@ -14,21 +14,7 @@ public struct CreatePlaylist: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let libraryId: String
-            
-            let name: String
-            
-            let description: String?
-            
-            let coverPath: String?
-            
-            let items: [Item]?
-            
-        }
-        
+
         /// An Encodable version of PlaylistItem,
         /// including only the parameters required to add the Item to a Playlist
         public struct Item: Encodable {
@@ -108,5 +94,23 @@ public struct CreatePlaylist: Interface {
         400: .failure(AudiobookshelfError.badRequest),
         
     ]
-    
+
+}
+
+public extension CreatePlaylist.Parameters {
+
+    struct Body: Encodable {
+
+        let libraryId: String
+
+        let name: String
+
+        let description: String?
+
+        let coverPath: String?
+
+        let items: [Item]?
+
+    }
+
 }

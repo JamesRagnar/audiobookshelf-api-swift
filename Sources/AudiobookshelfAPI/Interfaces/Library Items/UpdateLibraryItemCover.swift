@@ -64,7 +64,7 @@ public struct UpdateLibraryItemCover: Interface {
 
 }
 
-extension UpdateLibraryItemCover.Parameters {
+public extension UpdateLibraryItemCover.Parameters {
 
     struct Body: Encodable {
 

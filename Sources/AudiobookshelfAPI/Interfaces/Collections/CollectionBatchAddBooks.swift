@@ -14,13 +14,7 @@ public struct CollectionBatchAddBooks: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let books: [String]
-            
-        }
-        
+
         public let method: RequestMethod = .post
 
         public let path: String
@@ -77,6 +71,16 @@ public struct CollectionBatchAddBooks: Interface {
         500: .failure(AudiobookshelfError.internalError),
         
     ]
-    
+
+}
+
+public extension CollectionBatchAddBooks.Parameters {
+
+    struct Body: Encodable {
+
+        let books: [String]
+
+    }
+
 }
 

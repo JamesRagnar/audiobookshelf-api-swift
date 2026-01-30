@@ -72,7 +72,7 @@ public struct UpdateEbookFileStatus: Interface {
 
 }
 
-extension UpdateEbookFileStatus.Parameters {
+public extension UpdateEbookFileStatus.Parameters {
 
     struct Body: Encodable {
 

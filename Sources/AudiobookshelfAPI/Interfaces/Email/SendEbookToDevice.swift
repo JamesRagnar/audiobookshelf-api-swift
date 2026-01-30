@@ -67,7 +67,7 @@ public struct SendEbookToDevice: Interface {
 
 }
 
-extension SendEbookToDevice.Parameters {
+public extension SendEbookToDevice.Parameters {
 
     struct Body: Encodable {
 
