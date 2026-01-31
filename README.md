@@ -41,18 +41,19 @@ Because this package mirrors the server API closely (like an OpenAPI-generated c
 ```swift
 import AudiobookshelfAPI
 
-let client = AudiobookshelfClient(
+let server = ServerConfiguration(
     baseURL: URL(string: "http://localhost:13378")!, 
     token: "your_api_token"
 )
 
-Task {
-    do {
-        let books = try await client.fetchBooks()
-        print(books)
-    } catch {
-        print("Error fetching books:", error)
-    }
+do {
+    let item = try await URLSession().dataTask(
+        GetLibraryItem.self,
+        .init(itemID: "itemID"),
+        server
+    )
+} catch {
+    print("Error fetching item:", error)
 }
 ```
 
