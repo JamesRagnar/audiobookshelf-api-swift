@@ -1,12 +1,13 @@
 {
-  "originHash" : "7d53f0c23808984472aeb53066749f25a9f9e6a761ecb2f61eb79fc52326717b",
+  "originHash" : "6659c6f2f9f32599501251f6e230a198328d2d452123d7859f696e5ef772bdff",
   "pins" : [
     {
       "identity" : "ragnarnetworking",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JamesRagnar/RagnarNetworking",
       "state" : {
-        "revision" : "3e25b8305cbc80356b0398f8861cb0c7ec2fa562"
+        "revision" : "06dc6fc2d7565b855d8be89b76261e29a4793816",
+        "version" : "0.1.0"
       }
     },
     {
