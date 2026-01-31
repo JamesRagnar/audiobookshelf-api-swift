@@ -50,13 +50,23 @@ public struct GetLibrary: Interface {
     }
     
     // MARK: Response
-    
-    public struct Response: Decodable, Sendable {
-        
-        // TODO: Can be Library or special response body
-        
+
+    public struct Response: Sendable {
+
+        /// The library object. Always present in both response modes.
+        public let library: Library
+
+        /// Filter data for the library. Only present when requested with `?include=filterdata`.
+        public let filterdata: FilterData?
+
+        /// Number of issues in the library. Only present when requested with `?include=filterdata`.
+        public let issues: Int?
+
+        /// Number of user playlists in this library. Only present when requested with `?include=filterdata`.
+        public let numUserPlaylists: Int?
+
     }
-    
+
     public enum AudiobookshelfError: Error {
         
         ///
@@ -71,5 +81,35 @@ public struct GetLibrary: Interface {
         404: .failure(AudiobookshelfError.notFound)
         
     ]
-    
+
+}
+
+extension GetLibrary.Response: Decodable {
+
+    enum CodingKeys: String, CodingKey {
+        case library
+        case filterdata
+        case issues
+        case numUserPlaylists
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Check if this is the expanded response with filterdata
+        if container.contains(.filterdata) {
+            // Mode B: Wrapper response with filterdata
+            self.filterdata = try container.decode(FilterData.self, forKey: .filterdata)
+            self.issues = try container.decode(Int.self, forKey: .issues)
+            self.numUserPlaylists = try container.decode(Int.self, forKey: .numUserPlaylists)
+            self.library = try container.decode(Library.self, forKey: .library)
+        } else {
+            // Mode A: Direct library response
+            self.filterdata = nil
+            self.issues = nil
+            self.numUserPlaylists = nil
+            self.library = try Library(from: decoder)
+        }
+    }
+
 }

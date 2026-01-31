@@ -6,7 +6,7 @@ An overview of Interface structure, components, and exceptions.
 
 ## Overview
 
-The Interface protocol is defined in RagnarNetworking, and provides a structure of defining the requirements of a network request, and the expected response cases and types.
+The Interface protocol is defined in RagnarNetworking, and provides a structure of defining the requirements of a network request along with the expected response cases and types.
 
 ```swift
 // Include a comment defining the operation performed by the request
@@ -35,7 +35,8 @@ public struct MyInterface: Interface {
         // and are not included in the Parameters initialization.
         public let authentication: AuthenticationType = .bearer
 
-        // Request requirements are defined here, often header, path, or body components
+        // Request requirements are defined here, often header, path, or body components.
+        // Document each parameter type and call out exceptions or default values.
         public init(
         	someID: String
         ) {
@@ -168,7 +169,7 @@ public extension MyInterface {
 }
 ```
 
-Responses may also be a raw response type, one of String, Data
+Responses may also be a raw response type, one of String or Data.
 
 ## Design Considerations
 

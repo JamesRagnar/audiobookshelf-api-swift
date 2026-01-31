@@ -12,14 +12,16 @@ let package = Package(
     products: [
         .library(
             name: "AudiobookshelfAPI",
-            targets: ["AudiobookshelfAPI"]
+            targets: [
+                "AudiobookshelfAPI",
+            ]
         ),
     ],
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking",
             branch: "main"
-        )
+        ),
     ],
     targets: [
         .target(
@@ -28,12 +30,13 @@ let package = Package(
                 .product(
                     name: "RagnarNetworking",
                     package: "RagnarNetworking"
-                )
+                ),
             ]
         ),
         .testTarget(
             name: "AudiobookshelfAPITests",
             dependencies: [
+                "AudiobookshelfAPI",
             ]
         ),
     ]

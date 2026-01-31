@@ -35,18 +35,21 @@ public struct UpdatePlaylist: Interface {
         ///   - name: The playlist's name.
         ///   - description: The playlist's description.
         ///   - coverPath: The path of the playlist's cover.
+        ///   - items: Optional array of playlist items for reordering. Must contain ALL existing items in the new order.
         public init(
             playlistID: String,
             name: String,
             description: String? = nil,
-            coverPath: String? = nil
+            coverPath: String? = nil,
+            items: [PlaylistItem]? = nil
         ) throws {
             self.path = "/api/playlists/\(playlistID)"
             self.body = try JSONEncoder().encode(
                 Body(
                     name: name,
                     description: description,
-                    coverPath: coverPath
+                    coverPath: coverPath,
+                    items: items?.map { Item(libraryItemId: $0.libraryItemId, episodeId: $0.episodeId) }
                 )
             )
         }
@@ -90,8 +93,21 @@ public extension UpdatePlaylist.Parameters {
 
         let coverPath: String?
 
-        // TODO: Verify items should be included
-        // let items: [Item]?
+        /// Optional array of playlist items for reordering existing items.
+        /// Must contain all existing items in the desired order.
+        let items: [Item]?
+
+    }
+
+    /// Request-specific model for playlist items in update body.
+    /// Only includes the minimal fields required by the server.
+    struct Item: Encodable {
+
+        /// The ID of the library item.
+        let libraryItemId: String
+
+        /// The ID of the podcast episode (if applicable).
+        let episodeId: String?
 
     }
 

@@ -8,7 +8,7 @@
 import Foundation
 import RagnarNetworking
 
-/// Match author metadata from Audnexus API.
+/// Match author metadata
 public struct MatchAuthor: Interface {
 
     // MARK: Request
@@ -42,7 +42,11 @@ public struct MatchAuthor: Interface {
         ) throws {
             self.path = "/api/authors/\(authorId)/match"
             self.body = try JSONEncoder().encode(
-                Body(q: query, asin: asin, region: region)
+                Body(
+                    q: query,
+                    asin: asin,
+                    region: region
+                )
             )
         }
     }

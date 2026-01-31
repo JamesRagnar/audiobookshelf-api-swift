@@ -33,6 +33,7 @@ public struct Login: Interface {
         /// - Parameters:
         ///   - username: The username to log in with.
         ///   - password: The password of the user.
+        ///   - returnRefreshToken: If true, returns the user's refresh token in response body
         public init(
             username: String,
             password: String,
