@@ -1,0 +1,64 @@
+//
+//  GetShareCover.swift
+//  AudiobookshelfAPI
+//
+//  Created by James Harquail on 2026-01-28.
+//
+
+import Foundation
+import RagnarNetworking
+
+/// Get the cover image from a public share.
+public struct GetShareCover: Interface {
+
+    // MARK: Request
+
+    public struct Parameters: RequestParameters {
+
+        public let method: RequestMethod = .get
+
+        public let path: String
+
+        public let queryItems: [String : String]? = nil
+
+        public let headers: [String : String]? = nil
+
+        public let body: Data? = nil
+
+        public let authentication: AuthenticationType = .none
+
+        /// Get Share Cover Parameters
+        ///
+        /// - Parameters:
+        ///   - slug: The unique share identifier.
+        public init(slug: String) {
+            self.path = "/public/share/\(slug)/cover"
+        }
+
+    }
+
+    // MARK: Response
+
+    public typealias Response = Data
+
+    public enum AudiobookshelfError: Error {
+
+        case notFound
+
+        case internalError
+
+    }
+
+    public static let responseCases: ResponseCases = [
+
+        200: .success(Response.self),
+
+        204: .success(Response.self),
+
+        404: .failure(AudiobookshelfError.notFound),
+
+        500: .failure(AudiobookshelfError.internalError)
+
+    ]
+
+}

@@ -14,22 +14,22 @@ public struct Library {
     
     /// The name of the library.
     public let name: String
-    
+
     /// The folders that the library is composed of on the server.
     public let folders: [Folder]
-    
+
     /// Display position of the library in the list of libraries. Must be >= 1.
-    public let displayOrder: Int
-    
+    public let displayOrder: Int?
+
     /// The selected icon for the library. See Library Icons for a list of possible icons.
-    public let icon: Icon
-    
+    public let icon: Icon?
+
     /// The type of media that the library contains. Will be book or podcast. (Read Only)
     public let mediaType: MediaType
-    
+
     /// Preferred metadata provider for the library. See Metadata Providers for a list of possible providers.
-    public let provider: String
-    
+    public let provider: String?
+
     /// The settings for the library.
     public let settings: LibrarySettings
     
@@ -38,20 +38,29 @@ public struct Library {
 
     /// The time (in ms since POSIX epoch) when the library was last updated. (Read Only)
     public let lastUpdate: Int
-    
+
+    /// The time (in ms since POSIX epoch) when the library was last scanned. Will be null if never scanned.
+    public let lastScan: Int?
+
+    /// The version of the scanner when the library was last scanned. Will be null if never scanned.
+    public let lastScanVersion: String?
+
 }
 
 public extension Library {
-    
-    enum MediaType: String, Decodable, Sendable {
-        
+
+    enum MediaType: String {
+
         case book
-        
+
         case podcast
-        
+
     }
 
 }
 
 extension Library: Decodable {}
 extension Library: Sendable {}
+
+extension Library.MediaType: Decodable {}
+extension Library.MediaType: Sendable {}

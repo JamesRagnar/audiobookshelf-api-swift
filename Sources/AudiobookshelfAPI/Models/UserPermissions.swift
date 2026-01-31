@@ -33,4 +33,5 @@ public struct UserPermissions {
 }
 
 extension UserPermissions: Decodable {}
+extension UserPermissions: Encodable {}
 extension UserPermissions: Sendable {}

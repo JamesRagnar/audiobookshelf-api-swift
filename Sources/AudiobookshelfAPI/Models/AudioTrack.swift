@@ -26,11 +26,15 @@ public struct AudioTrack {
     
     /// The MIME type of the audio file.
     public let mimeType: String
-    
+
+    /// The codec of the audio file.
+    public let codec: String?
+
     ///The metadata of the audio file.
     public let metadata: FileMetadata?
     
 }
 
 extension AudioTrack: Decodable {}
+extension AudioTrack: Encodable {}
 extension AudioTrack: Sendable {}

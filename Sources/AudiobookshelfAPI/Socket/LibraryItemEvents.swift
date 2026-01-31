@@ -28,10 +28,24 @@ public struct ItemUpdatedEvent: SocketEvent {
 
 /// A library item was deleted.
 public struct ItemRemovedEvent: SocketEvent {
-    
+
     public static let name = "item_removed"
-    
-    public typealias Schema = LibraryItem
+
+    public typealias Schema = ItemRemovedPayload
+
+}
+
+extension ItemRemovedEvent {
+
+    public struct ItemRemovedPayload: Decodable, Sendable {
+
+        /// The IDs of the library items that were removed.
+        public let libraryItemIds: [String]
+
+        /// The ID of the library.
+        public let libraryId: String
+
+    }
 
 }
 

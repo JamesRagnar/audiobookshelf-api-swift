@@ -78,9 +78,18 @@ extension UserItemProgressUpdated {
 
 /// A user started or stopped a playback session. (Admin Only)
 public struct UserStreamUpdateEvent: SocketEvent {
-    
+
     public static let name = "user_stream_update"
-    
+
     public typealias Schema = User
+
+}
+
+/// A user's playback session was closed.
+public struct UserSessionClosedEvent: SocketEvent {
+
+    public static let name = "user_session_closed"
+
+    public typealias Schema = String
 
 }

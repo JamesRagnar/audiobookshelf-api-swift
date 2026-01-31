@@ -8,37 +8,37 @@
 import Foundation
 
 public struct Stream {
-    
+
     /// The ID of the stream. It will be the same as the ID of the playback session that the stream is for.
-    public let id: UUID
-    
+    public let id: String
+
     /// The ID of the user that started the stream.
-    public let iuserId: UUID
-    
+    public let userId: String
+
     /// The library item the stream is for.
-    public let ilibraryItem: LibraryItem
-    
+    public let libraryItem: LibraryItem
+
     /// The podcast episode the stream is for. Will be null if the stream is for a book.
-    public let iepisode: PodcastEpisode?
-    
+    public let episode: PodcastEpisode?
+
     /// The length (in seconds) of each segment of the stream.
-    public let isegmentLength: Int
-    
+    public let segmentLength: Int
+
     /// The path on the server of the stream output.
-    public let iplaylistPath: String
-    
+    public let playlistPath: String
+
     /// The URI path for the client to access the stream.
-    public let iclientPlaylistUri: String
-    
+    public let clientPlaylistUri: String
+
     /// The time (in seconds) where the playback session started.
-    public let istartTime: Float
-    
+    public let startTime: Float
+
     /// The segment where the transcoding began.
-    public let isegmentStartNumber: Int
-    
+    public let segmentStartNumber: Int
+
     /// Whether transcoding is complete.
-    public let iisTranscodeComplete: Bool
-    
+    public let isTranscodeComplete: Bool
+
 }
 
 extension Stream: Decodable {}

@@ -16,14 +16,17 @@ public struct PlaybackSession {
     public let userId: String
     
     /// The ID of the library that contains the library item.
-    public let libraryId: String
+    public let libraryId: String?
     
     /// The ID of the library item.
-    public let libraryItemId: String
+    public let libraryItemId: String?
     
     /// The ID of the podcast episode. Will be null if this playback session was started without an episode ID.
     public let episodeId: String?
-    
+
+    /// The ID of the book. Will be null if this playback session is for a podcast episode.
+    public let bookId: String?
+
     /// The media type of the library item.
     public let mediaType: MediaType
     
@@ -31,7 +34,7 @@ public struct PlaybackSession {
     public let mediaMetadata: BookMetadata
     
     /// If the library item is a book, the chapters it contains.
-    public let chapters: [BookChapter]
+    public let chapters: [BookChapter]?
     
     /// The title of the playing item to show to the user.
     public let displayTitle: String
@@ -49,10 +52,10 @@ public struct PlaybackSession {
     public let playMethod: PlayMethod
     
     /// The given media player when the playback session was requested.
-    public let mediaPlayer: String
+    public let mediaPlayer: String?
     
     /// The given device info when the playback session was requested.
-    public let deviceInfo: DeviceInfo
+    public let deviceInfo: DeviceInfo?
     
     /// The server version the playback session was started with.
     public let serverVersion: String
@@ -64,7 +67,7 @@ public struct PlaybackSession {
     public let dayOfWeek: String
     
     /// The amount of time (in seconds) the user has spent listening using this playback session.
-    public let timeListening: Float
+    public let timeListening: Float?
     
     /// The time (in seconds) where the playback session started.
     public let startTime: Float
@@ -99,7 +102,7 @@ extension PlaybackSession: Sendable {}
 
 extension PlaybackSession {
 
-    public enum MediaType: String, Decodable, Sendable {
+    public enum MediaType: String {
 
         case book
 
@@ -107,7 +110,7 @@ extension PlaybackSession {
 
     }
 
-    public enum PlayMethod: Int, Decodable, Sendable {
+    public enum PlayMethod: Int {
 
         case directPlay = 0
 
@@ -118,5 +121,20 @@ extension PlaybackSession {
         case local = 3
 
     }
-    
+
+    /// Placeholder for future video playback support.
+    /// The audiobookshelf server does not currently support video media types.
+    /// This struct is intentionally empty and will always be null in API responses.
+    public struct VideoTrack {}
+
 }
+
+extension PlaybackSession.MediaType: Decodable {}
+extension PlaybackSession.MediaType: Sendable {}
+
+extension PlaybackSession.PlayMethod: Decodable {}
+extension PlaybackSession.PlayMethod: Sendable {}
+
+extension PlaybackSession.VideoTrack: Decodable {}
+extension PlaybackSession.VideoTrack: Sendable {}
+

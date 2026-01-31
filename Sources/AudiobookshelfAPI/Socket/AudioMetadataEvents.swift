@@ -39,10 +39,37 @@ public struct AudioFileMetadataStartedEvent: SocketEvent {
 
 /// An audio file has finished updating its metadata.
 public struct AudioFileMetadataFinishedEvent: SocketEvent {
-    
+
     public static let name = "audiofile_metadata_finished"
-    
+
     public typealias Schema = AudioFileMetadataFinishedEventObject
+
+}
+
+/// Audio track processing started (admin only).
+public struct TrackStartedEvent: SocketEvent {
+
+    public static let name = "track_started"
+
+    public typealias Schema = TrackStartedEventObject
+
+}
+
+/// Audio track processing progress update (admin only).
+public struct TrackProgressEvent: SocketEvent {
+
+    public static let name = "track_progress"
+
+    public typealias Schema = TrackProgressEventObject
+
+}
+
+/// Audio track processing finished (admin only).
+public struct TrackFinishedEvent: SocketEvent {
+
+    public static let name = "track_finished"
+
+    public typealias Schema = TrackFinishedEventObject
 
 }
 
@@ -130,14 +157,59 @@ public struct AudioFileMetadataFinishedEventObject: Decodable {
 
 /// The object representing an individual audio file in an event.
 public struct EventAudioFile: Decodable {
-    
+
     /// The index of the audio file.
     let index: Int
-    
+
     /// The inode of the audio file.
     let ino: String
-    
+
     /// The filename of the audio file.
     let filename: String
-    
+
+}
+
+/// The object representing the track started event.
+public struct TrackStartedEventObject: Decodable {
+
+    /// The ID of the library item being processed.
+    public let libraryItemId: String
+
+    /// The track index being processed.
+    public let trackIndex: Int
+
+    /// The filename being processed.
+    public let filename: String
+
+}
+
+/// The object representing the track progress event.
+public struct TrackProgressEventObject: Decodable {
+
+    /// The ID of the library item being processed.
+    public let libraryItemId: String
+
+    /// The track index being processed.
+    public let trackIndex: Int
+
+    /// Progress percentage (0-100).
+    public let progress: Float
+
+}
+
+/// The object representing the track finished event.
+public struct TrackFinishedEventObject: Decodable {
+
+    /// The ID of the library item being processed.
+    public let libraryItemId: String
+
+    /// The track index being processed.
+    public let trackIndex: Int
+
+    /// Whether processing was successful.
+    public let success: Bool
+
+    /// Error message if unsuccessful.
+    public let error: String?
+
 }

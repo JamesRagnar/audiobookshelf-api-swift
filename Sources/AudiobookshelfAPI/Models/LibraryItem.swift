@@ -11,7 +11,10 @@ public struct LibraryItem {
     
     /// The ID of the library item.
     public let id: String
-    
+
+    /// The old library item ID, used for migration purposes. Will be null if not migrated.
+    public let oldLibraryItemId: String?
+
     /// The inode of the library item.
     public let ino: String
     
@@ -31,13 +34,13 @@ public struct LibraryItem {
     public let isFile: Bool
     
     /// The time (in ms since POSIX epoch) when the library item was last modified on disk.
-    public let mtimeMs: Int
-    
+    public let mtimeMs: Int?
+
     /// The time (in ms since POSIX epoch) when the library item status was changed on disk.
-    public let ctimeMs: Int
-    
+    public let ctimeMs: Int?
+
     ///  The time (in ms since POSIX epoch) when the library item was created on disk. Will be 0 if unknown.
-    public let birthtimeMs: Int
+    public let birthtimeMs: Int?
     
     /// The time (in ms since POSIX epoch) when the library item was added to the library.
     public let addedAt: Int
@@ -127,23 +130,24 @@ public struct LibraryItem {
 }
 
 public extension LibraryItem {
-    
-    enum MediaType: String, Decodable, Sendable {
+
+    enum MediaType: String {
         case book
         case podcast
     }
-    
-    enum Media: Sendable {
+
+    enum Media {
         case book(Book)
         case podcast(Podcast)
     }
-    
+
 }
 
 extension LibraryItem: Decodable {
     
     enum CodingKeys: CodingKey {
         case id
+        case oldLibraryItemId
         case ino
         case libraryId
         case folderId
@@ -178,15 +182,16 @@ extension LibraryItem: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
+        self.oldLibraryItemId = try container.decodeIfPresent(String.self, forKey: .oldLibraryItemId)
         self.ino = try container.decode(String.self, forKey: .ino)
         self.libraryId = try container.decode(String.self, forKey: .libraryId)
         self.folderId = try container.decode(String.self, forKey: .folderId)
         self.path = try container.decode(String.self, forKey: .path)
         self.relPath = try container.decode(String.self, forKey: .relPath)
         self.isFile = try container.decode(Bool.self, forKey: .isFile)
-        self.mtimeMs = try container.decode(Int.self, forKey: .mtimeMs)
-        self.ctimeMs = try container.decode(Int.self, forKey: .ctimeMs)
-        self.birthtimeMs = try container.decode(Int.self, forKey: .birthtimeMs)
+        self.mtimeMs = try container.decodeIfPresent(Int.self, forKey: .mtimeMs)
+        self.ctimeMs = try container.decodeIfPresent(Int.self, forKey: .ctimeMs)
+        self.birthtimeMs = try container.decodeIfPresent(Int.self, forKey: .birthtimeMs)
         self.addedAt = try container.decode(Int.self, forKey: .addedAt)
         self.updatedAt = try container.decode(Int.self, forKey: .updatedAt)
         self.lastScan = try container.decodeIfPresent(Int.self, forKey: .lastScan)
@@ -218,3 +223,8 @@ extension LibraryItem: Decodable {
 }
 
 extension LibraryItem: Sendable {}
+
+extension LibraryItem.MediaType: Decodable {}
+extension LibraryItem.MediaType: Sendable {}
+
+extension LibraryItem.Media: Sendable {}

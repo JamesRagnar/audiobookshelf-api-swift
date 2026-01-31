@@ -10,10 +10,10 @@ import Foundation
 public struct DeviceInfo {
     
     /// Unique identifier.
-    public let id: UUID
-    
+    public let id: String
+
     /// User identifier.
-    public let userId: UUID
+    public let userId: String
     
     /// Device identifier, as provided in the request.
     public let deviceId: String
@@ -46,13 +46,13 @@ public struct DeviceInfo {
     public let model: String?
     
     /// For an Android device, the Android SDK version of the client, as provided in the request.
-    public let sdkVersion: Int?
+    public let sdkVersion: String?
     
     /// Name of the client, as provided in the request.
     public let clientName: String
     
     /// Version of the client, as provided in the request.
-    public let clientVersion: String
+    public let clientVersion: String?
     
 }
 

@@ -8,7 +8,10 @@
 import Foundation
 
 public struct Book {
-    
+
+    /// The ID of the book.
+    public let id: String
+
     /// The ID of the library item that contains the book.
     /// - Note: Book Minified - Removed Attribute
     public let libraryItemId: String?

@@ -14,19 +14,7 @@ public struct CreateCollection: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let libraryID: String
-            
-            let name: String
-            
-            let description: String?
-            
-            let books: [String]?
-            
-        }
-        
+
         public let method: RequestMethod = .post
 
         public let path: String = "/api/collections"
@@ -88,5 +76,21 @@ public struct CreateCollection: Interface {
         500: .failure(AudiobookshelfError.internalError),
         
     ]
-    
+
+}
+
+public extension CreateCollection.Parameters {
+
+    struct Body: Encodable {
+
+        let libraryID: String
+
+        let name: String
+
+        let description: String?
+
+        let books: [String]?
+
+    }
+
 }

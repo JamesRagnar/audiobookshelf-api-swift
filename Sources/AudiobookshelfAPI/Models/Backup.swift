@@ -11,10 +11,10 @@ public struct Backup {
     
     /// The ID of the backup. Will be the date and time when the backup was created.
     public let id: String
-    
-    /// Whether the backup includes library item covers and author images located in metadata.
-    public let backupMetadataCovers: Bool
-    
+
+    /// The backup key identifier.
+    public let key: String
+
     /// The backup directory path.
     public let backupDirPath: String
     

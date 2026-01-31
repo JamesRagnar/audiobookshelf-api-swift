@@ -14,17 +14,7 @@ public struct SyncOpenSession: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let currentTime: Float
-            
-            let timeListened: Float
-            
-            let duration: Float
-            
-        }
-        
+
         public let method: RequestMethod = .post
 
         public let path: String
@@ -87,5 +77,19 @@ public struct SyncOpenSession: Interface {
         500: .failure(AudiobookshelfError.internalServerError),
         
     ]
-    
+
+}
+
+public extension SyncOpenSession.Parameters {
+
+    struct Body: Encodable {
+
+        let currentTime: Float
+
+        let timeListened: Float
+
+        let duration: Float
+
+    }
+
 }

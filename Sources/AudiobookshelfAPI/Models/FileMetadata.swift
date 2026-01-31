@@ -36,4 +36,5 @@ public struct FileMetadata {
 }
 
 extension FileMetadata: Decodable {}
+extension FileMetadata: Encodable {}
 extension FileMetadata: Sendable {}

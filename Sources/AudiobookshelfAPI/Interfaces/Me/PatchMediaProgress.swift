@@ -14,37 +14,19 @@ public struct PatchMediaProgress: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
-        struct Body: Encodable {
-            
-            let duration: Float?
-            
-            let progress: Float?
-            
-            let currentTime: Float?
-            
-            let isFinished: Bool?
-            
-            let hideFromContinueListening: Bool?
-            
-            let finishedAt: Int?
-            
-            let startedAt: Int?
-            
-        }
-        
+
         public let method: RequestMethod = .patch
 
         public let path: String
-        
+
         public let queryItems: [String : String]? = nil
-        
+
         public let headers: [String : String]? = nil
-        
+
         public let body: Data?
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// PatchMediaProgress Parameters
         ///
         /// - Parameters:
@@ -55,38 +37,53 @@ public struct PatchMediaProgress: Interface {
         ///   - currentTime: The current time (in seconds) of your progress.
         ///   - isFinished: Whether the media is finished.
         ///   - hideFromContinueListening: Whether the media will be hidden from the "Continue Listening" shelf.
+        ///   - ebookLocation: The ebook location for ebook progress.
+        ///   - ebookProgress: The ebook progress percentage.
         ///   - finishedAt: The time (in ms since POSIX epoch) when the user finished the media. The default will be Date.now() if isFinished is true.
-        ///   - startedAt: The time (in ms since POSIX epoch) when the user started consuming the media. The default will be the value of finishedAt if isFinished is true.
+        ///   - createdAt: The time (in ms since POSIX epoch) when the media progress was created.
+        ///   - lastUpdate: The time (in ms since POSIX epoch) when the media progress was last updated.
+        ///   - markAsFinishedTimeRemaining: Time remaining when marking as finished.
+        ///   - markAsFinishedPercentComplete: Percent complete when marking as finished.
         public init(
             libraryItemID: String,
-            episodeID: String?,
-            duration: Float?,
-            progress: Float?,
-            currentTime: Float?,
-            isFinished: Bool?,
-            hideFromContinueListening: Bool?,
-            finishedAt: Int?,
-            startedAt: Int?
+            episodeID: String? = nil,
+            duration: Float? = nil,
+            progress: Float? = nil,
+            currentTime: Float? = nil,
+            isFinished: Bool? = nil,
+            hideFromContinueListening: Bool? = nil,
+            ebookLocation: String? = nil,
+            ebookProgress: Float? = nil,
+            finishedAt: Int? = nil,
+            createdAt: Int? = nil,
+            lastUpdate: Int? = nil,
+            markAsFinishedTimeRemaining: Float? = nil,
+            markAsFinishedPercentComplete: Float? = nil
         ) throws {
             var path = "/api/me/progress/\(libraryItemID)"
             if let episodeID {
                 path += "/\(episodeID)"
             }
             self.path = path
-            
+
             self.body = try JSONEncoder().encode(
                 Body(
                     duration: duration,
-                    progress: progress,
                     currentTime: currentTime,
+                    progress: progress,
                     isFinished: isFinished,
                     hideFromContinueListening: hideFromContinueListening,
+                    ebookLocation: ebookLocation,
+                    ebookProgress: ebookProgress,
                     finishedAt: finishedAt,
-                    startedAt: startedAt
+                    createdAt: createdAt,
+                    lastUpdate: lastUpdate,
+                    markAsFinishedTimeRemaining: markAsFinishedTimeRemaining,
+                    markAsFinishedPercentComplete: markAsFinishedPercentComplete
                 )
             )
         }
-        
+
     }
     
     // MARK: Response
@@ -108,5 +105,37 @@ public struct PatchMediaProgress: Interface {
         404: .failure(AudiobookshelfError.notFound),
         
     ]
-    
+
+}
+
+public extension PatchMediaProgress.Parameters {
+
+    struct Body: Encodable {
+
+        let duration: Float?
+
+        let currentTime: Float?
+
+        let progress: Float?
+
+        let isFinished: Bool?
+
+        let hideFromContinueListening: Bool?
+
+        let ebookLocation: String?
+
+        let ebookProgress: Float?
+
+        let finishedAt: Int?
+
+        let createdAt: Int?
+
+        let lastUpdate: Int?
+
+        let markAsFinishedTimeRemaining: Float?
+
+        let markAsFinishedPercentComplete: Float?
+
+    }
+
 }

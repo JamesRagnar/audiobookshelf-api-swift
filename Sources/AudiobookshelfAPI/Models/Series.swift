@@ -11,7 +11,10 @@ public struct Series {
 
     /// The ID of the series.
     public let id: String
-    
+
+    /// The ID of the library the series belongs to.
+    public let libraryId: String?
+
     /// The name of the series.
     public let name: String
     
@@ -25,7 +28,7 @@ public struct Series {
     /// - Note: Series Num Books - Removed Attribute
     /// - Note: Series Sequence - Removed Attribute
     public let addedAt: Int?
-    
+
     /// The time (in ms since POSIX epoch) when the series was last updated.
     /// - Note: Series Books - Removed Attribute
     /// - Note: Series Num Books - Removed Attribute
@@ -37,7 +40,7 @@ public struct Series {
     /// The name of the series with any prefix moved to the end.
     /// - Note: Series Books - Added Attribute
     /// - Note: Series Num Books - Added Attribute
-    public  let nameIgnorePrefix: String?
+    public let nameIgnorePrefix: String?
     
     // MARK: Series Num Books
     
@@ -118,6 +121,7 @@ extension Series: Decodable {
     
     enum CodingKeys: CodingKey {
         case id
+        case libraryId
         case name
         case description
         case addedAt
@@ -143,6 +147,7 @@ extension Series: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
+        self.libraryId = try container.decodeIfPresent(String.self, forKey: .libraryId)
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
         self.addedAt = try container.decodeIfPresent(Int.self, forKey: .addedAt)

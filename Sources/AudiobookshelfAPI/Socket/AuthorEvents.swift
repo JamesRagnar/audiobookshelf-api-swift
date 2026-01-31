@@ -28,10 +28,24 @@ public struct AuthorUpdatedEvent: SocketEvent {
 
 /// An author was deleted.
 public struct AuthorRemovedEvent: SocketEvent {
-    
+
     public static let name = "author_removed"
-    
-    public typealias Schema = Author
+
+    public typealias Schema = EntityRemovedPayload
+
+}
+
+extension AuthorRemovedEvent {
+
+    public struct EntityRemovedPayload: Decodable, Sendable {
+
+        /// The ID of the entity that was removed.
+        public let id: String
+
+        /// The ID of the library.
+        public let libraryId: String
+
+    }
 
 }
 

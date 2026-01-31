@@ -53,8 +53,12 @@ public struct BookMetadata {
     public let language: String?
     
     /// Whether the book has been marked as explicit.
-    public let explicit: Bool
-    
+    /// - Note: Can be null in minified responses (oldMetadataToJSONMinified passes raw value)
+    public let explicit: Bool?
+
+    /// Whether the book is abridged.
+    public let abridged: Bool?
+
     // MARK: BookMetadata Minified + Expanded
     
     /// The title of the book with any prefix moved to the end.
@@ -101,6 +105,7 @@ extension BookMetadata: Decodable {
         case asin
         case language
         case explicit
+        case abridged
         case titleIgnorePrefix
         case authorName
         case authorNameLF
@@ -122,20 +127,21 @@ extension BookMetadata: Decodable {
         self.isbn = try container.decodeIfPresent(String.self, forKey: .isbn)
         self.asin = try container.decodeIfPresent(String.self, forKey: .asin)
         self.language = try container.decodeIfPresent(String.self, forKey: .language)
-        self.explicit = try container.decode(Bool.self, forKey: .explicit)
+        self.explicit = try container.decodeIfPresent(Bool.self, forKey: .explicit)
+        self.abridged = try container.decodeIfPresent(Bool.self, forKey: .abridged)
         self.titleIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .titleIgnorePrefix)
         self.authorName = try container.decodeIfPresent(String.self, forKey: .authorName)
         self.authorNameLF = try container.decodeIfPresent(String.self, forKey: .authorNameLF)
         self.narratorName = try container.decodeIfPresent(String.self, forKey: .narratorName)
         self.seriesName = try container.decodeIfPresent(String.self, forKey: .seriesName)
         
-        do {
-            // Author returns Series as a single object
-            let singleSeries = try container.decode(Series.self, forKey: .series)
+        // Series can be either an array or a single object
+        if let seriesArray = try? container.decode([Series].self, forKey: .series) {
+            self.series = seriesArray
+        } else if let singleSeries = try? container.decode(Series.self, forKey: .series) {
             self.series = [singleSeries]
-        } catch {
-            // It can also be an array of Series
-            self.series = try container.decodeIfPresent([Series].self, forKey: .series)
+        } else {
+            self.series = nil
         }
     }
     

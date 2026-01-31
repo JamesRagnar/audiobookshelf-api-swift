@@ -56,10 +56,10 @@ public struct SearchLibrary: Interface {
         
         /// The item results of the search. This attribute will be book or podcast depending on the library's media type.
         public let podcast: [LibraryItemSearchResult]?
-        
+
         /// The tag results of the search.
-        // public let tags: [String]? // TODO: Dictionary?
-        
+        public let tags: [TagSearchResult]?
+
         /// The series results of the search.
         public let series: [SeriesSearchResult]?
         
@@ -107,11 +107,21 @@ public extension SearchLibrary.Response {
     }
     
     struct SeriesSearchResult: Decodable, Sendable {
-        
+
         public let series: Series
-        
+
         public let books: [LibraryItem]
-        
+
+    }
+
+    struct TagSearchResult: Decodable, Sendable {
+
+        /// The tag value (e.g., "Science Fiction")
+        public let name: String
+
+        /// Number of items with this tag
+        public let numItems: Int
+
     }
 
 }

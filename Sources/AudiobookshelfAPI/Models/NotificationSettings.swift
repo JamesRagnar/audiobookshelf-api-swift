@@ -9,7 +9,7 @@ import Foundation
 
 public struct NotificationSettings {
     
-    public enum AppriseType: String, Sendable, Decodable {
+    public enum AppriseType: String {
         case api
     }
     
@@ -38,3 +38,6 @@ public struct NotificationSettings {
 
 extension NotificationSettings: Decodable {}
 extension NotificationSettings: Sendable {}
+
+extension NotificationSettings.AppriseType: Decodable {}
+extension NotificationSettings.AppriseType: Sendable {}

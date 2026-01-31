@@ -22,16 +22,16 @@ public struct Notification {
     public let urls: [String]
     
     /// The template for the notification title.
-    public let titleTemplate: String
-    
+    public let titleTemplate: String?
+
     /// The template for the notification body.
-    public let bodyTemplate: String
-    
+    public let bodyTemplate: String?
+
     /// Whether the notification is enabled.
     public let enabled: Bool
-    
+
     /// The notification's type.
-    public let type: String
+    public let type: String?
     
     /// The time (in ms since POSIX epoch) when the notification was last fired. Will be null if the notification has not fired.
     public let lastFiredAt: Int?
@@ -51,4 +51,5 @@ public struct Notification {
 }
 
 extension Notification: Decodable {}
+extension Notification: Encodable {}
 extension Notification: Sendable {}

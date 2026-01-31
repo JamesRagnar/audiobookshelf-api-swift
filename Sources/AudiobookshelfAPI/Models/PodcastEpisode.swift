@@ -11,7 +11,10 @@ public struct PodcastEpisode {
     
     /// The ID of the library item that contains the podcast.
     public let libraryItemId: String
-    
+
+    /// The ID of the podcast.
+    public let podcastId: String
+
     /// The ID of the podcast episode.
     public let id: String
     
@@ -19,28 +22,34 @@ public struct PodcastEpisode {
     public let index: Int?
     
     /// The season of the podcast episode, if known.
-    public let season: String
-    
+    public let season: String?
+
     /// The episode of the season of the podcast, if known.
-    public let episode: String
-    
+    public let episode: String?
+
     /// The type of episode that the podcast episode is.
-    public let episodeType: String
+    public let episodeType: String?
     
     /// The title of the podcast episode.
-    public let title: String
+    public let title: String?
     
     /// The subtitle of the podcast episode.
-    public let subtitle: String
-    
+    public let subtitle: String?
+
     /// A HTML encoded, description of the podcast episode.
-    public let description: String
+    public let description: String?
     
     /// Information about the podcast episode from when it was downloaded.
     public let enclosure: PodcastEpisodeEnclosure?
 
+    /// The podcast episode's chapters.
+    public let chapters: [BookChapter]?
+
+    /// The globally unique identifier for the podcast episode.
+    public let guid: String?
+
     /// When the podcast episode was published.
-    public let pubDate: String
+    public let pubDate: String?
     
     /// The audio file for the podcast episode.
     public let audioFile: AudioFile

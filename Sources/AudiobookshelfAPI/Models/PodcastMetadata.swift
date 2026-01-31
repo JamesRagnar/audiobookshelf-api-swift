@@ -40,7 +40,7 @@ public struct PodcastMetadata {
     public let itunesArtistId: String?
     
     /// Whether the podcast has been marked as explicit.
-    public let explicit: Bool
+    public let explicit: Bool?
     
     /// The language of the podcast. Will be null if unknown.
     public let language: String?

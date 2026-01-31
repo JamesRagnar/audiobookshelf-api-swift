@@ -23,7 +23,10 @@ public struct LibraryFile {
     
     /// The type of file that the library file is (audio, image, etc.).
     public let fileType: String
-    
+
+    /// Whether the file is supplementary (e.g., PDF, cover art).
+    public let isSupplementary: Bool?
+
 }
 
 extension LibraryFile: Decodable {}
