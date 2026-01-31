@@ -20,7 +20,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking",
-            branch: "main"
+            revision: "3e25b8305cbc80356b0398f8861cb0c7ec2fa562"
         ),
     ],
     targets: [
