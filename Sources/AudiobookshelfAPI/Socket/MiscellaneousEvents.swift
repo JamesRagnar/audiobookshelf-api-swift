@@ -19,7 +19,7 @@ public struct InitEvent: SocketEvent {
 
 public extension InitEvent {
 
-    struct CustomResponse: Decodable {
+    struct CustomResponse: Decodable, Sendable {
 
         /// The ID of the authenticated user.
         public let userId: String
@@ -104,16 +104,16 @@ public extension MetadataEmbedQueueUpdate {
 
 }
 
-public struct LogEventObject: Decodable {
+public struct LogEventObject: Decodable, Sendable {
 
-    public enum LogName: String, Decodable {
+    public enum LogName: String, Decodable, Sendable {
         case debug = "DEBUG"
         case info = "INFO"
         case warn = "WARN"
         case error = "ERROR"
     }
 
-    public enum LogLevel: Int, Decodable {
+    public enum LogLevel: Int, Decodable, Sendable {
         case debug = 1
         case info
         case warning

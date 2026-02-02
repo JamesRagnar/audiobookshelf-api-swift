@@ -66,7 +66,7 @@ public struct MessageAllUsersEvent: SocketEvent {
 
 public extension MessageAllUsersEvent {
 
-    struct Body: Codable {
+    struct Body: Codable, Sendable {
 
         public let message: String
 

@@ -55,7 +55,7 @@ public struct StreamResetEvent: SocketEvent {
 
 extension StreamResetEvent {
     
-    public struct Body: Decodable {
+    public struct Body: Decodable, Sendable {
         
         /// The new start time (in seconds) of the stream.
         public let startTime: Float
@@ -77,7 +77,7 @@ public struct StreamErrorEvent: SocketEvent {
 
 extension StreamErrorEvent {
     
-    public struct Body: Decodable {
+    public struct Body: Decodable, Sendable {
         
         /// The ID of the stream where the error occurred.
         public let id: String

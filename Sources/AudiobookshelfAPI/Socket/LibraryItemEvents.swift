@@ -78,7 +78,7 @@ public struct BatchQuickMatchCompleteEvent: SocketEvent {
 
 extension BatchQuickMatchCompleteEvent {
     
-    public struct BatchQuickMatchResult: Decodable {
+    public struct BatchQuickMatchResult: Decodable, Sendable {
         
         /// Whether library items were successfully updated.
         public let success: Bool
