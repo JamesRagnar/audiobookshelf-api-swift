@@ -9,47 +9,47 @@ import Foundation
 import RagnarNetworking
 
 /// A stream has opened.
-public struct StreamOpenEvent: SocketEvent {
+public struct StreamOpenEvent: SocketInboundEvent {
     
     public static let name = "stream_open"
     
-    public typealias Schema = AudiobookshelfAPI.Stream
+    public typealias Payload = AudiobookshelfAPI.Stream
 
 }
 
 /// A stream has closed.
-public struct StreamClosedEvent: SocketEvent {
+public struct StreamClosedEvent: SocketInboundEvent {
     
     public static let name = "stream_closed"
     
-    public typealias Schema = String // Stream ID
+    public typealias Payload = String // Stream ID
 
 }
 
 /// A stream transcode progress update.
-public struct StreamProgressEvent: SocketEvent {
+public struct StreamProgressEvent: SocketInboundEvent {
     
     public static let name = "stream_progress"
     
-    public typealias Schema = StreamProgress
+    public typealias Payload = StreamProgress
 
 }
 
 /// A stream is ready, transcoding has already been completed on the requested stream.
-public struct StreamReadyEvent: SocketEvent {
+public struct StreamReadyEvent: SocketInboundEvent {
     
     public static let name = "stream_ready"
     
-    public typealias Schema = EmptyBody
+    public typealias Payload = EmptyBody
 
 }
 
 /// A stream was reset.
-public struct StreamResetEvent: SocketEvent {
+public struct StreamResetEvent: SocketInboundEvent {
     
     public static let name = "stream_reset"
     
-    public typealias Schema = Body
+    public typealias Payload = Body
 
 }
 
@@ -67,11 +67,11 @@ extension StreamResetEvent {
 }
 
 /// A stream error occurred. Emitted when ffmpeg has an error while transcoding.
-public struct StreamErrorEvent: SocketEvent {
+public struct StreamErrorEvent: SocketInboundEvent {
     
     public static let name = "stream_error"
     
-    public typealias Schema = Body
+    public typealias Payload = Body
 
 }
 

@@ -9,56 +9,56 @@ import Foundation
 import RagnarNetworking
 
 /// A user is online. (Admin Only)
-public struct UserOnlineEvent: SocketEvent {
+public struct UserOnlineEvent: SocketInboundEvent {
     
     public static let name = "user_online"
     
-    public typealias Schema = User
+    public typealias Payload = User
 
 }
 
 /// A user is offline. (Admin Only)
-public struct UserOfflineEvent: SocketEvent {
+public struct UserOfflineEvent: SocketInboundEvent {
     
     public static let name = "user_offline"
     
-    public typealias Schema = User
+    public typealias Payload = User
 
 }
 
 /// A user was created. (Admin Only)
-public struct UserAddedEvent: SocketEvent {
+public struct UserAddedEvent: SocketInboundEvent {
     
     public static let name = "user_added"
     
-    public typealias Schema = User
+    public typealias Payload = User
 
 }
 
 /// The authenticated user has been updated.
-public struct UserUpdatedEvent: SocketEvent {
+public struct UserUpdatedEvent: SocketInboundEvent {
     
     public static let name = "user_updated"
     
-    public typealias Schema = User
+    public typealias Payload = User
 
 }
 
 /// A user was deleted. (Admin Only)
-public struct UserRemovedEvent: SocketEvent {
+public struct UserRemovedEvent: SocketInboundEvent {
     
     public static let name = "user_removed"
     
-    public typealias Schema = User
+    public typealias Payload = User
 
 }
 
 /// One of the authenticated user's media progress was created/updated.
-public struct UserItemProgressUpdated: SocketEvent {
+public struct UserItemProgressUpdated: SocketInboundEvent {
     
     public static let name = "user_item_progress_updated"
     
-    public typealias Schema = Body
+    public typealias Payload = Body
     
 }
 
@@ -77,19 +77,19 @@ extension UserItemProgressUpdated {
 }
 
 /// A user started or stopped a playback session. (Admin Only)
-public struct UserStreamUpdateEvent: SocketEvent {
+public struct UserStreamUpdateEvent: SocketInboundEvent {
 
     public static let name = "user_stream_update"
 
-    public typealias Schema = User
+    public typealias Payload = User
 
 }
 
 /// A user's playback session was closed.
-public struct UserSessionClosedEvent: SocketEvent {
+public struct UserSessionClosedEvent: SocketInboundEvent {
 
     public static let name = "user_session_closed"
 
-    public typealias Schema = String
+    public typealias Payload = String
 
 }

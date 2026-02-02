@@ -9,28 +9,28 @@ import Foundation
 import RagnarNetworking
 
 /// A library was created.
-public struct LibraryAddedEvent: SocketEvent {
+public struct LibraryAddedEvent: SocketInboundEvent {
     
     public static let name = "library_added"
     
-    public typealias Schema = Library
+    public typealias Payload = Library
 
 }
 
 /// A library was updated.
-public struct LibraryUpdatedEvent: SocketEvent {
+public struct LibraryUpdatedEvent: SocketInboundEvent {
     
     public static let name = "library_updated"
     
-    public typealias Schema = Library
+    public typealias Payload = Library
 
 }
 
 /// A library was deleted.
-public struct LibraryRemovedEvent: SocketEvent {
+public struct LibraryRemovedEvent: SocketInboundEvent {
     
     public static let name = "library_removed"
     
-    public typealias Schema = Library
+    public typealias Payload = Library
 
 }

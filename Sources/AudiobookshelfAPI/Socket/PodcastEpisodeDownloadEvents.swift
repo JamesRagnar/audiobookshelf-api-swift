@@ -9,20 +9,20 @@ import Foundation
 import RagnarNetworking
 
 /// A podcast episode has been queued for download.
-public struct EpisodeDownloadQueuedEvent: SocketEvent {
+public struct EpisodeDownloadQueuedEvent: SocketInboundEvent {
     
     public static let name = "episode_download_queued"
     
-    public typealias Schema = PodcastEpisodeDownload
+    public typealias Payload = PodcastEpisodeDownload
 
 }
 
 /// The podcast episode download queue has updated.
-public struct EpisodeDownloadQueueUpdatedEvent: SocketEvent {
+public struct EpisodeDownloadQueueUpdatedEvent: SocketInboundEvent {
     
     public static let name = "episode_download_queue_updated"
     
-    public typealias Schema = Body
+    public typealias Payload = Body
 
 }
 
@@ -41,37 +41,37 @@ extension EpisodeDownloadQueueUpdatedEvent {
 }
 
 /// A podcast episode has started downloading.
-public struct EpisodeDownloadStartedEvent: SocketEvent {
+public struct EpisodeDownloadStartedEvent: SocketInboundEvent {
     
     public static let name = "episode_download_started"
     
-    public typealias Schema = PodcastEpisodeDownload
+    public typealias Payload = PodcastEpisodeDownload
 
 }
 
 /// A podcast episode has finished downloading.
-public struct EpisodeDownloadFinishedEvent: SocketEvent {
+public struct EpisodeDownloadFinishedEvent: SocketInboundEvent {
 
     public static let name = "episode_download_finished"
 
-    public typealias Schema = PodcastEpisodeDownload
+    public typealias Payload = PodcastEpisodeDownload
 
 }
 
 /// A podcast episode was added to a podcast.
-public struct EpisodeAddedEvent: SocketEvent {
+public struct EpisodeAddedEvent: SocketInboundEvent {
 
     public static let name = "episode_added"
 
-    public typealias Schema = PodcastEpisode
+    public typealias Payload = PodcastEpisode
 
 }
 
 /// The podcast episode download queue was cleared.
-public struct EpisodeDownloadQueueClearedEvent: SocketEvent {
+public struct EpisodeDownloadQueueClearedEvent: SocketInboundEvent {
 
     public static let name = "episode_download_queue_cleared"
 
-    public typealias Schema = String
+    public typealias Payload = String
 
 }

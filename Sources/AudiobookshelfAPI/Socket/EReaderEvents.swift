@@ -9,10 +9,10 @@ import Foundation
 import RagnarNetworking
 
 /// The list of eReader devices was updated.
-public struct EReaderDevicesUpdatedEvent: SocketEvent {
+public struct EReaderDevicesUpdatedEvent: SocketInboundEvent {
 
     public static let name = "ereader-devices-updated"
 
-    public typealias Schema = [EReaderDevice]
+    public typealias Payload = [EReaderDevice]
 
 }

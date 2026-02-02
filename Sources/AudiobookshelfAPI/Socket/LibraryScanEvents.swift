@@ -9,11 +9,11 @@ import Foundation
 import RagnarNetworking
 
 /// A library scan was started.
-public struct ScanStartEvent: SocketEvent {
+public struct ScanStartEvent: SocketInboundEvent {
 
     public static let name = "scan_start"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 
@@ -51,10 +51,10 @@ public extension ScanStartEvent {
 }
 
 /// A library scan was completed.
-public struct ScanCompleteEvent: SocketEvent {
+public struct ScanCompleteEvent: SocketInboundEvent {
 
     public static let name = "scan_complete"
 
-    public typealias Schema = ScanStartEvent.CustomResponse
+    public typealias Payload = ScanStartEvent.CustomResponse
 
 }

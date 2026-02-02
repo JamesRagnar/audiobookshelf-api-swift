@@ -9,19 +9,19 @@ import Foundation
 import RagnarNetworking
 
 /// An RSS feed was opened.
-public struct RssFeedOpenEvent: SocketEvent {
+public struct RssFeedOpenEvent: SocketInboundEvent {
     
     public static let name = "rss_feed_open"
     
-    public typealias Schema = RSSFeed
+    public typealias Payload = RSSFeed
 
 }
 
 /// An RSS feed was closed.
-public struct RssFeedClosedEvent: SocketEvent {
+public struct RssFeedClosedEvent: SocketInboundEvent {
     
     public static let name = "rss_feed_closed"
     
-    public typealias Schema = RSSFeed
+    public typealias Payload = RSSFeed
 
 }

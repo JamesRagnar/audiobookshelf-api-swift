@@ -9,38 +9,38 @@ import Foundation
 import RagnarNetworking
 
 /// A series was created.
-public struct SeriesAddedEvent: SocketEvent {
+public struct SeriesAddedEvent: SocketInboundEvent {
     
     public static let name = "series_added"
     
-    public typealias Schema = Series
+    public typealias Payload = Series
 
 }
 
 /// A series was updated.
-public struct SeriesUpdatedEvent: SocketEvent {
+public struct SeriesUpdatedEvent: SocketInboundEvent {
     
     public static let name = "series_updated"
     
-    public typealias Schema = Series
+    public typealias Payload = Series
 
 }
 
 /// Multiple series were created.
-public struct MultipleSeriesAddedEvent: SocketEvent {
+public struct MultipleSeriesAddedEvent: SocketInboundEvent {
 
     public static let name = "multiple_series_added"
 
-    public typealias Schema = [Series]
+    public typealias Payload = [Series]
 
 }
 
 /// A series was deleted.
-public struct SeriesRemovedEvent: SocketEvent {
+public struct SeriesRemovedEvent: SocketInboundEvent {
 
     public static let name = "series_removed"
 
-    public typealias Schema = EntityRemovedPayload
+    public typealias Payload = EntityRemovedPayload
 
 }
 

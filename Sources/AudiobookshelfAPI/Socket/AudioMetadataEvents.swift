@@ -11,65 +11,65 @@ import RagnarNetworking
 // MARK: - Audio Metadata Events
 
 /// A library item has started updating its audio files' metadata.
-public struct AudioMetadataStartedEvent: SocketEvent {
+public struct AudioMetadataStartedEvent: SocketInboundEvent {
     
     public static let name = "audio_metadata_started"
     
-    public typealias Schema = AudioMetadataStartedEventObject
+    public typealias Payload = AudioMetadataStartedEventObject
 
 }
 
 /// A library item has finished updating its audio files' metadata.
-public struct AudioMetadataFinishedEvent: SocketEvent {
+public struct AudioMetadataFinishedEvent: SocketInboundEvent {
     
     public static let name = "audio_metadata_finished"
     
-    public typealias Schema = AudioMetadataFinishedEventObject
+    public typealias Payload = AudioMetadataFinishedEventObject
 
 }
 
 /// An audio file has started updating its metadata.
-public struct AudioFileMetadataStartedEvent: SocketEvent {
+public struct AudioFileMetadataStartedEvent: SocketInboundEvent {
     
     public static let name = "audiofile_metadata_started"
     
-    public typealias Schema = AudioFileMetadataStartedEventObject
+    public typealias Payload = AudioFileMetadataStartedEventObject
 
 }
 
 /// An audio file has finished updating its metadata.
-public struct AudioFileMetadataFinishedEvent: SocketEvent {
+public struct AudioFileMetadataFinishedEvent: SocketInboundEvent {
 
     public static let name = "audiofile_metadata_finished"
 
-    public typealias Schema = AudioFileMetadataFinishedEventObject
+    public typealias Payload = AudioFileMetadataFinishedEventObject
 
 }
 
 /// Audio track processing started (admin only).
-public struct TrackStartedEvent: SocketEvent {
+public struct TrackStartedEvent: SocketInboundEvent {
 
     public static let name = "track_started"
 
-    public typealias Schema = TrackStartedEventObject
+    public typealias Payload = TrackStartedEventObject
 
 }
 
 /// Audio track processing progress update (admin only).
-public struct TrackProgressEvent: SocketEvent {
+public struct TrackProgressEvent: SocketInboundEvent {
 
     public static let name = "track_progress"
 
-    public typealias Schema = TrackProgressEventObject
+    public typealias Payload = TrackProgressEventObject
 
 }
 
 /// Audio track processing finished (admin only).
-public struct TrackFinishedEvent: SocketEvent {
+public struct TrackFinishedEvent: SocketInboundEvent {
 
     public static let name = "track_finished"
 
-    public typealias Schema = TrackFinishedEventObject
+    public typealias Payload = TrackFinishedEventObject
 
 }
 

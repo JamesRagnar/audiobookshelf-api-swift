@@ -9,29 +9,29 @@ import Foundation
 import RagnarNetworking
 
 /// A library item was created.
-public struct ItemAddedEvent: SocketEvent {
+public struct ItemAddedEvent: SocketInboundEvent {
     
     public static let name = "item_added"
     
-    public typealias Schema = LibraryItem
+    public typealias Payload = LibraryItem
 
 }
 
 /// A library item was updated.
-public struct ItemUpdatedEvent: SocketEvent {
+public struct ItemUpdatedEvent: SocketInboundEvent {
     
     public static let name = "item_updated"
     
-    public typealias Schema = LibraryItem
+    public typealias Payload = LibraryItem
 
 }
 
 /// A library item was deleted.
-public struct ItemRemovedEvent: SocketEvent {
+public struct ItemRemovedEvent: SocketInboundEvent {
 
     public static let name = "item_removed"
 
-    public typealias Schema = ItemRemovedPayload
+    public typealias Payload = ItemRemovedPayload
 
 }
 
@@ -50,29 +50,29 @@ extension ItemRemovedEvent {
 }
 
 /// Library items were created.
-public struct ItemsAddedEvent: SocketEvent {
+public struct ItemsAddedEvent: SocketInboundEvent {
     
     public static let name = "items_added"
     
-    public typealias Schema = [LibraryItem]
+    public typealias Payload = [LibraryItem]
 
 }
 
 /// Library items were updated.
-public struct ItemsUpdatedEvent: SocketEvent {
+public struct ItemsUpdatedEvent: SocketInboundEvent {
     
     public static let name = "items_updated"
     
-    public typealias Schema = [LibraryItem]
+    public typealias Payload = [LibraryItem]
 
 }
 
 /// Batch library item quick matching is complete.
-public struct BatchQuickMatchCompleteEvent: SocketEvent {
+public struct BatchQuickMatchCompleteEvent: SocketInboundEvent {
     
     public static let name = "batch_quickmatch_complete"
     
-    public typealias Schema = BatchQuickMatchResult
+    public typealias Payload = BatchQuickMatchResult
 
 }
 

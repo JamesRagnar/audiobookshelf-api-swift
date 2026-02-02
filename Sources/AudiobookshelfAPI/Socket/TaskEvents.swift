@@ -9,29 +9,29 @@ import Foundation
 import RagnarNetworking
 
 /// Background task started notification.
-public struct TaskStarted: SocketEvent {
+public struct TaskStarted: SocketInboundEvent {
 
     public static let name = "task_started"
 
-    public typealias Schema = BackgroundTask
+    public typealias Payload = BackgroundTask
 
 }
 
 /// Background task finished notification.
-public struct TaskFinished: SocketEvent {
+public struct TaskFinished: SocketInboundEvent {
 
     public static let name = "task_finished"
 
-    public typealias Schema = BackgroundTask
+    public typealias Payload = BackgroundTask
 
 }
 
 /// Background task progress update notification (admin only).
-public struct TaskProgress: SocketEvent {
+public struct TaskProgress: SocketInboundEvent {
 
     public static let name = "task_progress"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 

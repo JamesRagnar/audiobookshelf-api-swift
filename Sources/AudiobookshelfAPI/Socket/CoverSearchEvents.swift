@@ -9,11 +9,11 @@ import Foundation
 import RagnarNetworking
 
 /// Cover search result streamed to client.
-public struct CoverSearchResult: SocketEvent {
+public struct CoverSearchResult: SocketInboundEvent {
 
     public static let name = "cover_search_result"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 
@@ -35,11 +35,11 @@ public extension CoverSearchResult {
 }
 
 /// Cover search operation completed.
-public struct CoverSearchComplete: SocketEvent {
+public struct CoverSearchComplete: SocketInboundEvent {
 
     public static let name = "cover_search_complete"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 
@@ -55,11 +55,11 @@ public extension CoverSearchComplete {
 }
 
 /// Cover search error occurred.
-public struct CoverSearchError: SocketEvent {
+public struct CoverSearchError: SocketInboundEvent {
 
     public static let name = "cover_search_error"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 
@@ -78,11 +78,11 @@ public extension CoverSearchError {
 }
 
 /// Cover search provider-specific error.
-public struct CoverSearchProviderError: SocketEvent {
+public struct CoverSearchProviderError: SocketInboundEvent {
 
     public static let name = "cover_search_provider_error"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 
@@ -104,11 +104,11 @@ public extension CoverSearchProviderError {
 }
 
 /// Cover search cancelled by user.
-public struct CoverSearchCancelled: SocketEvent {
+public struct CoverSearchCancelled: SocketInboundEvent {
 
     public static let name = "cover_search_cancelled"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 
@@ -124,11 +124,11 @@ public extension CoverSearchCancelled {
 }
 
 /// Authentication failed (invalid token or user).
-public struct AuthFailed: SocketEvent {
+public struct AuthFailed: SocketInboundEvent {
 
     public static let name = "auth_failed"
 
-    public typealias Schema = CustomResponse
+    public typealias Payload = CustomResponse
 
 }
 

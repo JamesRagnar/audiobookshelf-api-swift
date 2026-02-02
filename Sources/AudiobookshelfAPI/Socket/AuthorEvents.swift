@@ -9,29 +9,29 @@ import Foundation
 import RagnarNetworking
 
 /// An author was created.
-public struct AuthorAddedEvent: SocketEvent {
+public struct AuthorAddedEvent: SocketInboundEvent {
     
     public static let name = "author_added"
     
-    public typealias Schema = Author
+    public typealias Payload = Author
 
 }
 
 /// An author was updated.
-public struct AuthorUpdatedEvent: SocketEvent {
+public struct AuthorUpdatedEvent: SocketInboundEvent {
     
     public static let name = "author_updated"
     
-    public typealias Schema = Author
+    public typealias Payload = Author
 
 }
 
 /// An author was deleted.
-public struct AuthorRemovedEvent: SocketEvent {
+public struct AuthorRemovedEvent: SocketInboundEvent {
 
     public static let name = "author_removed"
 
-    public typealias Schema = EntityRemovedPayload
+    public typealias Payload = EntityRemovedPayload
 
 }
 
@@ -50,10 +50,10 @@ extension AuthorRemovedEvent {
 }
 
 /// Authors were created.
-public struct AuthorsAddedEvent: SocketEvent {
+public struct AuthorsAddedEvent: SocketInboundEvent {
     
     public static let name = "authors_added"
     
-    public typealias Schema = [Author]
+    public typealias Payload = [Author]
 
 }

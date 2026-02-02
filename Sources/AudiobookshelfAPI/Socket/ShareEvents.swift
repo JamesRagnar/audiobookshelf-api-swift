@@ -9,19 +9,19 @@ import Foundation
 import RagnarNetworking
 
 /// A share link was opened.
-public struct ShareOpenEvent: SocketEvent {
+public struct ShareOpenEvent: SocketInboundEvent {
 
     public static let name = "share_open"
 
-    public typealias Schema = Share
+    public typealias Payload = Share
 
 }
 
 /// A share link was closed.
-public struct ShareClosedEvent: SocketEvent {
+public struct ShareClosedEvent: SocketInboundEvent {
 
     public static let name = "share_closed"
 
-    public typealias Schema = Share
+    public typealias Payload = Share
 
 }

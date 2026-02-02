@@ -9,28 +9,28 @@ import Foundation
 import RagnarNetworking
 
 /// A playlist was created.
-public struct PlaylistAddedEvent: SocketEvent {
+public struct PlaylistAddedEvent: SocketInboundEvent {
     
     public static let name = "playlist_added"
     
-    public typealias Schema = Playlist
+    public typealias Payload = Playlist
 
 }
 
 /// A playlist was updated.
-public struct PlaylistUpdatedEvent: SocketEvent {
+public struct PlaylistUpdatedEvent: SocketInboundEvent {
     
     public static let name = "playlist_updated"
     
-    public typealias Schema = Playlist
+    public typealias Payload = Playlist
 
 }
 
 /// A playlist was deleted.
-public struct PlaylistRemovedEvent: SocketEvent {
+public struct PlaylistRemovedEvent: SocketInboundEvent {
     
     public static let name = "playlist_removed"
     
-    public typealias Schema = Playlist
+    public typealias Payload = Playlist
 
 }

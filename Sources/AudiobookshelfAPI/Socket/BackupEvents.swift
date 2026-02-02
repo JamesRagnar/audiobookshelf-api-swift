@@ -9,10 +9,10 @@ import Foundation
 import RagnarNetworking
 
 /// A backup was applied to the server.
-public struct BackupAppliedEvent: SocketEvent {
+public struct BackupAppliedEvent: SocketInboundEvent {
     
     public static let name = "backup_applied"
     
-    public typealias Schema = EmptyBody
+    public typealias Payload = EmptyBody
 
 }
