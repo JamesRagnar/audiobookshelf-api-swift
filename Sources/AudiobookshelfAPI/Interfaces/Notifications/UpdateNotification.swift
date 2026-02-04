@@ -19,11 +19,11 @@ public struct UpdateNotification: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -47,9 +47,9 @@ public struct UpdateNotification: Interface {
             bodyTemplate: String,
             enabled: Bool,
             type: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/notifications/\(notificationId)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     id: notificationId,
                     libraryId: libraryId,
@@ -79,7 +79,7 @@ public struct UpdateNotification: Interface {
 
 public extension UpdateNotification.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let id: String
 

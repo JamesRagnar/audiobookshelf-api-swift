@@ -19,19 +19,19 @@ public struct SyncLocalSession: Interface {
 
         public let path: String = "/api/session/local"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         /// Sync Local Session Parameters
         ///
         /// - Parameter session: The local playback session data to sync with the server.
-        public init(session: LocalPlaybackSession) throws {
-            self.body = try JSONEncoder().encode(session)
+        public init(session: LocalPlaybackSession) {
+            self.body = .json(session)
         }
 
     }

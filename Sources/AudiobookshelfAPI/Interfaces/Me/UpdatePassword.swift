@@ -19,11 +19,11 @@ public struct UpdatePassword: Interface {
 
         public let path: String = "/api/me/password"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,8 +35,8 @@ public struct UpdatePassword: Interface {
         public init(
             currentPassword: String?,
             newPassword: String?
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(password: currentPassword, newPassword: newPassword)
             )
         }
@@ -60,7 +60,7 @@ public struct UpdatePassword: Interface {
 
 public extension UpdatePassword.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
         let password: String?
         let newPassword: String?
     }

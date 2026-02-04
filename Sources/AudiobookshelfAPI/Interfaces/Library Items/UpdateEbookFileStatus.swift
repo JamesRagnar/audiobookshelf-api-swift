@@ -19,11 +19,11 @@ public struct UpdateEbookFileStatus: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,9 +32,9 @@ public struct UpdateEbookFileStatus: Interface {
             fileId: String,
             ebookLocation: String? = nil,
             ebookProgress: Float? = nil
-        ) throws {
+        ) {
             self.path = "/api/items/\(itemId)/ebook/\(fileId)/status"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     ebookLocation: ebookLocation,
                     ebookProgress: ebookProgress
@@ -74,7 +74,7 @@ public struct UpdateEbookFileStatus: Interface {
 
 public extension UpdateEbookFileStatus.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let ebookLocation: String?
 

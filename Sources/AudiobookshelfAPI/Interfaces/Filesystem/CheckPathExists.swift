@@ -19,11 +19,11 @@ public struct CheckPathExists: Interface {
 
         public let path: String = "/api/filesystem/pathexists"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,8 +35,8 @@ public struct CheckPathExists: Interface {
         public init(
             directory: String,
             folderPath: String
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(directory: directory, folderPath: folderPath)
             )
         }
@@ -79,7 +79,7 @@ public struct CheckPathExists: Interface {
 
 public extension CheckPathExists.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let directory: String
 

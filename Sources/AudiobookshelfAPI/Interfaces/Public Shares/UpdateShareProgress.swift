@@ -19,11 +19,11 @@ public struct UpdateShareProgress: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .none
 
@@ -35,9 +35,9 @@ public struct UpdateShareProgress: Interface {
         public init(
             slug: String,
             currentTime: Double
-        ) throws {
+        ) {
             self.path = "/public/share/\(slug)/progress"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(currentTime: currentTime)
             )
         }
@@ -70,7 +70,7 @@ public struct UpdateShareProgress: Interface {
 
 public extension UpdateShareProgress.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let currentTime: Double
 

@@ -19,17 +19,17 @@ public struct UpdateLibraryItemTracks: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(itemId: String, tracks: [AudioTrack]) throws {
+        public init(itemId: String, tracks: [AudioTrack]) {
             self.path = "/api/items/\(itemId)/tracks"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(tracks: tracks)
             )
         }
@@ -66,7 +66,7 @@ public struct UpdateLibraryItemTracks: Interface {
 
 public extension UpdateLibraryItemTracks.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let tracks: [AudioTrack]
 

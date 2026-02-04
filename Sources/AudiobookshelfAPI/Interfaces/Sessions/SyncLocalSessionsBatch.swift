@@ -19,19 +19,19 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let path: String = "/api/session/local-all"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         /// Sync Local Sessions Batch Parameters
         ///
         /// - Parameter sessions: The array of local playback session data to sync with the server.
-        public init(sessions: [LocalPlaybackSession]) throws {
-            self.body = try JSONEncoder().encode(sessions)
+        public init(sessions: [LocalPlaybackSession]) {
+            self.body = .json(sessions)
         }
 
     }

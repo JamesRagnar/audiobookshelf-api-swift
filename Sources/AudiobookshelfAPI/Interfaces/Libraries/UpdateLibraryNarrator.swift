@@ -19,11 +19,11 @@ public struct UpdateLibraryNarrator: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -37,12 +37,12 @@ public struct UpdateLibraryNarrator: Interface {
             libraryId: String,
             narratorName: String,
             newName: String
-        ) throws {
+        ) {
             let encodedNarrator = Data(narratorName.utf8)
                 .base64EncodedString()
                 .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
             self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(name: newName)
             )
         }
@@ -83,7 +83,7 @@ public struct UpdateLibraryNarrator: Interface {
 
 public extension UpdateLibraryNarrator.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let name: String
 

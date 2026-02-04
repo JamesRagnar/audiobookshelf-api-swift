@@ -20,11 +20,11 @@ public struct Login: Interface {
 
         public let path: String = "/login"
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]?
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .none
         
@@ -38,12 +38,12 @@ public struct Login: Interface {
             username: String,
             password: String,
             returnRefreshToken: Bool
-        ) throws {
+        ) {
             self.headers = [
                 "x-return-tokens": returnRefreshToken.description,
             ]
             
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 [
                     "username": username,
                     "password": password

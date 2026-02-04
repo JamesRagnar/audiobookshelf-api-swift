@@ -20,11 +20,11 @@ public struct UpdatePlaylist: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -42,9 +42,9 @@ public struct UpdatePlaylist: Interface {
             description: String? = nil,
             coverPath: String? = nil,
             items: [PlaylistItem]? = nil
-        ) throws {
+        ) {
             self.path = "/api/playlists/\(playlistID)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     name: name,
                     description: description,
@@ -85,7 +85,7 @@ public struct UpdatePlaylist: Interface {
 
 public extension UpdatePlaylist.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let name: String
 
@@ -101,7 +101,7 @@ public extension UpdatePlaylist.Parameters {
 
     /// Request-specific model for playlist items in update body.
     /// Only includes the minimal fields required by the server.
-    struct Item: Encodable {
+    struct Item: Encodable, Sendable {
 
         /// The ID of the library item.
         let libraryItemId: String

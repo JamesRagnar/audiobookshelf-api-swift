@@ -19,19 +19,19 @@ public struct AddCustomMetadataProvider: Interface {
 
         public let path: String = "/api/custom-metadata-providers"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(
             name: String,
             url: String
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     name: name,
                     url: url
@@ -67,7 +67,7 @@ public struct AddCustomMetadataProvider: Interface {
 
 public extension AddCustomMetadataProvider.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let name: String
 

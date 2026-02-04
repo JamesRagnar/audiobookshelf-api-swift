@@ -19,11 +19,11 @@ public struct CreateMediaItemShare: Interface {
 
         public let path: String = "/api/share/mediaitem"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,8 +41,8 @@ public struct CreateMediaItemShare: Interface {
             mediaItemId: String,
             expiresAt: Int? = nil,
             isDownloadable: Bool = false
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     slug: slug,
                     mediaItemType: mediaItemType,
@@ -111,7 +111,7 @@ public struct CreateMediaItemShare: Interface {
 
 public extension CreateMediaItemShare.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let slug: String
 

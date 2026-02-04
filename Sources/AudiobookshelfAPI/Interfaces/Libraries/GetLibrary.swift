@@ -23,11 +23,11 @@ public struct GetLibrary: Interface {
 
         public let path: String
         
-        public let queryItems: [String: String]?
+        public let queryItems: [String: String?]?
         
         public let headers: [String : String]? = nil
         
-        public let body: Data? = nil
+        public let body: RequestBody? = nil
         
         public let authentication: AuthenticationType = .bearer
         
@@ -42,7 +42,7 @@ public struct GetLibrary: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)"
             
-            var queryItems: [String: String] = [:]
+            var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }

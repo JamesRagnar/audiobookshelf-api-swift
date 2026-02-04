@@ -19,17 +19,17 @@ public struct UpdateLibraryItemChapters: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(itemId: String, chapters: [BookChapter]) throws {
+        public init(itemId: String, chapters: [BookChapter]) {
             self.path = "/api/items/\(itemId)/chapters"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(chapters: chapters)
             )
         }
@@ -66,7 +66,7 @@ public struct UpdateLibraryItemChapters: Interface {
 
 public extension UpdateLibraryItemChapters.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let chapters: [BookChapter]
 

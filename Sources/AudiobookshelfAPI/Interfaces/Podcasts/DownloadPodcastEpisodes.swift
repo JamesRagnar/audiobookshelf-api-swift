@@ -19,11 +19,11 @@ public struct DownloadPodcastEpisodes: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,9 +35,9 @@ public struct DownloadPodcastEpisodes: Interface {
         public init(
             podcastId: String,
             episodes: [EpisodeToDownload]
-        ) throws {
+        ) {
             self.path = "/api/podcasts/\(podcastId)/download-episodes"
-            self.body = try JSONEncoder().encode(Body(episodes: episodes))
+            self.body = .json(Body(episodes: episodes))
         }
 
     }
@@ -68,7 +68,7 @@ public struct DownloadPodcastEpisodes: Interface {
 
 extension DownloadPodcastEpisodes {
 
-    public struct EpisodeToDownload: Encodable {
+    public struct EpisodeToDownload: Encodable, Sendable {
 
         /// The title of the episode.
         public let title: String
@@ -125,7 +125,7 @@ extension DownloadPodcastEpisodes {
 
 public extension DownloadPodcastEpisodes.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let episodes: [DownloadPodcastEpisodes.EpisodeToDownload]
 

@@ -19,11 +19,11 @@ public struct UpdateAuthor: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,9 +41,9 @@ public struct UpdateAuthor: Interface {
             description: String? = nil,
             imagePath: String? = nil,
             asin: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/authors/\(authorId)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     name: name,
                     description: description,
@@ -77,7 +77,7 @@ public struct UpdateAuthor: Interface {
 
 public extension UpdateAuthor.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let name: String?
 

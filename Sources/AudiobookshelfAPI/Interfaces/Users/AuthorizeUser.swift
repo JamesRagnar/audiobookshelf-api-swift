@@ -19,16 +19,16 @@ public struct AuthorizeUser: Interface {
 
         public let path: String = "/api/authorize"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(code: String, state: String) throws {
-            self.body = try JSONEncoder().encode(
+        public init(code: String, state: String) {
+            self.body = .json(
                 Body(code: code, state: state)
             )
         }
@@ -61,7 +61,7 @@ public struct AuthorizeUser: Interface {
 
 public extension AuthorizeUser.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let code: String
 

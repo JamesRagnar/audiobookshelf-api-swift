@@ -19,16 +19,16 @@ public struct BatchScanLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/scan"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(libraryItemIds: [String]) throws {
-            self.body = try JSONEncoder().encode(
+        public init(libraryItemIds: [String]) {
+            self.body = .json(
                 Body(libraryItemIds: libraryItemIds)
             )
         }
@@ -57,7 +57,7 @@ public struct BatchScanLibraryItems: Interface {
 
 public extension BatchScanLibraryItems.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryItemIds: [String]
 

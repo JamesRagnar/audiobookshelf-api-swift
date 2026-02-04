@@ -19,11 +19,11 @@ public struct OpenFeedForItem: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -43,9 +43,9 @@ public struct OpenFeedForItem: Interface {
             preventIndexing: Bool? = nil,
             ownerName: String? = nil,
             ownerEmail: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/feeds/item/\(itemId)/open"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     serverAddress: serverAddress,
                     slug: slug,
@@ -98,7 +98,7 @@ public struct OpenFeedForItem: Interface {
 
 public extension OpenFeedForItem.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let serverAddress: String
 
@@ -108,7 +108,7 @@ public extension OpenFeedForItem.Parameters {
 
     }
 
-    struct MetadataDetails: Encodable {
+    struct MetadataDetails: Encodable, Sendable {
 
         let preventIndexing: Bool?
 

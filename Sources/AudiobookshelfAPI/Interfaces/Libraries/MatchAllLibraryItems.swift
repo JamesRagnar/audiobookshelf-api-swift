@@ -21,11 +21,11 @@ public struct MatchAllLibraryItems: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data? = nil
+        public let body: RequestBody? = nil
         
         public let authentication: AuthenticationType = .bearer
         

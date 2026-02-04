@@ -19,11 +19,11 @@ public struct EncodeLibraryItemM4B: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,9 +32,9 @@ public struct EncodeLibraryItemM4B: Interface {
             bitrate: String? = nil,
             codec: String? = nil,
             channels: Int? = nil
-        ) throws {
+        ) {
             self.path = "/api/tools/item/\(itemId)/encode-m4b"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     bitrate: bitrate,
                     codec: codec,
@@ -75,7 +75,7 @@ public struct EncodeLibraryItemM4B: Interface {
 
 public extension EncodeLibraryItemM4B.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let bitrate: String?
 

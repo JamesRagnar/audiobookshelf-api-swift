@@ -19,11 +19,11 @@ public struct GetYourListeningSessions: Interface {
 
         public let path: String = "/api/me/listening-sessions"
         
-        public let queryItems: [String : String]?
+        public let queryItems: [String : String?]?
         
         public let headers: [String : String]? = nil
         
-        public let body: Data? = nil
+        public let body: RequestBody? = nil
         
         public let authentication: AuthenticationType = .bearer
 

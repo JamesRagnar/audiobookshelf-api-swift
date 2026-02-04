@@ -19,11 +19,11 @@ public struct SyncOpenSession: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -39,10 +39,10 @@ public struct SyncOpenSession: Interface {
             currentTime: Float,
             timeListened: Float,
             duration: Float
-        ) throws {
+        ) {
             self.path = "/api/session/\(sessionID)/sync"
             
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     currentTime: currentTime,
                     timeListened: timeListened,
@@ -82,7 +82,7 @@ public struct SyncOpenSession: Interface {
 
 public extension SyncOpenSession.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let currentTime: Float
 

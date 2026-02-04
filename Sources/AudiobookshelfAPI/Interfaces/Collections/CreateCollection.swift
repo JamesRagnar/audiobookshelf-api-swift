@@ -19,11 +19,11 @@ public struct CreateCollection: Interface {
 
         public let path: String = "/api/collections"
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -39,7 +39,7 @@ public struct CreateCollection: Interface {
             name: String,
             description: String? = nil,
             books: [String]? = nil
-        ) throws {
+        ) {
             let body = Body(
                 libraryID: libraryID,
                 name: name,
@@ -47,7 +47,7 @@ public struct CreateCollection: Interface {
                 books: books
             )
 
-            self.body = try JSONEncoder().encode(body)
+            self.body = .json(body)
         }
         
     }
@@ -81,7 +81,7 @@ public struct CreateCollection: Interface {
 
 public extension CreateCollection.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryID: String
 

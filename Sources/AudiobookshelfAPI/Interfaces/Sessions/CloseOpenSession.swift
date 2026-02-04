@@ -19,11 +19,11 @@ public struct CloseOpenSession: Interface {
 
         public let path: String
         
-        public let queryItems: [String: String]? = nil
+        public let queryItems: [String: String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,14 +39,14 @@ public struct CloseOpenSession: Interface {
             currentTime: Float? = nil,
             timeListened: Float? = nil,
             duration: Float? = nil
-        ) throws {
+        ) {
             self.path = "/api/session/\(sessionID)/close"
             
-            var body: [String: String] = [:]
+            var body: [String: String?] = [:]
             body.setIfPresent("currentTime", currentTime?.description)
             body.setIfPresent("timeListened", timeListened?.description)
             body.setIfPresent("duration", duration?.description)
-            self.body = try JSONEncoder().encode(body)
+            self.body = .json(body)
         }
         
     }

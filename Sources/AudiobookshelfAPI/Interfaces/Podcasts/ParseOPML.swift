@@ -19,11 +19,11 @@ public struct ParseOPML: Interface {
 
         public let path: String = "/api/podcasts/opml/parse"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +31,8 @@ public struct ParseOPML: Interface {
         ///
         /// - Parameters:
         ///   - opmlText: The OPML XML content as a string.
-        public init(opmlText: String) throws {
-            self.body = try JSONEncoder().encode(Body(opmlText: opmlText))
+        public init(opmlText: String) {
+            self.body = .json(Body(opmlText: opmlText))
         }
 
     }
@@ -67,7 +67,7 @@ public struct ParseOPML: Interface {
 
 public extension ParseOPML.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let opmlText: String
 

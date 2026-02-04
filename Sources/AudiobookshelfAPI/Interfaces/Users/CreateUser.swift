@@ -19,11 +19,11 @@ public struct CreateUser: Interface {
 
         public let path: String = "/api/users"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,8 +34,8 @@ public struct CreateUser: Interface {
             isActive: Bool = true,
             librariesAccessible: [String]? = nil,
             permissions: UserPermissions? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     username: username,
                     password: password,
@@ -75,7 +75,7 @@ public struct CreateUser: Interface {
 
 public extension CreateUser.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let username: String
 

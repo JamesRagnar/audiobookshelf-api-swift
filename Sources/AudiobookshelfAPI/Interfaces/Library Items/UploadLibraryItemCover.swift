@@ -19,18 +19,18 @@ public struct UploadLibraryItemCover: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]?
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(itemId: String, imageData: Data, contentType: String) {
             self.path = "/api/items/\(itemId)/cover"
             self.headers = ["Content-Type": contentType]
-            self.body = imageData
+            self.body = .data(imageData)
         }
 
     }

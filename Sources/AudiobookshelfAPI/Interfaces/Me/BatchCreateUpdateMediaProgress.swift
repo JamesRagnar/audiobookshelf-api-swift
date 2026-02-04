@@ -15,7 +15,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
     
     public struct Parameters: RequestParameters {
         
-        public struct ProgressItem: Encodable {
+        public struct ProgressItem: Encodable, Sendable {
 
             /// The ID of the library item the media progress is for.
             public let libraryItemId: String
@@ -72,19 +72,19 @@ public struct BatchCreateUpdateMediaProgress: Interface {
 
         public let path: String = "/api/me/progress/batch/update"
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
         /// Batch Create/Update Media Progress Parameters
         ///
         /// - Parameter progressItems: The Progress items to update
-        public init(progressItems: [ProgressItem]) throws {
-            self.body = try JSONEncoder().encode(progressItems)
+        public init(progressItems: [ProgressItem]) {
+            self.body = .json(progressItems)
         }
         
     }
@@ -110,4 +110,3 @@ public struct BatchCreateUpdateMediaProgress: Interface {
     ]
     
 }
-

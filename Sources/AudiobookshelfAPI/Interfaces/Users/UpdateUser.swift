@@ -19,11 +19,11 @@ public struct UpdateUser: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,9 +36,9 @@ public struct UpdateUser: Interface {
             isLocked: Bool? = nil,
             librariesAccessible: [String]? = nil,
             permissions: UserPermissions? = nil
-        ) throws {
+        ) {
             self.path = "/api/users/\(userId)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     username: username,
                     password: password,
@@ -83,7 +83,7 @@ public struct UpdateUser: Interface {
 
 public extension UpdateUser.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let username: String?
 

@@ -19,11 +19,11 @@ public struct CollectionBatchRemoveBooks: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -35,9 +35,9 @@ public struct CollectionBatchRemoveBooks: Interface {
         public init(
             collectionID: String,
             bookIDs: [String]
-        ) throws {
+        ) {
             self.path = "/api/collections/\(collectionID)/batch/remove"
-            self.body = try JSONEncoder().encode(Body(books: bookIDs))
+            self.body = .json(Body(books: bookIDs))
         }
         
     }
@@ -76,7 +76,7 @@ public struct CollectionBatchRemoveBooks: Interface {
 
 public extension CollectionBatchRemoveBooks.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let books: [String]
 

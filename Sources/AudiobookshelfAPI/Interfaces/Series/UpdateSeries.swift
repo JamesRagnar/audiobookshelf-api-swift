@@ -19,11 +19,11 @@ public struct UpdateSeries: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -37,9 +37,9 @@ public struct UpdateSeries: Interface {
             seriesId: String,
             name: String? = nil,
             description: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/series/\(seriesId)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     name: name,
                     description: description
@@ -71,7 +71,7 @@ public struct UpdateSeries: Interface {
 
 public extension UpdateSeries.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let name: String?
 

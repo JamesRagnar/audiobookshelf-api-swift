@@ -19,11 +19,11 @@ public struct CreateNotification: Interface {
 
         public let path: String = "/api/notifications"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,8 +34,8 @@ public struct CreateNotification: Interface {
             bodyTemplate: String,
             libraryId: String? = nil,
             enabled: Bool = true
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     eventName: eventName,
                     urls: urls,
@@ -75,7 +75,7 @@ public struct CreateNotification: Interface {
 
 public extension CreateNotification.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let eventName: String
 

@@ -19,11 +19,11 @@ public struct UpdateCollection: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -41,10 +41,10 @@ public struct UpdateCollection: Interface {
             name: String,
             description: String? = nil,
             books: [String]? = nil
-        ) throws {
+        ) {
             self.path = "/api/collections/\(collectionID)"
             
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     libraryID: libraryID,
                     name: name,
@@ -85,7 +85,7 @@ public struct UpdateCollection: Interface {
 
 public extension UpdateCollection.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryID: String
 
@@ -98,4 +98,3 @@ public extension UpdateCollection.Parameters {
     }
 
 }
-

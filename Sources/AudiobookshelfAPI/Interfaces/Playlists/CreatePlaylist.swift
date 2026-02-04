@@ -17,7 +17,7 @@ public struct CreatePlaylist: Interface {
 
         /// An Encodable version of PlaylistItem,
         /// including only the parameters required to add the Item to a Playlist
-        public struct Item: Encodable {
+        public struct Item: Encodable, Sendable {
 
             /// The ID of the library item the playlist item is for.
             public let libraryItemId: String
@@ -39,11 +39,11 @@ public struct CreatePlaylist: Interface {
 
         public let path: String = "/api/playlists"
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -61,8 +61,8 @@ public struct CreatePlaylist: Interface {
             description: String? = nil,
             coverPath: String? = nil,
             items: [Item]? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     libraryId: libraryId,
                     name: name,
@@ -99,7 +99,7 @@ public struct CreatePlaylist: Interface {
 
 public extension CreatePlaylist.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryId: String
 

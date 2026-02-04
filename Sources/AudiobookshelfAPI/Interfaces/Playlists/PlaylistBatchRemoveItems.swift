@@ -16,7 +16,7 @@ public struct PlaylistBatchRemoveItems: Interface {
     
     public struct Parameters: RequestParameters {
         
-        public struct Item: Encodable {
+        public struct Item: Encodable, Sendable {
             
             /// The ID of the library item the playlist item is for.
             public let libraryItemId: String
@@ -38,11 +38,11 @@ public struct PlaylistBatchRemoveItems: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -54,9 +54,9 @@ public struct PlaylistBatchRemoveItems: Interface {
         public init(
             playlistID: String,
             items: [Item]
-        ) throws {
+        ) {
             self.path = "/api/playlists/\(playlistID)/batch/remove"
-            self.body = try JSONEncoder().encode(Body(items: items))
+            self.body = .json(Body(items: items))
         }
         
     }
@@ -100,11 +100,10 @@ public struct PlaylistBatchRemoveItems: Interface {
 
 public extension PlaylistBatchRemoveItems.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let items: [Item]
 
     }
 
 }
-

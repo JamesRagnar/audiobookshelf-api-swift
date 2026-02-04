@@ -19,11 +19,11 @@ public struct StartEpisodePlaybackSession: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -45,9 +45,9 @@ public struct StartEpisodePlaybackSession: Interface {
             forceTranscode: Bool? = nil,
             mediaPlayer: String? = nil,
             supportedMimeTypes: [String]? = nil
-        ) throws {
+        ) {
             self.path = "/api/items/\(libraryItemId)/play/\(episodeId)"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     deviceInfo: deviceInfo,
                     forceDirectPlay: forceDirectPlay,
@@ -79,7 +79,7 @@ public struct StartEpisodePlaybackSession: Interface {
 
 public extension StartEpisodePlaybackSession.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
         let deviceInfo: StartPlaybackSession.Parameters.DeviceInfo?
         let forceDirectPlay: Bool?
         let forceTranscode: Bool?

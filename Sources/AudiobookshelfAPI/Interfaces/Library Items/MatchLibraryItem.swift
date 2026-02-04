@@ -19,11 +19,11 @@ public struct MatchLibraryItem: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,9 +34,9 @@ public struct MatchLibraryItem: Interface {
             author: String? = nil,
             isbn: String? = nil,
             asin: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/items/\(itemId)/match"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     provider: provider,
                     title: title,
@@ -79,7 +79,7 @@ public struct MatchLibraryItem: Interface {
 
 public extension MatchLibraryItem.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let provider: String
 

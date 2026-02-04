@@ -19,11 +19,11 @@ public struct UpdateSortingPrefixes: Interface {
 
         public let path: String = "/api/sorting-prefixes"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +31,8 @@ public struct UpdateSortingPrefixes: Interface {
         ///
         /// - Parameters:
         ///   - prefixes: Array of sorting prefixes (e.g., ["the", "a", "an"]).
-        public init(prefixes: [String]) throws {
-            self.body = try JSONEncoder().encode(Body(sortingPrefixes: prefixes))
+        public init(prefixes: [String]) {
+            self.body = .json(Body(sortingPrefixes: prefixes))
         }
 
     }
@@ -69,7 +69,7 @@ public struct UpdateSortingPrefixes: Interface {
 
 public extension UpdateSortingPrefixes.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let sortingPrefixes: [String]
 

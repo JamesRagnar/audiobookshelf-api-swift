@@ -19,11 +19,11 @@ public struct UpdateWatcher: Interface {
 
         public let path: String = "/api/watcher/update"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,8 +39,8 @@ public struct UpdateWatcher: Interface {
             path: String,
             type: String,
             oldPath: String? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     libraryId: libraryId,
                     path: path,
@@ -78,7 +78,7 @@ public struct UpdateWatcher: Interface {
 
 public extension UpdateWatcher.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryId: String
 

@@ -19,11 +19,11 @@ public struct CreatePodcastFromFeed: Interface {
 
         public let path: String = "/api/podcasts/feed"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,8 +39,8 @@ public struct CreatePodcastFromFeed: Interface {
             libraryId: String,
             folderId: String,
             autoDownloadEpisodes: Bool? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     rssFeed: rssFeed,
                     libraryId: libraryId,
@@ -71,7 +71,7 @@ public struct CreatePodcastFromFeed: Interface {
 
 public extension CreatePodcastFromFeed.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
         let rssFeed: String
         let libraryId: String
         let folderId: String

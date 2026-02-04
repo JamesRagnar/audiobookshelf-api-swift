@@ -19,16 +19,16 @@ public struct ReorderLibraries: Interface {
 
         public let path: String = "/api/libraries/order"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(libraries: [LibraryOrder]) throws {
-            self.body = try JSONEncoder().encode(
+        public init(libraries: [LibraryOrder]) {
+            self.body = .json(
                 Body(libraries: libraries)
             )
         }
@@ -61,7 +61,7 @@ public struct ReorderLibraries: Interface {
 
 public extension ReorderLibraries {
 
-    struct LibraryOrder: Encodable {
+    struct LibraryOrder: Encodable, Sendable {
 
         public let id: String
 
@@ -78,7 +78,7 @@ public extension ReorderLibraries {
 
 public extension ReorderLibraries.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraries: [ReorderLibraries.LibraryOrder]
 

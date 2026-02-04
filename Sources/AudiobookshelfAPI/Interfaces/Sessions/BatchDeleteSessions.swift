@@ -19,11 +19,11 @@ public struct BatchDeleteSessions: Interface {
 
         public let path: String = "/api/sessions/batch/delete"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +31,8 @@ public struct BatchDeleteSessions: Interface {
         ///
         /// - Parameters:
         ///   - sessionIds: Array of session IDs to delete.
-        public init(sessionIds: [String]) throws {
-            self.body = try JSONEncoder().encode(Body(sessions: sessionIds))
+        public init(sessionIds: [String]) {
+            self.body = .json(Body(sessions: sessionIds))
         }
 
     }
@@ -67,7 +67,7 @@ public struct BatchDeleteSessions: Interface {
 
 public extension BatchDeleteSessions.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let sessions: [String]
 

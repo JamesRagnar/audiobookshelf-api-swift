@@ -19,11 +19,11 @@ public struct UpdateNotificationSettings: Interface {
 
         public let path: String = "/api/notifications"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,8 +32,8 @@ public struct UpdateNotificationSettings: Interface {
             maxFailedAttempts: Int? = nil,
             maxNotificationQueue: Int? = nil,
             notificationDelay: Int? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     appriseApiUrl: appriseApiUrl,
                     maxFailedAttempts: maxFailedAttempts,
@@ -71,7 +71,7 @@ public struct UpdateNotificationSettings: Interface {
 
 public extension UpdateNotificationSettings.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let appriseApiUrl: String?
 

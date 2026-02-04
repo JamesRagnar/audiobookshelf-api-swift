@@ -19,11 +19,11 @@ public struct UploadFile: Interface {
 
         public let path: String = "/api/upload"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]?
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,7 +34,7 @@ public struct UploadFile: Interface {
             folderId: String? = nil
         ) {
             self.headers = ["Content-Type": contentType]
-            self.body = fileData
+            self.body = .data(fileData)
         }
 
     }

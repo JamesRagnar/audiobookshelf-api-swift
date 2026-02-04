@@ -19,20 +19,20 @@ public struct EmbedLibraryItemMetadata: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(
             itemId: String,
             backup: Bool? = nil
-        ) throws {
+        ) {
             self.path = "/api/tools/item/\(itemId)/embed-metadata"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(backup: backup)
             )
         }
@@ -69,7 +69,7 @@ public struct EmbedLibraryItemMetadata: Interface {
 
 public extension EmbedLibraryItemMetadata.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let backup: Bool?
 

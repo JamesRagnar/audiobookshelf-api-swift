@@ -19,11 +19,11 @@ public struct PatchMediaProgress: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -59,14 +59,14 @@ public struct PatchMediaProgress: Interface {
             lastUpdate: Int? = nil,
             markAsFinishedTimeRemaining: Float? = nil,
             markAsFinishedPercentComplete: Float? = nil
-        ) throws {
+        ) {
             var path = "/api/me/progress/\(libraryItemID)"
             if let episodeID {
                 path += "/\(episodeID)"
             }
             self.path = path
 
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     duration: duration,
                     currentTime: currentTime,
@@ -110,7 +110,7 @@ public struct PatchMediaProgress: Interface {
 
 public extension PatchMediaProgress.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let duration: Float?
 

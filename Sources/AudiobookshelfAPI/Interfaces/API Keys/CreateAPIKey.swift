@@ -19,11 +19,11 @@ public struct CreateAPIKey: Interface {
 
         public let path: String = "/api/api-keys"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +31,8 @@ public struct CreateAPIKey: Interface {
         ///
         /// - Parameters:
         ///   - expiresAt: Optional Unix timestamp for when the key expires.
-        public init(expiresAt: Int? = nil) throws {
-            self.body = try JSONEncoder().encode(Body(expiresAt: expiresAt))
+        public init(expiresAt: Int? = nil) {
+            self.body = .json(Body(expiresAt: expiresAt))
         }
 
     }
@@ -63,7 +63,7 @@ public struct CreateAPIKey: Interface {
 
 public extension CreateAPIKey.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let expiresAt: Int?
 

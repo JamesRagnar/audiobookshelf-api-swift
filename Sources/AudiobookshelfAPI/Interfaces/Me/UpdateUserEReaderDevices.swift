@@ -19,19 +19,19 @@ public struct UpdateUserEReaderDevices: Interface {
 
         public let path: String = "/api/me/ereader-devices"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         /// Update User E-Reader Devices Parameters
         ///
         /// - Parameter devices: Array of e-reader device configurations
-        public init(devices: [EReaderDevice]) throws {
-            self.body = try JSONEncoder().encode(Body(ereaderDevices: devices))
+        public init(devices: [EReaderDevice]) {
+            self.body = .json(Body(ereaderDevices: devices))
         }
     }
 
@@ -51,7 +51,7 @@ public struct UpdateUserEReaderDevices: Interface {
 
 public extension UpdateUserEReaderDevices.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
         let ereaderDevices: [EReaderDevice]
     }
 

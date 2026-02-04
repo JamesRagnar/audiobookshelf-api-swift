@@ -19,11 +19,11 @@ public struct CollectionAddBook: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -35,10 +35,10 @@ public struct CollectionAddBook: Interface {
         public init(
             collectionID: String,
             bookID: String
-        ) throws {
+        ) {
             self.path = "/api/collections/\(collectionID)/book"
             
-            self.body = try JSONEncoder().encode(Body(id: bookID))
+            self.body = .json(Body(id: bookID))
         }
         
     }
@@ -77,7 +77,7 @@ public struct CollectionAddBook: Interface {
 
 public extension CollectionAddBook.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let id: String
 

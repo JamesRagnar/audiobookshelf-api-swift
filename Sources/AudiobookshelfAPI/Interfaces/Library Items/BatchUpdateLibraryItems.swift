@@ -19,11 +19,11 @@ public struct BatchUpdateLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/update"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String : String]?
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +32,9 @@ public struct BatchUpdateLibraryItems: Interface {
                 "libraryItemIds": libraryItemIds,
                 "mediaPayload": mediaPayload
             ]
-            self.body = try JSONSerialization.data(withJSONObject: bodyDict)
+            self.headers = ["Content-Type": "application/json"]
+            let jsonData = try JSONSerialization.data(withJSONObject: bodyDict)
+            self.body = .data(jsonData)
         }
 
     }

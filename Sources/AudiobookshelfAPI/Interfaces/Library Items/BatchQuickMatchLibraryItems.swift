@@ -19,19 +19,19 @@ public struct BatchQuickMatchLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/quickmatch"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(
             libraryItemIds: [String],
             options: BatchQuickMatchLibraryItems.QuickMatchOptions? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     libraryItemIds: libraryItemIds,
                     options: options
@@ -63,7 +63,7 @@ public struct BatchQuickMatchLibraryItems: Interface {
 
 extension BatchQuickMatchLibraryItems {
 
-    public struct QuickMatchOptions: Encodable {
+    public struct QuickMatchOptions: Encodable, Sendable {
 
         public let provider: String?
 
@@ -80,7 +80,7 @@ extension BatchQuickMatchLibraryItems {
 
 public extension BatchQuickMatchLibraryItems.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryItemIds: [String]
 

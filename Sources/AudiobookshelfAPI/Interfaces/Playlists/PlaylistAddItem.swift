@@ -19,11 +19,11 @@ public struct PlaylistAddItem: Interface {
 
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data?
+        public let body: RequestBody?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -37,9 +37,9 @@ public struct PlaylistAddItem: Interface {
             playlistID: String,
             libraryItemID: String,
             episodeID: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/playlists/\(playlistID)/item"
-            self.body = try JSONEncoder().encode(
+            self.body = .json(
                 Body(
                     libraryItemId: libraryItemID,
                     episodeId: episodeID
@@ -83,7 +83,7 @@ public struct PlaylistAddItem: Interface {
 
 public extension PlaylistAddItem.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let libraryItemId: String
 
@@ -92,4 +92,3 @@ public extension PlaylistAddItem.Parameters {
     }
 
 }
-

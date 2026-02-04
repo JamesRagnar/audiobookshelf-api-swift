@@ -19,11 +19,11 @@ public struct CreatePodcastsFromOPML: Interface {
 
         public let path: String = "/api/podcasts/opml/create"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,8 +39,8 @@ public struct CreatePodcastsFromOPML: Interface {
             libraryId: String,
             folderId: String,
             autoDownloadEpisodes: Bool = false
-        ) throws {
-            self.body = try JSONEncoder().encode(
+        ) {
+            self.body = .json(
                 Body(
                     feeds: feeds,
                     libraryId: libraryId,
@@ -82,7 +82,7 @@ public struct CreatePodcastsFromOPML: Interface {
 
 public extension CreatePodcastsFromOPML.Parameters {
 
-    struct Body: Encodable {
+    struct Body: Encodable, Sendable {
 
         let feeds: [String]
 

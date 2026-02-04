@@ -19,11 +19,11 @@ public struct UploadBackup: Interface {
 
         public let path: String = "/api/backups/upload"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String : String?]? = nil
 
         public let headers: [String : String]? = nil
 
-        public let body: Data?
+        public let body: RequestBody?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +32,7 @@ public struct UploadBackup: Interface {
         /// - Parameters:
         ///   - backupFile: The backup file data to upload.
         public init(backupFile: Data) {
-            self.body = backupFile
+            self.body = .data(backupFile)
         }
 
     }
