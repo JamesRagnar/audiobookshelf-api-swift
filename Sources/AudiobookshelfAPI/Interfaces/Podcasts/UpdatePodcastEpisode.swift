@@ -23,7 +23,9 @@ public struct UpdatePodcastEpisode: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -55,18 +57,16 @@ public struct UpdatePodcastEpisode: Interface {
             publishedAt: Int? = nil
         ) {
             self.path = "/api/podcasts/\(podcastId)/episode/\(episodeId)"
-            self.body = .json(
-                Body(
-                    title: title,
-                    subtitle: subtitle,
-                    description: description,
-                    enclosure: enclosure,
-                    pubDate: pubDate,
-                    season: season,
-                    episode: episode,
-                    episodeType: episodeType,
-                    publishedAt: publishedAt
-                )
+            self.body = Payload(
+                title: title,
+                subtitle: subtitle,
+                description: description,
+                enclosure: enclosure,
+                pubDate: pubDate,
+                season: season,
+                episode: episode,
+                episodeType: episodeType,
+                publishedAt: publishedAt
             )
         }
 
@@ -93,7 +93,7 @@ public struct UpdatePodcastEpisode: Interface {
 
 public extension UpdatePodcastEpisode.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let title: String?
         let subtitle: String?
         let description: String?

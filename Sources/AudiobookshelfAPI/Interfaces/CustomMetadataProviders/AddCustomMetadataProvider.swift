@@ -23,7 +23,9 @@ public struct AddCustomMetadataProvider: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,11 +33,9 @@ public struct AddCustomMetadataProvider: Interface {
             name: String,
             url: String
         ) {
-            self.body = .json(
-                Body(
-                    name: name,
-                    url: url
-                )
+            self.body = Payload(
+                name: name,
+                url: url
             )
         }
 
@@ -67,7 +67,7 @@ public struct AddCustomMetadataProvider: Interface {
 
 public extension AddCustomMetadataProvider.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String
 

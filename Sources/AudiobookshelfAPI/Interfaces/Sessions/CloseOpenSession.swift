@@ -14,7 +14,6 @@ public struct CloseOpenSession: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
         public let method: RequestMethod = .post
 
         public let path: String
@@ -23,7 +22,9 @@ public struct CloseOpenSession: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = CloseBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,12 +42,12 @@ public struct CloseOpenSession: Interface {
             duration: Float? = nil
         ) {
             self.path = "/api/session/\(sessionID)/close"
-            
-            var body: [String: String?] = [:]
-            body.setIfPresent("currentTime", currentTime?.description)
-            body.setIfPresent("timeListened", timeListened?.description)
-            body.setIfPresent("duration", duration?.description)
-            self.body = .json(body)
+
+            self.body = CloseBody(
+                currentTime: currentTime,
+                timeListened: timeListened,
+                duration: duration
+            )
         }
         
     }
@@ -71,4 +72,18 @@ public struct CloseOpenSession: Interface {
         
     ]
     
+}
+
+public extension CloseOpenSession.Parameters {
+
+    struct CloseBody: RequestBody, Encodable, Sendable {
+
+        public let currentTime: Float?
+
+        public let timeListened: Float?
+
+        public let duration: Float?
+
+    }
+
 }

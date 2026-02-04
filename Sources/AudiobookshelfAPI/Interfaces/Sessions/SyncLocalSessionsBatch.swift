@@ -23,7 +23,9 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = ArrayBody<LocalPlaybackSession>
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,7 +33,7 @@ public struct SyncLocalSessionsBatch: Interface {
         ///
         /// - Parameter sessions: The array of local playback session data to sync with the server.
         public init(sessions: [LocalPlaybackSession]) {
-            self.body = .json(sessions)
+            self.body = ArrayBody(sessions)
         }
 
     }

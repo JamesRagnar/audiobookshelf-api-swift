@@ -23,7 +23,9 @@ public struct MatchLibraryItem: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,14 +38,12 @@ public struct MatchLibraryItem: Interface {
             asin: String? = nil
         ) {
             self.path = "/api/items/\(itemId)/match"
-            self.body = .json(
-                Body(
-                    provider: provider,
-                    title: title,
-                    author: author,
-                    isbn: isbn,
-                    asin: asin
-                )
+            self.body = Payload(
+                provider: provider,
+                title: title,
+                author: author,
+                isbn: isbn,
+                asin: asin
             )
         }
 
@@ -79,7 +79,7 @@ public struct MatchLibraryItem: Interface {
 
 public extension MatchLibraryItem.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let provider: String
 

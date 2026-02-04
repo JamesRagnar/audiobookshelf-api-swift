@@ -23,7 +23,9 @@ public struct CreateUser: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,15 +37,13 @@ public struct CreateUser: Interface {
             librariesAccessible: [String]? = nil,
             permissions: UserPermissions? = nil
         ) {
-            self.body = .json(
-                Body(
-                    username: username,
-                    password: password,
-                    type: type,
-                    isActive: isActive,
-                    librariesAccessible: librariesAccessible,
-                    permissions: permissions
-                )
+            self.body = Payload(
+                username: username,
+                password: password,
+                type: type,
+                isActive: isActive,
+                librariesAccessible: librariesAccessible,
+                permissions: permissions
             )
         }
 
@@ -75,7 +75,7 @@ public struct CreateUser: Interface {
 
 public extension CreateUser.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let username: String
 

@@ -23,7 +23,9 @@ public struct StartPlaybackSession: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -45,14 +47,12 @@ public struct StartPlaybackSession: Interface {
             supportedMimeTypes: [String]? = nil
         ) {
             self.path = "/api/items/\(libraryItemId)/play"
-            self.body = .json(
-                Body(
-                    deviceInfo: deviceInfo,
-                    forceDirectPlay: forceDirectPlay,
-                    forceTranscode: forceTranscode,
-                    mediaPlayer: mediaPlayer,
-                    supportedMimeTypes: supportedMimeTypes
-                )
+            self.body = Payload(
+                deviceInfo: deviceInfo,
+                forceDirectPlay: forceDirectPlay,
+                forceTranscode: forceTranscode,
+                mediaPlayer: mediaPlayer,
+                supportedMimeTypes: supportedMimeTypes
             )
         }
     }
@@ -75,7 +75,7 @@ public struct StartPlaybackSession: Interface {
 
 public extension StartPlaybackSession.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let deviceInfo: DeviceInfo?
         let forceDirectPlay: Bool?
         let forceTranscode: Bool?

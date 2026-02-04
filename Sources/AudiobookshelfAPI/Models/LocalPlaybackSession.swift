@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RagnarNetworking
 
 /// A local playback session to be synced with the server.
 /// This represents the client-side data sent when syncing local session state.
@@ -63,4 +64,5 @@ public struct LocalPlaybackSession {
 }
 
 extension LocalPlaybackSession: Encodable {}
+extension LocalPlaybackSession: RequestBody {}
 extension LocalPlaybackSession: Sendable {}

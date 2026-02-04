@@ -21,19 +21,17 @@ public struct UpdateServerSettings: Interface {
 
         public let queryItems: [String : String?]? = nil
 
-        public let headers: [String : String]?
+        public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = ServerSettingsUpdate
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        /// Update Server Settings Parameters
-        ///
-        /// All parameters are optional - only include fields you want to update.
-        public init(settings: [String: Any]) throws {
-            self.headers = ["Content-Type": "application/json"]
-            let jsonData = try JSONSerialization.data(withJSONObject: settings)
-            self.body = .data(jsonData)
+        /// Update Server Settings Parameters.
+        public init(settings: Body) {
+            self.body = settings
         }
 
     }

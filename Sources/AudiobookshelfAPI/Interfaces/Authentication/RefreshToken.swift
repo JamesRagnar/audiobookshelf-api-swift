@@ -23,7 +23,9 @@ public struct RefreshToken: Interface {
         
         public let headers: [String : String]?
         
-        public let body: RequestBody? = nil
+        public typealias Body = EmptyBody
+
+        public let body: Body? = nil
         
         public let authentication: AuthenticationType = .none
         

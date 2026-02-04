@@ -23,7 +23,9 @@ public struct SyncOpenSession: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -41,13 +43,11 @@ public struct SyncOpenSession: Interface {
             duration: Float
         ) {
             self.path = "/api/session/\(sessionID)/sync"
-            
-            self.body = .json(
-                Body(
-                    currentTime: currentTime,
-                    timeListened: timeListened,
-                    duration: duration
-                )
+
+            self.body = Payload(
+                currentTime: currentTime,
+                timeListened: timeListened,
+                duration: duration
             )
         }
         
@@ -82,7 +82,7 @@ public struct SyncOpenSession: Interface {
 
 public extension SyncOpenSession.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let currentTime: Float
 

@@ -14,27 +14,22 @@ public struct BatchUpdateLibraryItems: Interface {
     // MARK: Request
 
     public struct Parameters: RequestParameters {
-
         public let method: RequestMethod = .post
 
         public let path: String = "/api/items/batch/update"
 
         public let queryItems: [String : String?]? = nil
 
-        public let headers: [String : String]?
+        public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = BatchBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(libraryItemIds: [String], mediaPayload: [String: Any]) throws {
-            let bodyDict: [String: Any] = [
-                "libraryItemIds": libraryItemIds,
-                "mediaPayload": mediaPayload
-            ]
-            self.headers = ["Content-Type": "application/json"]
-            let jsonData = try JSONSerialization.data(withJSONObject: bodyDict)
-            self.body = .data(jsonData)
+        public init(updates: [Body.UpdateItem]) {
+            self.body = BatchBody(updates: updates)
         }
 
     }
@@ -56,5 +51,37 @@ public struct BatchUpdateLibraryItems: Interface {
         403: .failure(AudiobookshelfError.forbidden),
 
     ]
+
+}
+
+public extension BatchUpdateLibraryItems.Parameters {
+
+    struct BatchBody: RequestBody {
+
+        private let updates: [UpdateItem]
+
+        public init(updates: [UpdateItem]) {
+            self.updates = updates
+        }
+
+        public func encodeBody(using encoder: JSONEncoder) throws -> EncodedBody {
+            let data = try encoder.encode(updates)
+            return EncodedBody(data: data, contentType: "application/json")
+        }
+
+        public struct UpdateItem: Encodable, Sendable {
+
+            public let id: String
+
+            public let mediaPayload: LibraryItemMediaPayload
+
+            public init(id: String, mediaPayload: LibraryItemMediaPayload) {
+                self.id = id
+                self.mediaPayload = mediaPayload
+            }
+
+        }
+
+    }
 
 }

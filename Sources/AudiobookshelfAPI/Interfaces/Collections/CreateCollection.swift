@@ -23,7 +23,9 @@ public struct CreateCollection: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -40,14 +42,14 @@ public struct CreateCollection: Interface {
             description: String? = nil,
             books: [String]? = nil
         ) {
-            let body = Body(
+            let body = Payload(
                 libraryID: libraryID,
                 name: name,
                 description: description,
                 books: books
             )
 
-            self.body = .json(body)
+            self.body = body
         }
         
     }
@@ -81,7 +83,7 @@ public struct CreateCollection: Interface {
 
 public extension CreateCollection.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryID: String
 

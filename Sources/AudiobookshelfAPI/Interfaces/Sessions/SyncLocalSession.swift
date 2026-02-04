@@ -23,7 +23,9 @@ public struct SyncLocalSession: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = LocalPlaybackSession
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,7 +33,7 @@ public struct SyncLocalSession: Interface {
         ///
         /// - Parameter session: The local playback session data to sync with the server.
         public init(session: LocalPlaybackSession) {
-            self.body = .json(session)
+            self.body = session
         }
 
     }

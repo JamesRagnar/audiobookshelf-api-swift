@@ -24,7 +24,9 @@ public struct Login: Interface {
         
         public let headers: [String : String]?
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .none
         
@@ -43,11 +45,9 @@ public struct Login: Interface {
                 "x-return-tokens": returnRefreshToken.description,
             ]
             
-            self.body = .json(
-                [
-                    "username": username,
-                    "password": password
-                ]
+            self.body = Payload(
+                username: username,
+                password: password
             )
         }
         
@@ -94,4 +94,16 @@ public struct Login: Interface {
         
     ]
     
+}
+
+public extension Login.Parameters {
+
+    struct Payload: RequestBody, Encodable, Sendable {
+
+        let username: String
+
+        let password: String
+
+    }
+
 }

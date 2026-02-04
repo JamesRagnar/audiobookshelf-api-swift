@@ -23,7 +23,9 @@ public struct OpenFeedForItem: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -45,15 +47,13 @@ public struct OpenFeedForItem: Interface {
             ownerEmail: String? = nil
         ) {
             self.path = "/api/feeds/item/\(itemId)/open"
-            self.body = .json(
-                Body(
-                    serverAddress: serverAddress,
-                    slug: slug,
-                    metadataDetails: MetadataDetails(
-                        preventIndexing: preventIndexing,
-                        ownerName: ownerName,
-                        ownerEmail: ownerEmail
-                    )
+            self.body = Payload(
+                serverAddress: serverAddress,
+                slug: slug,
+                metadataDetails: MetadataDetails(
+                    preventIndexing: preventIndexing,
+                    ownerName: ownerName,
+                    ownerEmail: ownerEmail
                 )
             )
         }
@@ -98,7 +98,7 @@ public struct OpenFeedForItem: Interface {
 
 public extension OpenFeedForItem.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let serverAddress: String
 

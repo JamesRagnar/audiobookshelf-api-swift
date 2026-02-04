@@ -23,7 +23,9 @@ public struct StartEpisodePlaybackSession: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -47,14 +49,12 @@ public struct StartEpisodePlaybackSession: Interface {
             supportedMimeTypes: [String]? = nil
         ) {
             self.path = "/api/items/\(libraryItemId)/play/\(episodeId)"
-            self.body = .json(
-                Body(
-                    deviceInfo: deviceInfo,
-                    forceDirectPlay: forceDirectPlay,
-                    forceTranscode: forceTranscode,
-                    mediaPlayer: mediaPlayer,
-                    supportedMimeTypes: supportedMimeTypes
-                )
+            self.body = Payload(
+                deviceInfo: deviceInfo,
+                forceDirectPlay: forceDirectPlay,
+                forceTranscode: forceTranscode,
+                mediaPlayer: mediaPlayer,
+                supportedMimeTypes: supportedMimeTypes
             )
         }
     }
@@ -79,7 +79,7 @@ public struct StartEpisodePlaybackSession: Interface {
 
 public extension StartEpisodePlaybackSession.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let deviceInfo: StartPlaybackSession.Parameters.DeviceInfo?
         let forceDirectPlay: Bool?
         let forceTranscode: Bool?

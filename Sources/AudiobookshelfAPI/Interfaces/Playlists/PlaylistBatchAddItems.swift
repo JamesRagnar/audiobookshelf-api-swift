@@ -14,7 +14,7 @@ public struct PlaylistBatchAddItems: Interface {
     // MARK: Request
     
     public struct Parameters: RequestParameters {
-        
+
         public struct Item: Encodable, Sendable {
             
             /// The ID of the library item the playlist item is for.
@@ -41,7 +41,9 @@ public struct PlaylistBatchAddItems: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = ArrayBody<Item>
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -55,7 +57,7 @@ public struct PlaylistBatchAddItems: Interface {
             items: [Item]
         ) {
             self.path = "/api/playlists/\(playlistID)/batch/add"
-            self.body = .json(items)
+            self.body = ArrayBody(items)
         }
         
     }

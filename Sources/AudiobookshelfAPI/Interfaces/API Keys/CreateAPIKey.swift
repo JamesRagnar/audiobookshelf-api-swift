@@ -23,7 +23,9 @@ public struct CreateAPIKey: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +34,7 @@ public struct CreateAPIKey: Interface {
         /// - Parameters:
         ///   - expiresAt: Optional Unix timestamp for when the key expires.
         public init(expiresAt: Int? = nil) {
-            self.body = .json(Body(expiresAt: expiresAt))
+            self.body = Payload(expiresAt: expiresAt)
         }
 
     }
@@ -63,7 +65,7 @@ public struct CreateAPIKey: Interface {
 
 public extension CreateAPIKey.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let expiresAt: Int?
 

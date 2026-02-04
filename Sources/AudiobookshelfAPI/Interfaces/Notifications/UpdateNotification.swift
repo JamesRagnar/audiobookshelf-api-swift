@@ -23,7 +23,9 @@ public struct UpdateNotification: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -49,17 +51,15 @@ public struct UpdateNotification: Interface {
             type: String? = nil
         ) {
             self.path = "/api/notifications/\(notificationId)"
-            self.body = .json(
-                Body(
-                    id: notificationId,
-                    libraryId: libraryId,
-                    eventName: eventName,
-                    urls: urls,
-                    titleTemplate: titleTemplate,
-                    bodyTemplate: bodyTemplate,
-                    enabled: enabled,
-                    type: type
-                )
+            self.body = Payload(
+                id: notificationId,
+                libraryId: libraryId,
+                eventName: eventName,
+                urls: urls,
+                titleTemplate: titleTemplate,
+                bodyTemplate: bodyTemplate,
+                enabled: enabled,
+                type: type
             )
         }
 
@@ -79,7 +79,7 @@ public struct UpdateNotification: Interface {
 
 public extension UpdateNotification.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let id: String
 

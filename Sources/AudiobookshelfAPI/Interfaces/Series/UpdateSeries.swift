@@ -23,7 +23,9 @@ public struct UpdateSeries: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,11 +41,9 @@ public struct UpdateSeries: Interface {
             description: String? = nil
         ) {
             self.path = "/api/series/\(seriesId)"
-            self.body = .json(
-                Body(
-                    name: name,
-                    description: description
-                )
+            self.body = Payload(
+                name: name,
+                description: description
             )
         }
 
@@ -71,7 +71,7 @@ public struct UpdateSeries: Interface {
 
 public extension UpdateSeries.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String?
 

@@ -23,7 +23,9 @@ public struct BatchDeleteSessions: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +34,7 @@ public struct BatchDeleteSessions: Interface {
         /// - Parameters:
         ///   - sessionIds: Array of session IDs to delete.
         public init(sessionIds: [String]) {
-            self.body = .json(Body(sessions: sessionIds))
+            self.body = Payload(sessions: sessionIds)
         }
 
     }
@@ -67,7 +69,7 @@ public struct BatchDeleteSessions: Interface {
 
 public extension BatchDeleteSessions.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let sessions: [String]
 

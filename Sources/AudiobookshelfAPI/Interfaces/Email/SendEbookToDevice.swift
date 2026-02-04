@@ -23,7 +23,9 @@ public struct SendEbookToDevice: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,9 +38,7 @@ public struct SendEbookToDevice: Interface {
             libraryItemId: String,
             deviceName: String
         ) {
-            self.body = .json(
-                Body(libraryItemId: libraryItemId, deviceName: deviceName)
-            )
+            self.body = Payload(libraryItemId: libraryItemId, deviceName: deviceName)
         }
 
     }
@@ -69,7 +69,7 @@ public struct SendEbookToDevice: Interface {
 
 public extension SendEbookToDevice.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemId: String
 

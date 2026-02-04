@@ -23,7 +23,9 @@ public struct BatchDeleteLibraryItems: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,9 +33,7 @@ public struct BatchDeleteLibraryItems: Interface {
         ///
         /// - Parameter libraryItemIds: Array of library item IDs to delete.
         public init(libraryItemIds: [String]) {
-            self.body = .json(
-                Body(libraryItemIds: libraryItemIds)
-            )
+            self.body = Payload(libraryItemIds: libraryItemIds)
         }
 
     }
@@ -52,7 +52,7 @@ public struct BatchDeleteLibraryItems: Interface {
 
 public extension BatchDeleteLibraryItems.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

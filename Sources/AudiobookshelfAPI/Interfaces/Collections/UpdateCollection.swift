@@ -23,7 +23,9 @@ public struct UpdateCollection: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -43,14 +45,12 @@ public struct UpdateCollection: Interface {
             books: [String]? = nil
         ) {
             self.path = "/api/collections/\(collectionID)"
-            
-            self.body = .json(
-                Body(
-                    libraryID: libraryID,
-                    name: name,
-                    description: description,
-                    books: books
-                )
+
+            self.body = Payload(
+                libraryID: libraryID,
+                name: name,
+                description: description,
+                books: books
             )
         }
         
@@ -85,7 +85,7 @@ public struct UpdateCollection: Interface {
 
 public extension UpdateCollection.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryID: String
 

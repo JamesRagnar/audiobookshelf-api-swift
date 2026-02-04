@@ -23,7 +23,9 @@ public struct UpdateEbookFileStatus: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,11 +36,9 @@ public struct UpdateEbookFileStatus: Interface {
             ebookProgress: Float? = nil
         ) {
             self.path = "/api/items/\(itemId)/ebook/\(fileId)/status"
-            self.body = .json(
-                Body(
-                    ebookLocation: ebookLocation,
-                    ebookProgress: ebookProgress
-                )
+            self.body = Payload(
+                ebookLocation: ebookLocation,
+                ebookProgress: ebookProgress
             )
         }
 
@@ -74,7 +74,7 @@ public struct UpdateEbookFileStatus: Interface {
 
 public extension UpdateEbookFileStatus.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let ebookLocation: String?
 

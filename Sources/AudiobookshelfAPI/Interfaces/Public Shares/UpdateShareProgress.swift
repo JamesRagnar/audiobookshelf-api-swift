@@ -23,7 +23,9 @@ public struct UpdateShareProgress: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .none
 
@@ -37,9 +39,7 @@ public struct UpdateShareProgress: Interface {
             currentTime: Double
         ) {
             self.path = "/public/share/\(slug)/progress"
-            self.body = .json(
-                Body(currentTime: currentTime)
-            )
+            self.body = Payload(currentTime: currentTime)
         }
 
     }
@@ -70,7 +70,7 @@ public struct UpdateShareProgress: Interface {
 
 public extension UpdateShareProgress.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let currentTime: Double
 

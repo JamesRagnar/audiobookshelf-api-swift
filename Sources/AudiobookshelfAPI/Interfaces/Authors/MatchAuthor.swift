@@ -23,7 +23,9 @@ public struct MatchAuthor: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,12 +43,10 @@ public struct MatchAuthor: Interface {
             region: String? = nil
         ) {
             self.path = "/api/authors/\(authorId)/match"
-            self.body = .json(
-                Body(
-                    q: query,
-                    asin: asin,
-                    region: region
-                )
+            self.body = Payload(
+                q: query,
+                asin: asin,
+                region: region
             )
         }
     }
@@ -72,7 +72,7 @@ public struct MatchAuthor: Interface {
 
 public extension MatchAuthor.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let q: String?
         let asin: String?
         let region: String?

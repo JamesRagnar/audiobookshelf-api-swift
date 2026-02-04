@@ -23,7 +23,9 @@ public struct UpdateBackupPath: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +34,7 @@ public struct UpdateBackupPath: Interface {
         /// - Parameters:
         ///   - backupPath: The new file system path for storing backups.
         public init(backupPath: String) {
-            self.body = .json(Body(backupPath: backupPath))
+            self.body = Payload(backupPath: backupPath)
         }
 
     }
@@ -63,7 +65,7 @@ public struct UpdateBackupPath: Interface {
 
 public extension UpdateBackupPath.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let backupPath: String
 

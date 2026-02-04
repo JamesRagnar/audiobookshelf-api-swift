@@ -43,7 +43,9 @@ public struct CreatePlaylist: Interface {
         
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -62,14 +64,12 @@ public struct CreatePlaylist: Interface {
             coverPath: String? = nil,
             items: [Item]? = nil
         ) {
-            self.body = .json(
-                Body(
-                    libraryId: libraryId,
-                    name: name,
-                    description: description,
-                    coverPath: coverPath,
-                    items: items
-                )
+            self.body = Payload(
+                libraryId: libraryId,
+                name: name,
+                description: description,
+                coverPath: coverPath,
+                items: items
             )
         }
         
@@ -99,7 +99,7 @@ public struct CreatePlaylist: Interface {
 
 public extension CreatePlaylist.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryId: String
 

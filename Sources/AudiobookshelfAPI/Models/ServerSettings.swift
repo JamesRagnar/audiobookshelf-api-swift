@@ -58,7 +58,7 @@ public struct ServerSettings {
     public let authOpenIDTokenURL: String?
 
     /// OpenID Connect user info URL.
-    public let authOpenIDUserinfoURL: String?
+    public let authOpenIDUserInfoURL: String?
 
     /// OpenID Connect JWKS URL.
     public let authOpenIDJwksURL: String?
@@ -156,8 +156,8 @@ public struct ServerSettings {
     /// Whether to allow the server to be embedded in an iframe.
     public let allowIframe: Bool?
 
-    /// Whether to use subfolder for OpenID redirect URLs.
-    public let authOpenIDSubfolderForRedirectURLs: Bool?
+    /// Subfolder for OpenID redirect URLs (empty string or path). Undefined when not configured.
+    public let authOpenIDSubfolderForRedirectURLs: String?
 
 }
 
@@ -180,7 +180,7 @@ extension ServerSettings: Decodable {
         case authOpenIDIssuerURL
         case authOpenIDAuthorizationURL
         case authOpenIDTokenURL
-        case authOpenIDUserinfoURL
+        case authOpenIDUserInfoURL
         case authOpenIDJwksURL
         case authOpenIDLogoutURL
         case authOpenIDClientID
@@ -235,7 +235,7 @@ extension ServerSettings: Decodable {
         authOpenIDIssuerURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDIssuerURL)
         authOpenIDAuthorizationURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDAuthorizationURL)
         authOpenIDTokenURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDTokenURL)
-        authOpenIDUserinfoURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDUserinfoURL)
+        authOpenIDUserInfoURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDUserInfoURL)
         authOpenIDJwksURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDJwksURL)
         authOpenIDLogoutURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDLogoutURL)
         authOpenIDClientID = try container.decodeIfPresent(String.self, forKey: .authOpenIDClientID)
@@ -291,7 +291,7 @@ extension ServerSettings: Decodable {
         }
 
         allowIframe = try container.decodeIfPresent(Bool.self, forKey: .allowIframe)
-        authOpenIDSubfolderForRedirectURLs = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDSubfolderForRedirectURLs)
+        authOpenIDSubfolderForRedirectURLs = try container.decodeIfPresent(String.self, forKey: .authOpenIDSubfolderForRedirectURLs)
     }
 }
 

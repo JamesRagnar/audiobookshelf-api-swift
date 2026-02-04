@@ -23,7 +23,9 @@ public struct PatchMediaProgress: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -66,21 +68,19 @@ public struct PatchMediaProgress: Interface {
             }
             self.path = path
 
-            self.body = .json(
-                Body(
-                    duration: duration,
-                    currentTime: currentTime,
-                    progress: progress,
-                    isFinished: isFinished,
-                    hideFromContinueListening: hideFromContinueListening,
-                    ebookLocation: ebookLocation,
-                    ebookProgress: ebookProgress,
-                    finishedAt: finishedAt,
-                    createdAt: createdAt,
-                    lastUpdate: lastUpdate,
-                    markAsFinishedTimeRemaining: markAsFinishedTimeRemaining,
-                    markAsFinishedPercentComplete: markAsFinishedPercentComplete
-                )
+            self.body = Payload(
+                duration: duration,
+                currentTime: currentTime,
+                progress: progress,
+                isFinished: isFinished,
+                hideFromContinueListening: hideFromContinueListening,
+                ebookLocation: ebookLocation,
+                ebookProgress: ebookProgress,
+                finishedAt: finishedAt,
+                createdAt: createdAt,
+                lastUpdate: lastUpdate,
+                markAsFinishedTimeRemaining: markAsFinishedTimeRemaining,
+                markAsFinishedPercentComplete: markAsFinishedPercentComplete
             )
         }
 
@@ -110,7 +110,7 @@ public struct PatchMediaProgress: Interface {
 
 public extension PatchMediaProgress.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let duration: Float?
 

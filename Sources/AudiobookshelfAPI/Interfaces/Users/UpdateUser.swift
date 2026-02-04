@@ -23,7 +23,9 @@ public struct UpdateUser: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -38,16 +40,14 @@ public struct UpdateUser: Interface {
             permissions: UserPermissions? = nil
         ) {
             self.path = "/api/users/\(userId)"
-            self.body = .json(
-                Body(
-                    username: username,
-                    password: password,
-                    type: type,
-                    isActive: isActive,
-                    isLocked: isLocked,
-                    librariesAccessible: librariesAccessible,
-                    permissions: permissions
-                )
+            self.body = Payload(
+                username: username,
+                password: password,
+                type: type,
+                isActive: isActive,
+                isLocked: isLocked,
+                librariesAccessible: librariesAccessible,
+                permissions: permissions
             )
         }
 
@@ -83,7 +83,7 @@ public struct UpdateUser: Interface {
 
 public extension UpdateUser.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let username: String?
 

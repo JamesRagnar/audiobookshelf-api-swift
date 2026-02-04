@@ -23,7 +23,9 @@ public struct UpdateWatcher: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -40,13 +42,11 @@ public struct UpdateWatcher: Interface {
             type: String,
             oldPath: String? = nil
         ) {
-            self.body = .json(
-                Body(
-                    libraryId: libraryId,
-                    path: path,
-                    type: type,
-                    oldPath: oldPath
-                )
+            self.body = Payload(
+                libraryId: libraryId,
+                path: path,
+                type: type,
+                oldPath: oldPath
             )
         }
 
@@ -78,7 +78,7 @@ public struct UpdateWatcher: Interface {
 
 public extension UpdateWatcher.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryId: String
 

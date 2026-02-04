@@ -23,15 +23,15 @@ public struct UpdateLibraryItemCover: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(itemId: String, url: String? = nil, cover: String? = nil) {
             self.path = "/api/items/\(itemId)/cover"
-            self.body = .json(
-                Body(url: url, cover: cover)
-            )
+            self.body = Payload(url: url, cover: cover)
         }
 
     }
@@ -66,7 +66,7 @@ public struct UpdateLibraryItemCover: Interface {
 
 public extension UpdateLibraryItemCover.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let url: String?
 

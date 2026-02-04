@@ -32,7 +32,9 @@ public struct GetSeriesById: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody? = nil
+        public typealias Body = EmptyBody
+
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 

@@ -41,7 +41,7 @@ public struct InvalidTokenEvent: SocketEvent {
     
     public static let name = "invalid_token"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
 
 }
 
@@ -77,7 +77,7 @@ public struct PongEvent: SocketEvent {
     
     public static let name = "pong"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
 
 }
 

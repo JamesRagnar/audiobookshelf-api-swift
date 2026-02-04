@@ -23,15 +23,15 @@ public struct UpdateLibraryItemTracks: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(itemId: String, tracks: [AudioTrack]) {
             self.path = "/api/items/\(itemId)/tracks"
-            self.body = .json(
-                Body(tracks: tracks)
-            )
+            self.body = Payload(tracks: tracks)
         }
 
     }
@@ -66,7 +66,7 @@ public struct UpdateLibraryItemTracks: Interface {
 
 public extension UpdateLibraryItemTracks.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let tracks: [AudioTrack]
 

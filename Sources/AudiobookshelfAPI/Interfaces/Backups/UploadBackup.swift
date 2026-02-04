@@ -23,7 +23,9 @@ public struct UploadBackup: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = BinaryBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +33,9 @@ public struct UploadBackup: Interface {
         ///
         /// - Parameters:
         ///   - backupFile: The backup file data to upload.
-        public init(backupFile: Data) {
-            self.body = .data(backupFile)
+        ///   - mimeType: The MIME type for the backup file.
+        public init(backupFile: Data, mimeType: String = "application/octet-stream") {
+            self.body = BinaryBody(data: backupFile, contentType: mimeType)
         }
 
     }

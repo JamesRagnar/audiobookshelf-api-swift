@@ -13,6 +13,6 @@ public struct BackupAppliedEvent: SocketEvent {
     
     public static let name = "backup_applied"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
 
 }

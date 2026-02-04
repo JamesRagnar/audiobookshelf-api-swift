@@ -23,7 +23,9 @@ public struct BatchQuickMatchLibraryItems: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,11 +33,9 @@ public struct BatchQuickMatchLibraryItems: Interface {
             libraryItemIds: [String],
             options: BatchQuickMatchLibraryItems.QuickMatchOptions? = nil
         ) {
-            self.body = .json(
-                Body(
-                    libraryItemIds: libraryItemIds,
-                    options: options
-                )
+            self.body = Payload(
+                libraryItemIds: libraryItemIds,
+                options: options
             )
         }
 
@@ -80,7 +80,7 @@ extension BatchQuickMatchLibraryItems {
 
 public extension BatchQuickMatchLibraryItems.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

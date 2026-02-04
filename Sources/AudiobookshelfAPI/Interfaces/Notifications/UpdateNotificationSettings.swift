@@ -23,7 +23,9 @@ public struct UpdateNotificationSettings: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -33,13 +35,11 @@ public struct UpdateNotificationSettings: Interface {
             maxNotificationQueue: Int? = nil,
             notificationDelay: Int? = nil
         ) {
-            self.body = .json(
-                Body(
-                    appriseApiUrl: appriseApiUrl,
-                    maxFailedAttempts: maxFailedAttempts,
-                    maxNotificationQueue: maxNotificationQueue,
-                    notificationDelay: notificationDelay
-                )
+            self.body = Payload(
+                appriseApiUrl: appriseApiUrl,
+                maxFailedAttempts: maxFailedAttempts,
+                maxNotificationQueue: maxNotificationQueue,
+                notificationDelay: notificationDelay
             )
         }
 
@@ -71,7 +71,7 @@ public struct UpdateNotificationSettings: Interface {
 
 public extension UpdateNotificationSettings.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let appriseApiUrl: String?
 

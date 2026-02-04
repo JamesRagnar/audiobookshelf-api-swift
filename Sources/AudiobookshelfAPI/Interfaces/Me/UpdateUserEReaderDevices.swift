@@ -23,7 +23,9 @@ public struct UpdateUserEReaderDevices: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,7 +33,7 @@ public struct UpdateUserEReaderDevices: Interface {
         ///
         /// - Parameter devices: Array of e-reader device configurations
         public init(devices: [EReaderDevice]) {
-            self.body = .json(Body(ereaderDevices: devices))
+            self.body = Payload(ereaderDevices: devices)
         }
     }
 
@@ -51,7 +53,7 @@ public struct UpdateUserEReaderDevices: Interface {
 
 public extension UpdateUserEReaderDevices.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let ereaderDevices: [EReaderDevice]
     }
 

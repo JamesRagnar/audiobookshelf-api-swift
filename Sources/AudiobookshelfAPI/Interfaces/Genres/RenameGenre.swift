@@ -23,7 +23,9 @@ public struct RenameGenre: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,9 +38,7 @@ public struct RenameGenre: Interface {
             genre: String,
             newGenre: String
         ) {
-            self.body = .json(
-                Body(genre: genre, newGenre: newGenre)
-            )
+            self.body = Payload(genre: genre, newGenre: newGenre)
         }
 
     }
@@ -75,7 +75,7 @@ public struct RenameGenre: Interface {
 
 public extension RenameGenre.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let genre: String
 

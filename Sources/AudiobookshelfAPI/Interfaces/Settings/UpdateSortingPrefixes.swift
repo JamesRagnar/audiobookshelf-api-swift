@@ -23,7 +23,9 @@ public struct UpdateSortingPrefixes: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +34,7 @@ public struct UpdateSortingPrefixes: Interface {
         /// - Parameters:
         ///   - prefixes: Array of sorting prefixes (e.g., ["the", "a", "an"]).
         public init(prefixes: [String]) {
-            self.body = .json(Body(sortingPrefixes: prefixes))
+            self.body = Payload(sortingPrefixes: prefixes)
         }
 
     }
@@ -69,7 +71,7 @@ public struct UpdateSortingPrefixes: Interface {
 
 public extension UpdateSortingPrefixes.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let sortingPrefixes: [String]
 

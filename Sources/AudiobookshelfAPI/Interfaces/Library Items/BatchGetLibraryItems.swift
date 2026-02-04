@@ -23,7 +23,9 @@ public struct BatchGetLibraryItems: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,11 +38,9 @@ public struct BatchGetLibraryItems: Interface {
             libraryItemIds: [String],
             expanded: Bool? = nil
         ) {
-            self.body = .json(
-                Body(
-                    libraryItemIds: libraryItemIds,
-                    expanded: expanded
-                )
+            self.body = Payload(
+                libraryItemIds: libraryItemIds,
+                expanded: expanded
             )
         }
 
@@ -60,7 +60,7 @@ public struct BatchGetLibraryItems: Interface {
 
 public extension BatchGetLibraryItems.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

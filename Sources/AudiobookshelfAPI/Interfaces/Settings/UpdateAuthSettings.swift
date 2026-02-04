@@ -9,6 +9,8 @@ import Foundation
 import RagnarNetworking
 
 /// Update authentication settings.
+/// Note: This endpoint differentiates between omitted fields (no change) and explicit JSON null (clear value).
+/// Use `Nullable.null` to send JSON null; use `nil` to omit the field.
 public struct UpdateAuthSettings: Interface {
 
     // MARK: Request
@@ -21,19 +23,17 @@ public struct UpdateAuthSettings: Interface {
 
         public let queryItems: [String : String?]? = nil
 
-        public let headers: [String : String]?
+        public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = AuthSettingsUpdate
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        /// Update Auth Settings Parameters
-        ///
-        /// All parameters are optional - only include fields you want to update.
-        public init(settings: [String: Any]) throws {
-            self.headers = ["Content-Type": "application/json"]
-            let jsonData = try JSONSerialization.data(withJSONObject: settings)
-            self.body = .data(jsonData)
+        /// Update Auth Settings Parameters.
+        public init(settings: Body) {
+            self.body = settings
         }
 
     }

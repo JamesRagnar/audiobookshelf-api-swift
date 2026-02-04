@@ -23,7 +23,9 @@ public struct CreateNotification: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,15 +37,13 @@ public struct CreateNotification: Interface {
             libraryId: String? = nil,
             enabled: Bool = true
         ) {
-            self.body = .json(
-                Body(
-                    eventName: eventName,
-                    urls: urls,
-                    titleTemplate: titleTemplate,
-                    bodyTemplate: bodyTemplate,
-                    libraryId: libraryId,
-                    enabled: enabled
-                )
+            self.body = Payload(
+                eventName: eventName,
+                urls: urls,
+                titleTemplate: titleTemplate,
+                bodyTemplate: bodyTemplate,
+                libraryId: libraryId,
+                enabled: enabled
             )
         }
 
@@ -75,7 +75,7 @@ public struct CreateNotification: Interface {
 
 public extension CreateNotification.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let eventName: String
 

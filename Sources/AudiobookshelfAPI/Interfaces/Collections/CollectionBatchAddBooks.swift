@@ -23,7 +23,9 @@ public struct CollectionBatchAddBooks: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
 
@@ -37,7 +39,7 @@ public struct CollectionBatchAddBooks: Interface {
             bookIDs: [String]
         ) {
             self.path = "/api/collections/\(collectionID)/batch/add"
-            self.body = .json(Body(books: bookIDs))
+            self.body = Payload(books: bookIDs)
         }
         
     }
@@ -76,7 +78,7 @@ public struct CollectionBatchAddBooks: Interface {
 
 public extension CollectionBatchAddBooks.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let books: [String]
 

@@ -23,7 +23,9 @@ public struct UploadAuthorImage: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -37,7 +39,7 @@ public struct UploadAuthorImage: Interface {
             url: String
         ) {
             self.path = "/api/authors/\(authorId)/image"
-            self.body = .json(Body(url: url))
+            self.body = Payload(url: url)
         }
 
     }
@@ -76,7 +78,7 @@ public struct UploadAuthorImage: Interface {
 
 public extension UploadAuthorImage.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let url: String
 

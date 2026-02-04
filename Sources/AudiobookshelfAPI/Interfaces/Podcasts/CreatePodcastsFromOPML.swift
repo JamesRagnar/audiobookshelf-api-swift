@@ -23,7 +23,9 @@ public struct CreatePodcastsFromOPML: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -40,13 +42,11 @@ public struct CreatePodcastsFromOPML: Interface {
             folderId: String,
             autoDownloadEpisodes: Bool = false
         ) {
-            self.body = .json(
-                Body(
-                    feeds: feeds,
-                    libraryId: libraryId,
-                    folderId: folderId,
-                    autoDownloadEpisodes: autoDownloadEpisodes
-                )
+            self.body = Payload(
+                feeds: feeds,
+                libraryId: libraryId,
+                folderId: folderId,
+                autoDownloadEpisodes: autoDownloadEpisodes
             )
         }
 
@@ -82,7 +82,7 @@ public struct CreatePodcastsFromOPML: Interface {
 
 public extension CreatePodcastsFromOPML.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let feeds: [String]
 

@@ -23,7 +23,9 @@ public struct CheckPathExists: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,9 +38,7 @@ public struct CheckPathExists: Interface {
             directory: String,
             folderPath: String
         ) {
-            self.body = .json(
-                Body(directory: directory, folderPath: folderPath)
-            )
+            self.body = Payload(directory: directory, folderPath: folderPath)
         }
 
     }
@@ -79,7 +79,7 @@ public struct CheckPathExists: Interface {
 
 public extension CheckPathExists.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let directory: String
 

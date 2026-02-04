@@ -21,9 +21,11 @@ public struct UploadFile: Interface {
 
         public let queryItems: [String : String?]? = nil
 
-        public let headers: [String : String]?
+        public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = BinaryBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -33,8 +35,7 @@ public struct UploadFile: Interface {
             libraryId: String? = nil,
             folderId: String? = nil
         ) {
-            self.headers = ["Content-Type": contentType]
-            self.body = .data(fileData)
+            self.body = BinaryBody(data: fileData, contentType: contentType)
         }
 
     }

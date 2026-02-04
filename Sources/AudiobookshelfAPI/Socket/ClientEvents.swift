@@ -41,7 +41,7 @@ public struct RemoveLogListenerEvent: SocketEvent {
     
     public static let name = "remove_log_listener"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
     
 }
 
@@ -50,7 +50,7 @@ public struct FetchDailyLogsEvent: SocketEvent {
     
     public static let name = "fetch_daily_logs"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
     
 }
 
@@ -79,6 +79,6 @@ public struct PingEvent: SocketEvent {
     
     public static let name = "ping"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
     
 }

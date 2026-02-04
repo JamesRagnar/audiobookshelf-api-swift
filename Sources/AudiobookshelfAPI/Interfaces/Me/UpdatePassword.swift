@@ -23,7 +23,9 @@ public struct UpdatePassword: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,9 +38,7 @@ public struct UpdatePassword: Interface {
             currentPassword: String?,
             newPassword: String?
         ) {
-            self.body = .json(
-                Body(password: currentPassword, newPassword: newPassword)
-            )
+            self.body = Payload(password: currentPassword, newPassword: newPassword)
         }
     }
 
@@ -60,7 +60,7 @@ public struct UpdatePassword: Interface {
 
 public extension UpdatePassword.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let password: String?
         let newPassword: String?
     }

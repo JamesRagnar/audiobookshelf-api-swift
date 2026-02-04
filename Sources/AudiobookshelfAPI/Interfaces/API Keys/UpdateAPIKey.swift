@@ -23,7 +23,9 @@ public struct UpdateAPIKey: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,7 +36,7 @@ public struct UpdateAPIKey: Interface {
         ///   - expiresAt: Optional Unix timestamp for when the key expires (null to remove expiration).
         public init(keyId: String, expiresAt: Int?) {
             self.path = "/api/api-keys/\(keyId)"
-            self.body = .json(Body(expiresAt: expiresAt))
+            self.body = Payload(expiresAt: expiresAt)
         }
 
     }
@@ -69,7 +71,7 @@ public struct UpdateAPIKey: Interface {
 
 public extension UpdateAPIKey.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let expiresAt: Int?
 

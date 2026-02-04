@@ -23,7 +23,9 @@ public struct CreateBookmark: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,9 +41,7 @@ public struct CreateBookmark: Interface {
             title: String
         ) {
             self.path = "/api/me/item/\(libraryItemId)/bookmark"
-            self.body = .json(
-                Body(time: time, title: title)
-            )
+            self.body = Payload(time: time, title: title)
         }
 
     }
@@ -60,7 +60,7 @@ public struct CreateBookmark: Interface {
 
 public extension CreateBookmark.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let time: Float
 

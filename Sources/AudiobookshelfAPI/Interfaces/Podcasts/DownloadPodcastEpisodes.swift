@@ -23,7 +23,9 @@ public struct DownloadPodcastEpisodes: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -37,7 +39,7 @@ public struct DownloadPodcastEpisodes: Interface {
             episodes: [EpisodeToDownload]
         ) {
             self.path = "/api/podcasts/\(podcastId)/download-episodes"
-            self.body = .json(Body(episodes: episodes))
+            self.body = Payload(episodes: episodes)
         }
 
     }
@@ -125,7 +127,7 @@ extension DownloadPodcastEpisodes {
 
 public extension DownloadPodcastEpisodes.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let episodes: [DownloadPodcastEpisodes.EpisodeToDownload]
 

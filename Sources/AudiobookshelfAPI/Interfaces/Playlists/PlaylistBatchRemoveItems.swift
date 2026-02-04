@@ -42,7 +42,9 @@ public struct PlaylistBatchRemoveItems: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -56,7 +58,7 @@ public struct PlaylistBatchRemoveItems: Interface {
             items: [Item]
         ) {
             self.path = "/api/playlists/\(playlistID)/batch/remove"
-            self.body = .json(Body(items: items))
+            self.body = Payload(items: items)
         }
         
     }
@@ -100,7 +102,7 @@ public struct PlaylistBatchRemoveItems: Interface {
 
 public extension PlaylistBatchRemoveItems.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let items: [Item]
 

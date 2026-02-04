@@ -76,7 +76,9 @@ public struct BatchCreateUpdateMediaProgress: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = ArrayBody<ProgressItem>
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -84,7 +86,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
         ///
         /// - Parameter progressItems: The Progress items to update
         public init(progressItems: [ProgressItem]) {
-            self.body = .json(progressItems)
+            self.body = ArrayBody(progressItems)
         }
         
     }

@@ -23,7 +23,9 @@ public struct UpdateLibraryItemMedia: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = LibraryItemMediaPayload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,13 +33,13 @@ public struct UpdateLibraryItemMedia: Interface {
         ///
         /// - Parameters:
         ///   - itemId: The ID of the library item.
-        ///   - metadata: Dictionary of metadata fields to update.
+        ///   - mediaPayload: Media payload to update (metadata, tags, podcast settings, etc).
         public init(
             itemId: String,
-            metadata: [String: String]
+            mediaPayload: LibraryItemMediaPayload
         ) {
             self.path = "/api/items/\(itemId)/media"
-            self.body = .json(metadata)
+            self.body = mediaPayload
         }
 
     }

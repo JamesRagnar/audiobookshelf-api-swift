@@ -40,7 +40,7 @@ public struct StreamReadyEvent: SocketEvent {
     
     public static let name = "stream_ready"
     
-    public typealias Schema = EmptyBody
+    public typealias Schema = SocketEmptyBody
 
 }
 

@@ -23,7 +23,9 @@ public struct PlaylistAddItem: Interface {
         
         public let headers: [String : String]? = nil
         
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
         
         public let authentication: AuthenticationType = .bearer
         
@@ -39,11 +41,9 @@ public struct PlaylistAddItem: Interface {
             episodeID: String? = nil
         ) {
             self.path = "/api/playlists/\(playlistID)/item"
-            self.body = .json(
-                Body(
-                    libraryItemId: libraryItemID,
-                    episodeId: episodeID
-                )
+            self.body = Payload(
+                libraryItemId: libraryItemID,
+                episodeId: episodeID
             )
         }
         
@@ -83,7 +83,7 @@ public struct PlaylistAddItem: Interface {
 
 public extension PlaylistAddItem.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemId: String
 

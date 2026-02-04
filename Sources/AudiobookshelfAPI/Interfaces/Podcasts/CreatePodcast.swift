@@ -23,7 +23,9 @@ public struct CreatePodcast: Interface {
 
         public let headers: [String : String]? = nil
 
-        public let body: RequestBody?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -40,13 +42,11 @@ public struct CreatePodcast: Interface {
             path: String,
             metadata: PodcastMetadataPayload
         ) {
-            self.body = .json(
-                Body(
-                    libraryId: libraryId,
-                    folderId: folderId,
-                    path: path,
-                    media: MediaPayload(metadata: metadata)
-                )
+            self.body = Payload(
+                libraryId: libraryId,
+                folderId: folderId,
+                path: path,
+                media: MediaPayload(metadata: metadata)
             )
         }
     }
@@ -71,7 +71,7 @@ public struct CreatePodcast: Interface {
 
 public extension CreatePodcast.Parameters {
 
-    struct Body: Encodable, Sendable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let libraryId: String
         let folderId: String
         let path: String
