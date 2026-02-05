@@ -19,11 +19,13 @@ public struct CreatePodcast: Interface {
 
         public let path: String = "/api/podcasts"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,14 +41,12 @@ public struct CreatePodcast: Interface {
             folderId: String,
             path: String,
             metadata: PodcastMetadataPayload
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    libraryId: libraryId,
-                    folderId: folderId,
-                    path: path,
-                    media: MediaPayload(metadata: metadata)
-                )
+        ) {
+            self.body = Payload(
+                libraryId: libraryId,
+                folderId: folderId,
+                path: path,
+                media: MediaPayload(metadata: metadata)
             )
         }
     }
@@ -71,18 +71,18 @@ public struct CreatePodcast: Interface {
 
 public extension CreatePodcast.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let libraryId: String
         let folderId: String
         let path: String
         let media: MediaPayload
     }
 
-    struct MediaPayload: Encodable {
+    struct MediaPayload: Encodable, Sendable {
         let metadata: PodcastMetadataPayload
     }
 
-    struct PodcastMetadataPayload: Encodable {
+    struct PodcastMetadataPayload: Encodable, Sendable {
         let title: String?
         let author: String?
         let description: String?

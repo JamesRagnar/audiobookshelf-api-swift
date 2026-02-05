@@ -19,11 +19,13 @@ public struct UpdateNotificationSettings: Interface {
 
         public let path: String = "/api/notifications"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,14 +34,12 @@ public struct UpdateNotificationSettings: Interface {
             maxFailedAttempts: Int? = nil,
             maxNotificationQueue: Int? = nil,
             notificationDelay: Int? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    appriseApiUrl: appriseApiUrl,
-                    maxFailedAttempts: maxFailedAttempts,
-                    maxNotificationQueue: maxNotificationQueue,
-                    notificationDelay: notificationDelay
-                )
+        ) {
+            self.body = Payload(
+                appriseApiUrl: appriseApiUrl,
+                maxFailedAttempts: maxFailedAttempts,
+                maxNotificationQueue: maxNotificationQueue,
+                notificationDelay: notificationDelay
             )
         }
 
@@ -63,7 +63,7 @@ public struct UpdateNotificationSettings: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -71,7 +71,7 @@ public struct UpdateNotificationSettings: Interface {
 
 public extension UpdateNotificationSettings.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let appriseApiUrl: String?
 

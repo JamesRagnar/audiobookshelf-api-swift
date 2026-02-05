@@ -25,11 +25,11 @@ public struct GetLibrarySeriesById: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -45,7 +45,7 @@ public struct GetLibrarySeriesById: Interface {
         ) {
             self.path = "/api/libraries/\(libraryId)/series/\(seriesId)"
 
-            var queryItems: [String: String] = [:]
+            var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("include", include?.joined())
             self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
@@ -66,7 +66,7 @@ public struct GetLibrarySeriesById: Interface {
 
         200: .success(Response.self),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

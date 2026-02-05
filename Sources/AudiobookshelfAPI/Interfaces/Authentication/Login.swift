@@ -11,23 +11,25 @@ import RagnarNetworking
 /// This endpoint logs in a client to the server, returning information about the user and server.
 /// The`Authorize` endpoint is also available if an API token was persisted.
 public struct Login: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .post
 
         public let path: String = "/login"
-        
-        public let queryItems: [String : String]? = nil
-        
-        public let headers: [String : String]?
-        
-        public let body: Data?
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]?
+
+        public typealias Body = Payload
+
+        public let body: Body?
+
         public let authentication: AuthenticationType = .none
-        
+
         /// Login Parameters
         ///
         /// - Parameters:
@@ -38,60 +40,70 @@ public struct Login: Interface {
             username: String,
             password: String,
             returnRefreshToken: Bool
-        ) throws {
+        ) {
             self.headers = [
-                "x-return-tokens": returnRefreshToken.description,
+                "x-return-tokens": returnRefreshToken.description
             ]
-            
-            self.body = try JSONEncoder().encode(
-                [
-                    "username": username,
-                    "password": password
-                ]
+
+            self.body = Payload(
+                username: username,
+                password: password
             )
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public struct Response: Decodable, Sendable {
-        
+
         /// The authenticated user.
         public let user: User
-        
+
         /// The ID of the first library in the list the user has access to.
         public let userDefaultLibraryID: String
-        
+
         /// The server's settings.
         public let serverSettings: ServerSettings
-        
+
         /// The server's installation source.
         public let source: String
-        
+
         enum CodingKeys: String, CodingKey {
             case user
             case userDefaultLibraryID = "userDefaultLibraryId"
             case serverSettings
             case source = "Source"
         }
-        
+
     }
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case unauthorized
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// Invalid username or password.
         401: .failure(AudiobookshelfError.unauthorized)
-        
+
     ]
-    
+
+}
+
+public extension Login.Parameters {
+
+    struct Payload: RequestBody, Encodable, Sendable {
+
+        let username: String
+
+        let password: String
+
+    }
+
 }

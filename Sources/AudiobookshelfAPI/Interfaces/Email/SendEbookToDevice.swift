@@ -19,11 +19,13 @@ public struct SendEbookToDevice: Interface {
 
         public let path: String = "/api/emails/send-ebook-to-device"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,10 +37,8 @@ public struct SendEbookToDevice: Interface {
         public init(
             libraryItemId: String,
             deviceName: String
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(libraryItemId: libraryItemId, deviceName: deviceName)
-            )
+        ) {
+            self.body = Payload(libraryItemId: libraryItemId, deviceName: deviceName)
         }
 
     }
@@ -69,7 +69,7 @@ public struct SendEbookToDevice: Interface {
 
 public extension SendEbookToDevice.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemId: String
 

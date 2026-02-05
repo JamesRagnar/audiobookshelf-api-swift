@@ -8,7 +8,7 @@
 import Foundation
 
 extension Bool {
-    
+
     var binaryString: String {
         self ? "1" : "0"
     }

@@ -10,21 +10,21 @@ import RagnarNetworking
 
 /// This endpoint retrieves your media progress that is associated with the given library item ID or podcast episode ID.
 public struct GetMediaProgress: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String : String]? = nil
-        
-        public let headers: [String : String]? = nil
-        
-        public let body: Data? = nil
-                
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
+        public let body: Body? = nil
+
         public let authentication: AuthenticationType = .bearer
 
         /// Get Media Progress Parameters
@@ -40,30 +40,30 @@ public struct GetMediaProgress: Interface {
             if let episodeID = episodeID {
                 path += "/\(episodeID)"
             }
-        
+
             self.path = path
         }
 
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = MediaProgress
-    
+
     public enum AudiobookshelfError: Swift.Error {
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
-        
+
         /// Success
         200: .success(Response.self),
-        
+
         /// No media progress was found that matches the given IDs.
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
-    
+
 }

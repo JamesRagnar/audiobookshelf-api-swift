@@ -19,11 +19,13 @@ public struct CreateLibrary: Interface {
 
         public let path: String = "/api/libraries"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,15 +43,13 @@ public struct CreateLibrary: Interface {
             icon: String? = nil,
             mediaType: String,
             provider: String? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    name: name,
-                    folders: folders,
-                    icon: icon,
-                    mediaType: mediaType,
-                    provider: provider
-                )
+        ) {
+            self.body = Payload(
+                name: name,
+                folders: folders,
+                icon: icon,
+                mediaType: mediaType,
+                provider: provider
             )
         }
 
@@ -69,7 +69,7 @@ public struct CreateLibrary: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -77,7 +77,7 @@ public struct CreateLibrary: Interface {
 
 public extension CreateLibrary.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String
 

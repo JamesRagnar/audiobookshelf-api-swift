@@ -5,7 +5,6 @@
 //  Created by James Harquail on 2025-12-27.
 //
 
-
 import Foundation
 import RagnarNetworking
 
@@ -20,11 +19,11 @@ public struct GetLibraryNarrators: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -44,7 +43,7 @@ public struct GetLibraryNarrators: Interface {
     public static let responseCases: ResponseCases = [
 
         /// The requested narrators.
-        200: .success(Response.self),
+        200: .success(Response.self)
 
     ]
 
@@ -69,4 +68,3 @@ public extension GetLibraryNarrators {
     }
 
 }
-

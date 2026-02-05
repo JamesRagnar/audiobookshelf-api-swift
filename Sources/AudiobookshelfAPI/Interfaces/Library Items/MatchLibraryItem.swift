@@ -19,11 +19,13 @@ public struct MatchLibraryItem: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,16 +36,14 @@ public struct MatchLibraryItem: Interface {
             author: String? = nil,
             isbn: String? = nil,
             asin: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/items/\(itemId)/match"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    provider: provider,
-                    title: title,
-                    author: author,
-                    isbn: isbn,
-                    asin: asin
-                )
+            self.body = Payload(
+                provider: provider,
+                title: title,
+                author: author,
+                isbn: isbn,
+                asin: asin
             )
         }
 
@@ -71,7 +71,7 @@ public struct MatchLibraryItem: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -79,7 +79,7 @@ public struct MatchLibraryItem: Interface {
 
 public extension MatchLibraryItem.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let provider: String
 

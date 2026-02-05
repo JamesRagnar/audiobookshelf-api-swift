@@ -19,22 +19,22 @@ public struct EmbedLibraryItemMetadata: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(
             itemId: String,
             backup: Bool? = nil
-        ) throws {
+        ) {
             self.path = "/api/tools/item/\(itemId)/embed-metadata"
-            self.body = try JSONEncoder().encode(
-                Body(backup: backup)
-            )
+            self.body = Payload(backup: backup)
         }
 
     }
@@ -61,7 +61,7 @@ public struct EmbedLibraryItemMetadata: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -69,7 +69,7 @@ public struct EmbedLibraryItemMetadata: Interface {
 
 public extension EmbedLibraryItemMetadata.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let backup: Bool?
 

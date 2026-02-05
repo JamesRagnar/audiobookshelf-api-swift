@@ -19,11 +19,13 @@ public struct RenameGenre: Interface {
 
         public let path: String = "/api/genres/rename"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,10 +37,8 @@ public struct RenameGenre: Interface {
         public init(
             genre: String,
             newGenre: String
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(genre: genre, newGenre: newGenre)
-            )
+        ) {
+            self.body = Payload(genre: genre, newGenre: newGenre)
         }
 
     }
@@ -75,7 +75,7 @@ public struct RenameGenre: Interface {
 
 public extension RenameGenre.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let genre: String
 

@@ -1,0 +1,36 @@
+included:
+  - Sources
+  - Tests
+excluded:
+  - .build
+  - Documentation
+
+# Keep the initial setup minimal; extend later as needed.
+# Disable noisy rules that often require style decisions.
+disabled_rules:
+
+# Opt-in rules are off by default; enable if/when desired.
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - first_where
+  - sorted_imports
+  - implicit_optional_initialization
+  - explicit_init
+
+reporter: "xcode"
+
+# Avoid permission issues by keeping cache local to the repo.
+cache_path: .swiftlint-cache
+
+# Allow slightly deeper nesting for this codebase.
+nesting:
+  type_level: 2
+
+# Allow longer decoder bodies; this is a common pattern in the codebase.
+function_body_length:
+  warning: 80
+  error: 120
+
+analyzer_rules:
+  - unused_import

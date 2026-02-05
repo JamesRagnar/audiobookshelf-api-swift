@@ -19,11 +19,11 @@ public struct FireTestEvent: Interface {
 
         public let path: String = "/api/notifications/test"
 
-        public let queryItems: [String : String]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +32,7 @@ public struct FireTestEvent: Interface {
         /// - Parameters:
         ///   - fail: Set to true to intentionally fail the test notification.
         public init(fail: Bool = false) {
-            var queryItems: [String: String] = [:]
+            var queryItems: [String: String?] = [:]
             if fail {
                 queryItems["fail"] = "1"
             }

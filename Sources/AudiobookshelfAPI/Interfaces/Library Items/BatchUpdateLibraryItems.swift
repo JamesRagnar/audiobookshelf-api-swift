@@ -14,25 +14,22 @@ public struct BatchUpdateLibraryItems: Interface {
     // MARK: Request
 
     public struct Parameters: RequestParameters {
-
         public let method: RequestMethod = .post
 
         public let path: String = "/api/items/batch/update"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = BatchBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(libraryItemIds: [String], mediaPayload: [String: Any]) throws {
-            let bodyDict: [String: Any] = [
-                "libraryItemIds": libraryItemIds,
-                "mediaPayload": mediaPayload
-            ]
-            self.body = try JSONSerialization.data(withJSONObject: bodyDict)
+        public init(updates: [Body.UpdateItem]) {
+            self.body = BatchBody(updates: updates)
         }
 
     }
@@ -51,8 +48,40 @@ public struct BatchUpdateLibraryItems: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
+
+}
+
+public extension BatchUpdateLibraryItems.Parameters {
+
+    struct BatchBody: RequestBody {
+
+        private let updates: [UpdateItem]
+
+        public init(updates: [UpdateItem]) {
+            self.updates = updates
+        }
+
+        public func encodeBody(using encoder: JSONEncoder) throws -> EncodedBody {
+            let data = try encoder.encode(updates)
+            return EncodedBody(data: data, contentType: "application/json")
+        }
+
+        public struct UpdateItem: Encodable, Sendable {
+
+            public let id: String
+
+            public let mediaPayload: UpdateLibraryItemMedia.Parameters.LibraryItemMediaPayload
+
+            public init(id: String, mediaPayload: UpdateLibraryItemMedia.Parameters.LibraryItemMediaPayload) {
+                self.id = id
+                self.mediaPayload = mediaPayload
+            }
+
+        }
+
+    }
 
 }

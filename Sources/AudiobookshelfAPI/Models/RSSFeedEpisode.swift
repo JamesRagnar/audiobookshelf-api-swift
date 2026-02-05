@@ -8,7 +8,7 @@
 import Foundation
 
 public struct RSSFeedEpisode {
-    
+
     /// The ID of the RSS feed episode.
     public let id: String
 
@@ -18,7 +18,7 @@ public struct RSSFeedEpisode {
     /// An HTML encoded description of the RSS feed episode.
     public let description: String?
 
-    ///Download information for the RSS feed episode.
+    /// Download information for the RSS feed episode.
     public let enclosure: PodcastEpisodeEnclosure
 
     /// The RSS feed episode's publication date.
@@ -29,7 +29,7 @@ public struct RSSFeedEpisode {
 
     /// The author of the RSS feed episode.
     public let author: String?
-    
+
     /// Whether the RSS feed episode is explicit.
     public let explicit: String?
 
@@ -47,7 +47,7 @@ public struct RSSFeedEpisode {
 
     /// The path on the server of the audio file the RSS feed episode is for.
     public let fullPath: String?
-        
+
 }
 
 extension RSSFeedEpisode: Decodable {}

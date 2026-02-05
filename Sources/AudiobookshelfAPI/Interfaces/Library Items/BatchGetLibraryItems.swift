@@ -19,11 +19,13 @@ public struct BatchGetLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/get"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,12 +37,10 @@ public struct BatchGetLibraryItems: Interface {
         public init(
             libraryItemIds: [String],
             expanded: Bool? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    libraryItemIds: libraryItemIds,
-                    expanded: expanded
-                )
+        ) {
+            self.body = Payload(
+                libraryItemIds: libraryItemIds,
+                expanded: expanded
             )
         }
 
@@ -52,7 +52,7 @@ public struct BatchGetLibraryItems: Interface {
 
     public static let responseCases: ResponseCases = [
 
-        200: .success(Response.self),
+        200: .success(Response.self)
 
     ]
 
@@ -60,7 +60,7 @@ public struct BatchGetLibraryItems: Interface {
 
 public extension BatchGetLibraryItems.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

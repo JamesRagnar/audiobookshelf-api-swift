@@ -19,11 +19,13 @@ public struct StartPlaybackSession: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -43,16 +45,14 @@ public struct StartPlaybackSession: Interface {
             forceTranscode: Bool? = nil,
             mediaPlayer: String? = nil,
             supportedMimeTypes: [String]? = nil
-        ) throws {
+        ) {
             self.path = "/api/items/\(libraryItemId)/play"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    deviceInfo: deviceInfo,
-                    forceDirectPlay: forceDirectPlay,
-                    forceTranscode: forceTranscode,
-                    mediaPlayer: mediaPlayer,
-                    supportedMimeTypes: supportedMimeTypes
-                )
+            self.body = Payload(
+                deviceInfo: deviceInfo,
+                forceDirectPlay: forceDirectPlay,
+                forceTranscode: forceTranscode,
+                mediaPlayer: mediaPlayer,
+                supportedMimeTypes: supportedMimeTypes
             )
         }
     }
@@ -75,7 +75,7 @@ public struct StartPlaybackSession: Interface {
 
 public extension StartPlaybackSession.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let deviceInfo: DeviceInfo?
         let forceDirectPlay: Bool?
         let forceTranscode: Bool?
@@ -83,7 +83,7 @@ public extension StartPlaybackSession.Parameters {
         let supportedMimeTypes: [String]?
     }
 
-    struct DeviceInfo: Encodable {
+    struct DeviceInfo: Encodable, Sendable {
         public let deviceId: String?
         public let clientVersion: String?
         public let deviceName: String?

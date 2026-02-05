@@ -19,23 +19,23 @@ public struct AddCustomMetadataProvider: Interface {
 
         public let path: String = "/api/custom-metadata-providers"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(
             name: String,
             url: String
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    name: name,
-                    url: url
-                )
+        ) {
+            self.body = Payload(
+                name: name,
+                url: url
             )
         }
 
@@ -59,7 +59,7 @@ public struct AddCustomMetadataProvider: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -67,7 +67,7 @@ public struct AddCustomMetadataProvider: Interface {
 
 public extension AddCustomMetadataProvider.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String
 

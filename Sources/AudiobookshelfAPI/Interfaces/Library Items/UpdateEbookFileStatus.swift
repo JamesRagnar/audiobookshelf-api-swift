@@ -19,11 +19,13 @@ public struct UpdateEbookFileStatus: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,13 +34,11 @@ public struct UpdateEbookFileStatus: Interface {
             fileId: String,
             ebookLocation: String? = nil,
             ebookProgress: Float? = nil
-        ) throws {
+        ) {
             self.path = "/api/items/\(itemId)/ebook/\(fileId)/status"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    ebookLocation: ebookLocation,
-                    ebookProgress: ebookProgress
-                )
+            self.body = Payload(
+                ebookLocation: ebookLocation,
+                ebookProgress: ebookProgress
             )
         }
 
@@ -66,7 +66,7 @@ public struct UpdateEbookFileStatus: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -74,7 +74,7 @@ public struct UpdateEbookFileStatus: Interface {
 
 public extension UpdateEbookFileStatus.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let ebookLocation: String?
 

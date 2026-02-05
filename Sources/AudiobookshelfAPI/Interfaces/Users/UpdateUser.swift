@@ -19,11 +19,13 @@ public struct UpdateUser: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -36,18 +38,16 @@ public struct UpdateUser: Interface {
             isLocked: Bool? = nil,
             librariesAccessible: [String]? = nil,
             permissions: UserPermissions? = nil
-        ) throws {
+        ) {
             self.path = "/api/users/\(userId)"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    username: username,
-                    password: password,
-                    type: type,
-                    isActive: isActive,
-                    isLocked: isLocked,
-                    librariesAccessible: librariesAccessible,
-                    permissions: permissions
-                )
+            self.body = Payload(
+                username: username,
+                password: password,
+                type: type,
+                isActive: isActive,
+                isLocked: isLocked,
+                librariesAccessible: librariesAccessible,
+                permissions: permissions
             )
         }
 
@@ -75,7 +75,7 @@ public struct UpdateUser: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -83,7 +83,7 @@ public struct UpdateUser: Interface {
 
 public extension UpdateUser.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let username: String?
 

@@ -19,11 +19,11 @@ public struct DeleteLibrary: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -54,7 +54,7 @@ public struct DeleteLibrary: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

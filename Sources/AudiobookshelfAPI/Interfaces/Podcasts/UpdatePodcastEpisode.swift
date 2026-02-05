@@ -19,11 +19,13 @@ public struct UpdatePodcastEpisode: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -53,20 +55,18 @@ public struct UpdatePodcastEpisode: Interface {
             episode: String? = nil,
             episodeType: String? = nil,
             publishedAt: Int? = nil
-        ) throws {
+        ) {
             self.path = "/api/podcasts/\(podcastId)/episode/\(episodeId)"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    title: title,
-                    subtitle: subtitle,
-                    description: description,
-                    enclosure: enclosure,
-                    pubDate: pubDate,
-                    season: season,
-                    episode: episode,
-                    episodeType: episodeType,
-                    publishedAt: publishedAt
-                )
+            self.body = Payload(
+                title: title,
+                subtitle: subtitle,
+                description: description,
+                enclosure: enclosure,
+                pubDate: pubDate,
+                season: season,
+                episode: episode,
+                episodeType: episodeType,
+                publishedAt: publishedAt
             )
         }
 
@@ -93,7 +93,7 @@ public struct UpdatePodcastEpisode: Interface {
 
 public extension UpdatePodcastEpisode.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
         let title: String?
         let subtitle: String?
         let description: String?
@@ -105,7 +105,7 @@ public extension UpdatePodcastEpisode.Parameters {
         let publishedAt: Int?
     }
 
-    struct EnclosurePayload: Encodable {
+    struct EnclosurePayload: Encodable, Sendable {
         let url: String?
         let type: String?
         let length: String?

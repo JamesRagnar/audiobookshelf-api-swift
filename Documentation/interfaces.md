@@ -24,11 +24,13 @@ public struct MyInterface: Interface {
 		// If a parameter requires a dynamic input value, include it in the init below
         public let path: String
         
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
         
         public let headers: [String : String]? = nil
         
-        public let body: Data? = nil
+        public typealias Body = EmptyBody
+
+        public let body: Body? = nil
         
         // Ensure the authentication structure is defined based on the server auth format.
         // These keys are automatically applied during the request process,
@@ -79,7 +81,9 @@ public struct MyInterface: Interface {
 
 ### Request Body
 
-When a complex body type is required for a request, scope it to only be included in the Interface space. Avoid exposing Request body models where possible, lean on public parameter initialization and creating the request body locally. The Parameters init can throw, allowing the client to catch incorrect request structures.
+When a complex body type is required for a request, scope it to only be included in the Interface space. Avoid exposing request body models where possible, lean on public parameter initialization and creating the request body locally. Prefer `RequestBody` models so encoding and content-type handling are centralized.
+
+For PATCH-style endpoints that differentiate between omitted fields and explicit JSON null, model fields with optional `Nullable<T>` properties. Use `nil` to omit a field entirely, and `Nullable.null` to explicitly clear a value.
 
 ```swift
 public struct MyInterface: Interface {
@@ -88,18 +92,17 @@ public struct MyInterface: Interface {
 
     	// ...
 
-    	public let body: Data?
+        public typealias Body = Payload
+
+    	public let body: Body?
 
     	public init(
     		parameterOne: String,
     		parameterTwo: Int?
-    	) throws {
-    		self.body = try JSONEncoder()
-    		.encode(
-    			Body(
-    				parameterOne: parameterOne,
-    				parameterTwo: parameterTwo
-    			)
+    	) {
+    		self.body = Payload(
+    			parameterOne: parameterOne,
+    			parameterTwo: parameterTwo
     		)
     	}
 
@@ -109,9 +112,9 @@ public struct MyInterface: Interface {
 
 }
 
-extension MyInterface.Parameters {
+public extension MyInterface.Parameters {
 	
-	struct Body: Encodable {
+	struct Payload: RequestBody, Encodable, Sendable {
 
 		let parameterOne: String
 
@@ -184,7 +187,7 @@ Before submitting an Interface implementation, verify:
 - [ ] All public properties marked `public let`
 - [ ] All inits marked `public init`
 - [ ] Body struct in extension, not inline (if body is required)
-- [ ] Init throws if encoding Body
+- [ ] Body typealias conforms to `RequestBody` (and `Encodable` when JSON)
 - [ ] Response type is Decodable & Sendable
 - [ ] AudiobookshelfError cases match API docs
 - [ ] responseCases includes all documented status codes
@@ -198,11 +201,13 @@ Before submitting an Interface implementation, verify:
 
 ```swift
 public struct Parameters: RequestParameters {
-    struct Body: Encodable {  // DON'T DO THIS
+    struct Payload: Encodable {  // DON'T DO THIS
         let id: String
     }
 
-    public let body: Data?
+    public typealias Body = Payload
+
+    public let body: Body?
 }
 ```
 
@@ -210,15 +215,17 @@ public struct Parameters: RequestParameters {
 
 ```swift
 public struct Parameters: RequestParameters {
-    public let body: Data?
+    public typealias Body = Payload
 
-    public init(id: String) throws {
-        self.body = try JSONEncoder().encode(Body(id: id))
+    public let body: Body?
+
+    public init(id: String) {
+        self.body = Payload(id: id)
     }
 }
 
-extension MyInterface.Parameters {
-    struct Body: Encodable {  // DO THIS
+public extension MyInterface.Parameters {
+    struct Payload: RequestBody, Encodable, Sendable {  // DO THIS
         let id: String
     }
 }
@@ -240,19 +247,27 @@ public struct Response: Decodable, Sendable {
 }
 ```
 
-### WRONG: Missing throws on init with Body encoding
+### WRONG: Manual JSON encoding in init
 
 ```swift
-public init(name: String) {  // Should throw
+public init(name: String) {  // Manual encoding in init
     self.body = try JSONEncoder().encode(Body(name: name))  // Won't compile
 }
 ```
 
-### CORRECT: Init throws when encoding
+### CORRECT: Use RequestBody payload
 
 ```swift
-public init(name: String) throws {
-    self.body = try JSONEncoder().encode(Body(name: name))
+public typealias Body = Payload
+
+public init(name: String) {
+    self.body = Payload(name: name)
+}
+
+public extension MyInterface.Parameters {
+    struct Payload: RequestBody, Encodable, Sendable {
+        let name: String
+    }
 }
 ```
 

@@ -19,11 +19,13 @@ public struct UpdateBookmark: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -37,11 +39,9 @@ public struct UpdateBookmark: Interface {
             libraryItemId: String,
             time: Float,
             title: String
-        ) throws {
+        ) {
             self.path = "/api/me/item/\(libraryItemId)/bookmark"
-            self.body = try JSONEncoder().encode(
-                Body(time: time, title: title)
-            )
+            self.body = Payload(time: time, title: title)
         }
 
     }
@@ -52,7 +52,7 @@ public struct UpdateBookmark: Interface {
 
     public static let responseCases: ResponseCases = [
 
-        200: .success(Response.self),
+        200: .success(Response.self)
 
     ]
 
@@ -60,7 +60,7 @@ public struct UpdateBookmark: Interface {
 
 public extension UpdateBookmark.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let time: Float
 

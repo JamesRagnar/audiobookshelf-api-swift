@@ -10,21 +10,21 @@ import RagnarNetworking
 
 /// This endpoint returns a library's authors.
 public struct GetLibraryAuthors: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String : String]? = nil
-        
-        public let headers: [String : String]? = nil
-        
-        public let body: Data? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
+        public let body: Body? = nil
+
         public let authentication: AuthenticationType = .bearer
 
         /// Get Library Authors Parameters
@@ -35,22 +35,22 @@ public struct GetLibraryAuthors: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)/authors"
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public struct Response: Decodable, Sendable {
-        
+
         public let authors: [Author]
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// The requested authors.
-        200: .success(Response.self),
-        
+        200: .success(Response.self)
+
     ]
-    
+
 }

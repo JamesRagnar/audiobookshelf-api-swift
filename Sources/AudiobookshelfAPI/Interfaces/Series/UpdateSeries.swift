@@ -19,11 +19,13 @@ public struct UpdateSeries: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -37,13 +39,11 @@ public struct UpdateSeries: Interface {
             seriesId: String,
             name: String? = nil,
             description: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/series/\(seriesId)"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    name: name,
-                    description: description
-                )
+            self.body = Payload(
+                name: name,
+                description: description
             )
         }
 
@@ -63,7 +63,7 @@ public struct UpdateSeries: Interface {
 
         200: .success(Response.self),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -71,7 +71,7 @@ public struct UpdateSeries: Interface {
 
 public extension UpdateSeries.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String?
 

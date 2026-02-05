@@ -19,11 +19,11 @@ public struct GetUserListeningSessions: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -33,7 +33,7 @@ public struct GetUserListeningSessions: Interface {
             itemsPerPage: Int? = nil
         ) {
             self.path = "/api/users/\(userId)/listening-sessions"
-            var items: [String: String] = [:]
+            var items: [String: String?] = [:]
             if let page = page {
                 items["page"] = String(page)
             }
@@ -63,7 +63,7 @@ public struct GetUserListeningSessions: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

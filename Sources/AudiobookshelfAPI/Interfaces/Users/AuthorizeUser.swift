@@ -19,18 +19,18 @@ public struct AuthorizeUser: Interface {
 
         public let path: String = "/api/authorize"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(code: String, state: String) throws {
-            self.body = try JSONEncoder().encode(
-                Body(code: code, state: state)
-            )
+        public init(code: String, state: String) {
+            self.body = Payload(code: code, state: state)
         }
 
     }
@@ -53,7 +53,7 @@ public struct AuthorizeUser: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        401: .failure(AudiobookshelfError.unauthorized),
+        401: .failure(AudiobookshelfError.unauthorized)
 
     ]
 
@@ -61,7 +61,7 @@ public struct AuthorizeUser: Interface {
 
 public extension AuthorizeUser.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let code: String
 

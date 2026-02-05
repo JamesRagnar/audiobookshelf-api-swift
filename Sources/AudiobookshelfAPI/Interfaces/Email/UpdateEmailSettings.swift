@@ -19,11 +19,13 @@ public struct UpdateEmailSettings: Interface {
 
         public let path: String = "/api/emails/settings"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -45,17 +47,15 @@ public struct UpdateEmailSettings: Interface {
             pass: String? = nil,
             fromAddress: String? = nil,
             testAddress: String? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    host: host,
-                    port: port,
-                    secure: secure,
-                    user: user,
-                    pass: pass,
-                    fromAddress: fromAddress,
-                    testAddress: testAddress
-                )
+        ) {
+            self.body = Payload(
+                host: host,
+                port: port,
+                secure: secure,
+                user: user,
+                pass: pass,
+                fromAddress: fromAddress,
+                testAddress: testAddress
             )
         }
 
@@ -87,7 +87,7 @@ public struct UpdateEmailSettings: Interface {
 
 public extension UpdateEmailSettings.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let host: String?
 

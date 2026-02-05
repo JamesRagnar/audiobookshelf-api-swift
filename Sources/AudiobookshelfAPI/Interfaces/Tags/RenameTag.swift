@@ -19,11 +19,13 @@ public struct RenameTag: Interface {
 
         public let path: String = "/api/tags/rename"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -35,10 +37,8 @@ public struct RenameTag: Interface {
         public init(
             tag: String,
             newTag: String
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(tag: tag, newTag: newTag)
-            )
+        ) {
+            self.body = Payload(tag: tag, newTag: newTag)
         }
 
     }
@@ -75,7 +75,7 @@ public struct RenameTag: Interface {
 
 public extension RenameTag.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let tag: String
 

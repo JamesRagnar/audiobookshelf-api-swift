@@ -19,19 +19,19 @@ public struct UpdateLibraryItemTracks: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(itemId: String, tracks: [AudioTrack]) throws {
+        public init(itemId: String, tracks: [AudioTrack]) {
             self.path = "/api/items/\(itemId)/tracks"
-            self.body = try JSONEncoder().encode(
-                Body(tracks: tracks)
-            )
+            self.body = Payload(tracks: tracks)
         }
 
     }
@@ -58,7 +58,7 @@ public struct UpdateLibraryItemTracks: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -66,7 +66,7 @@ public struct UpdateLibraryItemTracks: Interface {
 
 public extension UpdateLibraryItemTracks.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let tracks: [AudioTrack]
 

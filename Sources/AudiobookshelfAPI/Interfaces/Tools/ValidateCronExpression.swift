@@ -19,11 +19,13 @@ public struct ValidateCronExpression: Interface {
 
         public let path: String = "/api/validate-cron"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +33,8 @@ public struct ValidateCronExpression: Interface {
         ///
         /// - Parameters:
         ///   - expression: The cron expression to validate.
-        public init(expression: String) throws {
-            self.body = try JSONEncoder().encode(Body(expression: expression))
+        public init(expression: String) {
+            self.body = Payload(expression: expression)
         }
 
     }
@@ -65,7 +67,7 @@ public struct ValidateCronExpression: Interface {
 
 public extension ValidateCronExpression.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let expression: String
 

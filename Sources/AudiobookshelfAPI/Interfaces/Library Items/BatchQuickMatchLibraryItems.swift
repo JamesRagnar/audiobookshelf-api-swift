@@ -19,23 +19,23 @@ public struct BatchQuickMatchLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/quickmatch"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(
             libraryItemIds: [String],
             options: BatchQuickMatchLibraryItems.QuickMatchOptions? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    libraryItemIds: libraryItemIds,
-                    options: options
-                )
+        ) {
+            self.body = Payload(
+                libraryItemIds: libraryItemIds,
+                options: options
             )
         }
 
@@ -55,7 +55,7 @@ public struct BatchQuickMatchLibraryItems: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -63,7 +63,7 @@ public struct BatchQuickMatchLibraryItems: Interface {
 
 extension BatchQuickMatchLibraryItems {
 
-    public struct QuickMatchOptions: Encodable {
+    public struct QuickMatchOptions: Encodable, Sendable {
 
         public let provider: String?
 
@@ -80,7 +80,7 @@ extension BatchQuickMatchLibraryItems {
 
 public extension BatchQuickMatchLibraryItems.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

@@ -19,11 +19,11 @@ public struct GetTasks: Interface {
 
         public let path: String = "/api/tasks"
 
-        public let queryItems: [String : String]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,7 +32,7 @@ public struct GetTasks: Interface {
         /// - Parameters:
         ///   - includeQueue: Whether to include queued task data.
         public init(includeQueue: Bool = false) {
-            var queryItems: [String: String] = [:]
+            var queryItems: [String: String?] = [:]
             if includeQueue {
                 queryItems["include"] = "queue"
             }

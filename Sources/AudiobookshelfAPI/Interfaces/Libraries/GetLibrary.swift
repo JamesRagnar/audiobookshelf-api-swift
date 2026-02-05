@@ -10,27 +10,27 @@ import RagnarNetworking
 
 /// This endpoint retrieves a library.
 public struct GetLibrary: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public enum Include: String {
             case filterData = "filterdata"
         }
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String: String]?
-        
-        public let headers: [String : String]? = nil
-        
-        public let body: Data? = nil
-        
+
+        public let queryItems: [String: String?]?
+
+        public let headers: [String: String]? = nil
+
+        public let body: Body? = nil
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Get Library Parameters
         ///
         /// - Parameters:
@@ -41,14 +41,14 @@ public struct GetLibrary: Interface {
             include: Set<Include>?
         ) {
             self.path = "/api/libraries/\(libraryID)"
-            
-            var queryItems: [String: String] = [:]
+
+            var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }
-        
+
     }
-    
+
     // MARK: Response
 
     public struct Response: Sendable {
@@ -68,18 +68,18 @@ public struct GetLibrary: Interface {
     }
 
     public enum AudiobookshelfError: Error {
-        
+
         ///
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         200: .success(Response.self),
-        
+
         404: .failure(AudiobookshelfError.notFound)
-        
+
     ]
 
 }

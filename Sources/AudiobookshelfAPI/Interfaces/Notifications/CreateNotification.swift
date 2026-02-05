@@ -19,11 +19,13 @@ public struct CreateNotification: Interface {
 
         public let path: String = "/api/notifications"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,16 +36,14 @@ public struct CreateNotification: Interface {
             bodyTemplate: String,
             libraryId: String? = nil,
             enabled: Bool = true
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    eventName: eventName,
-                    urls: urls,
-                    titleTemplate: titleTemplate,
-                    bodyTemplate: bodyTemplate,
-                    libraryId: libraryId,
-                    enabled: enabled
-                )
+        ) {
+            self.body = Payload(
+                eventName: eventName,
+                urls: urls,
+                titleTemplate: titleTemplate,
+                bodyTemplate: bodyTemplate,
+                libraryId: libraryId,
+                enabled: enabled
             )
         }
 
@@ -67,7 +67,7 @@ public struct CreateNotification: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -75,7 +75,7 @@ public struct CreateNotification: Interface {
 
 public extension CreateNotification.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let eventName: String
 

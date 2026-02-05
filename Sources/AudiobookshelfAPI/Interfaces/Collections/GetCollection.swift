@@ -10,27 +10,27 @@ import RagnarNetworking
 
 /// This endpoint retrieves a collection.
 public struct GetCollection: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public enum Include: String {
-            
+
             case rssfeed
-            
+
         }
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String : String]?
-        
-        public let headers: [String : String]? = nil
-        
-        public let body: Data? = nil
-        
+
+        public let queryItems: [String: String?]?
+
+        public let headers: [String: String]? = nil
+
+        public let body: Body? = nil
+
         public let authentication: AuthenticationType = .bearer
 
         /// Get Collection Parameters
@@ -43,32 +43,32 @@ public struct GetCollection: Interface {
             include: Set<Include>? = nil
         ) {
             self.path = "/api/collections/\(collectionID)"
-            
-            var queryItems: [String: String] = [:]
+
+            var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Collection
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// No collection with the specified ID exists.
         404: .failure(AudiobookshelfError.notFound)
-        
+
     ]
-    
+
 }

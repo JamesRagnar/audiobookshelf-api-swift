@@ -8,50 +8,50 @@
 import Foundation
 
 public struct BookMetadata {
-    
+
     /// The title of the book. Will be null if unknown.
     public let title: String?
-    
+
     /// The subtitle of the book. Will be null if there is no subtitle.
     public let subtitle: String?
-    
+
     /// The authors of the book.
     /// - Note: Book Metadata Minified - Removed Attribute
     public let authors: [Author]?
-    
+
     /// The narrators of the audiobook.
     /// - Note: Book Metadata Minified - Removed Attribute
     public let narrators: [String]?
-    
+
     /// The series the book belongs to.
     /// - Note: Book Metadata Minified - Removed Attribute
     /// - Note: Book Metadata Personalized - Added Attribute
     public let series: [Series]?
-    
+
     /// The genres of the book.
     public let genres: [String]
-    
+
     /// The year the book was published. Will be null if unknown.
     public let publishedYear: String?
-    
+
     /// The date the book was published. Will be null if unknown.
     public let publishedDate: String?
-    
+
     /// The publisher of the book. Will be null if unknown.
     public let publisher: String?
-    
+
     /// A description for the book. Will be null if empty.
     public let description: String?
-    
+
     /// The ISBN of the book. Will be null if unknown.
     public let isbn: String?
-    
+
     /// The ASIN of the book. Will be null if unknown.
     public let asin: String?
-    
+
     /// The language of the book. Will be null if unknown.
     public let language: String?
-    
+
     /// Whether the book has been marked as explicit.
     /// - Note: Can be null in minified responses (oldMetadataToJSONMinified passes raw value)
     public let explicit: Bool?
@@ -60,36 +60,36 @@ public struct BookMetadata {
     public let abridged: Bool?
 
     // MARK: BookMetadata Minified + Expanded
-    
+
     /// The title of the book with any prefix moved to the end.
     /// - Note: Book Metadata Minified - Added Attribute
     /// - Note: Book Metadata Expanded - Added Attribute
     public let titleIgnorePrefix: String?
-    
+
     /// The name of the book's author(s).
     /// - Note: Book Metadata Minified - Added Attribute
     /// - Note: Book Metadata Expanded - Added Attribute
     public let authorName: String?
-    
+
     /// The name of the book's author(s) with last names first.
     /// - Note: Book Metadata Minified - Added Attribute
     /// - Note: Book Metadata Expanded - Added Attribute
     public let authorNameLF: String?
-    
+
     /// The name of the audiobook's narrator(s).
     /// - Note: Book Metadata Minified - Added Attribute
     /// - Note: Book Metadata Expanded - Added Attribute
     public let narratorName: String?
-    
+
     /// The name of the book's series.
     /// - Note: Book Metadata Minified - Added Attribute
     /// - Note: Book Metadata Expanded - Added Attribute
     public let seriesName: String?
-    
+
 }
 
 extension BookMetadata: Decodable {
-    
+
     enum CodingKeys: CodingKey {
         case title
         case subtitle
@@ -112,7 +112,7 @@ extension BookMetadata: Decodable {
         case narratorName
         case seriesName
     }
-    
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.title = try container.decodeIfPresent(String.self, forKey: .title)
@@ -134,7 +134,7 @@ extension BookMetadata: Decodable {
         self.authorNameLF = try container.decodeIfPresent(String.self, forKey: .authorNameLF)
         self.narratorName = try container.decodeIfPresent(String.self, forKey: .narratorName)
         self.seriesName = try container.decodeIfPresent(String.self, forKey: .seriesName)
-        
+
         // Series can be either an array or a single object
         if let seriesArray = try? container.decode([Series].self, forKey: .series) {
             self.series = seriesArray
@@ -144,7 +144,7 @@ extension BookMetadata: Decodable {
             self.series = nil
         }
     }
-    
+
 }
 
 extension BookMetadata: Sendable {}

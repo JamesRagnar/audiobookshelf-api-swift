@@ -19,11 +19,13 @@ public struct BatchEmbedMetadata: Interface {
 
         public let path: String = "/api/tools/batch/embed-metadata"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +33,8 @@ public struct BatchEmbedMetadata: Interface {
         ///
         /// - Parameters:
         ///   - libraryItemIds: Array of library item IDs to embed metadata for.
-        public init(libraryItemIds: [String]) throws {
-            self.body = try JSONEncoder().encode(Body(libraryItemIds: libraryItemIds))
+        public init(libraryItemIds: [String]) {
+            self.body = Payload(libraryItemIds: libraryItemIds)
         }
 
     }
@@ -63,7 +65,7 @@ public struct BatchEmbedMetadata: Interface {
 
 public extension BatchEmbedMetadata.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

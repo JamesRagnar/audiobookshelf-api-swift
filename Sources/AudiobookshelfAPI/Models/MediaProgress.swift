@@ -7,7 +7,8 @@
 
 public struct MediaProgress {
 
-    /// The ID of the media progress. If the media progress is for a book, this will just be the libraryItemId. If for a podcast episode, it will be a hyphenated combination of the libraryItemId and episodeId.
+    /// The ID of the media progress. If the media progress is for a book, this will just be the libraryItemId. If for a
+    /// podcast episode, it will be a hyphenated combination of the libraryItemId and episodeId.
     public let id: String
 
     /// The ID of the user the media progress is for.
@@ -25,13 +26,15 @@ public struct MediaProgress {
     /// The type of the media item (book or podcastEpisode).
     public let mediaItemType: String
 
-    /// The total duration (in seconds) of the media. Will be 0 if the media was marked as finished without the user listening to it.
+    /// The total duration (in seconds) of the media. Will be 0 if the media was marked as finished without the user
+    /// listening to it.
     public let duration: Float
 
     /// The percentage completion progress of the media. Will be 1 if the media is finished.
     public let progress: Float
 
-    /// The current time (in seconds) of the user's progress. If the media has been marked as finished, this will be the time the user was at beforehand.
+    /// The current time (in seconds) of the user's progress. If the media has been marked as finished, this will be the
+    /// time the user was at beforehand.
     public let currentTime: Float
 
     /// The ebook location (for ebook progress tracking).
@@ -45,26 +48,26 @@ public struct MediaProgress {
 
     /// Whether the media will be hidden from the "Continue Listening" shelf.
     public let hideFromContinueListening: Bool
-    
+
     /// The time (in ms since POSIX epoch) when the media progress was last updated.
     public let lastUpdate: Int
-    
+
     /// The time (in ms since POSIX epoch) when the media progress was created.
     public let startedAt: Int
-    
+
     /// The time (in ms since POSIX epoch) when the media was finished. Will be null if the media has is not finished.
     public let finishedAt: Int?
-    
+
     // MARK: Media Progress With Media
-    
+
     /// The media of the library item the media progress is for.
     /// - Note: Media Progress with Media - Added Attribute
     public let media: Media?
-    
+
     /// The podcast episode the media progress is for. Will only exist if the media progress is for a podcast episode.
     /// - Note: Media Progress with Media - Added Attribute
     public let episode: PodcastEpisode?
-    
+
 }
 
 extension MediaProgress {
@@ -123,8 +126,7 @@ extension MediaProgress: Decodable {
 
         if
             episodeId?.isEmpty == false,
-            let podcast = try container.decodeIfPresent(Podcast.self, forKey: .media)
-        {
+            let podcast = try container.decodeIfPresent(Podcast.self, forKey: .media) {
             media = .podcast(podcast)
         } else if let book = try container.decodeIfPresent(Book.self, forKey: .media) {
             media = .book(book)

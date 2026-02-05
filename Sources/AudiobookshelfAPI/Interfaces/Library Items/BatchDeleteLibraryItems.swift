@@ -19,21 +19,21 @@ public struct BatchDeleteLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/delete"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         /// Batch Delete Library Items Parameters
         ///
         /// - Parameter libraryItemIds: Array of library item IDs to delete.
-        public init(libraryItemIds: [String]) throws {
-            self.body = try JSONEncoder().encode(
-                Body(libraryItemIds: libraryItemIds)
-            )
+        public init(libraryItemIds: [String]) {
+            self.body = Payload(libraryItemIds: libraryItemIds)
         }
 
     }
@@ -44,7 +44,7 @@ public struct BatchDeleteLibraryItems: Interface {
 
     public static let responseCases: ResponseCases = [
 
-        200: .success(Response.self),
+        200: .success(Response.self)
 
     ]
 
@@ -52,7 +52,7 @@ public struct BatchDeleteLibraryItems: Interface {
 
 public extension BatchDeleteLibraryItems.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraryItemIds: [String]
 

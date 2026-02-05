@@ -19,11 +19,13 @@ public struct UpdateAPIKey: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -32,9 +34,9 @@ public struct UpdateAPIKey: Interface {
         /// - Parameters:
         ///   - keyId: The ID of the API key to update.
         ///   - expiresAt: Optional Unix timestamp for when the key expires (null to remove expiration).
-        public init(keyId: String, expiresAt: Int?) throws {
+        public init(keyId: String, expiresAt: Int?) {
             self.path = "/api/api-keys/\(keyId)"
-            self.body = try JSONEncoder().encode(Body(expiresAt: expiresAt))
+            self.body = Payload(expiresAt: expiresAt)
         }
 
     }
@@ -69,7 +71,7 @@ public struct UpdateAPIKey: Interface {
 
 public extension UpdateAPIKey.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let expiresAt: Int?
 

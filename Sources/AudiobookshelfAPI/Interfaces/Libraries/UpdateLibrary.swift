@@ -19,11 +19,13 @@ public struct UpdateLibrary: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,15 +43,13 @@ public struct UpdateLibrary: Interface {
             folders: [String]? = nil,
             icon: String? = nil,
             provider: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/libraries/\(libraryId)"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    name: name,
-                    folders: folders,
-                    icon: icon,
-                    provider: provider
-                )
+            self.body = Payload(
+                name: name,
+                folders: folders,
+                icon: icon,
+                provider: provider
             )
         }
 
@@ -73,7 +73,7 @@ public struct UpdateLibrary: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -81,7 +81,7 @@ public struct UpdateLibrary: Interface {
 
 public extension UpdateLibrary.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String?
 

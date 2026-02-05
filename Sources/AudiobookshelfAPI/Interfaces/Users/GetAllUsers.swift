@@ -19,11 +19,11 @@ public struct GetAllUsers: Interface {
 
         public let path: String = "/api/users"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -45,7 +45,7 @@ public struct GetAllUsers: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 

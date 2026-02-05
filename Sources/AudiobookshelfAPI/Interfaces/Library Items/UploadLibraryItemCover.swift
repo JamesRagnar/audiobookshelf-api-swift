@@ -19,18 +19,19 @@ public struct UploadLibraryItemCover: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]?
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = BinaryBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         public init(itemId: String, imageData: Data, contentType: String) {
             self.path = "/api/items/\(itemId)/cover"
-            self.headers = ["Content-Type": contentType]
-            self.body = imageData
+            self.body = BinaryBody(data: imageData, contentType: contentType)
         }
 
     }
@@ -57,7 +58,7 @@ public struct UploadLibraryItemCover: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

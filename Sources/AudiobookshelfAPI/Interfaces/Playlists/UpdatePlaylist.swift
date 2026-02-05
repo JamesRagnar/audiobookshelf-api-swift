@@ -5,29 +5,30 @@
 //  Created by James Harquail on 2024-11-26.
 //
 
-
 import Foundation
 import RagnarNetworking
 
 /// This endpoint updates a playlist and returns it.
 public struct UpdatePlaylist: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
 
         public let method: RequestMethod = .patch
 
         public let path: String
-        
-        public let queryItems: [String : String]? = nil
-        
-        public let headers: [String : String]? = nil
-        
-        public let body: Data?
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
+        public typealias Body = Payload
+
+        public let body: Body?
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Update Playlist Parameters
         ///
         /// - Parameters:
@@ -35,57 +36,58 @@ public struct UpdatePlaylist: Interface {
         ///   - name: The playlist's name.
         ///   - description: The playlist's description.
         ///   - coverPath: The path of the playlist's cover.
-        ///   - items: Optional array of playlist items for reordering. Must contain ALL existing items in the new order.
+        ///   - items: Optional array of playlist items for reordering.
+        ///            Must contain ALL existing items in the new order.
         public init(
             playlistID: String,
             name: String,
             description: String? = nil,
             coverPath: String? = nil,
             items: [PlaylistItem]? = nil
-        ) throws {
+        ) {
             self.path = "/api/playlists/\(playlistID)"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    name: name,
-                    description: description,
-                    coverPath: coverPath,
-                    items: items?.map { Item(libraryItemId: $0.libraryItemId, episodeId: $0.episodeId) }
-                )
+            self.body = Payload(
+                name: name,
+                description: description,
+                coverPath: coverPath,
+                items: items?.map {
+                    Item(libraryItemId: $0.libraryItemId, episodeId: $0.episodeId)
+                }
             )
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Playlist
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case forbidden
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// The playlist does not belong to the authenticated user.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// No playlist with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
 
 }
 
 public extension UpdatePlaylist.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String
 
@@ -101,7 +103,7 @@ public extension UpdatePlaylist.Parameters {
 
     /// Request-specific model for playlist items in update body.
     /// Only includes the minimal fields required by the server.
-    struct Item: Encodable {
+    struct Item: Encodable, Sendable {
 
         /// The ID of the library item.
         let libraryItemId: String

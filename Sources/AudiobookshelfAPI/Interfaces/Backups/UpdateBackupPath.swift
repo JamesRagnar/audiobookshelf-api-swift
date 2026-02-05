@@ -19,11 +19,13 @@ public struct UpdateBackupPath: Interface {
 
         public let path: String = "/api/backups/path"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -31,8 +33,8 @@ public struct UpdateBackupPath: Interface {
         ///
         /// - Parameters:
         ///   - backupPath: The new file system path for storing backups.
-        public init(backupPath: String) throws {
-            self.body = try JSONEncoder().encode(Body(backupPath: backupPath))
+        public init(backupPath: String) {
+            self.body = Payload(backupPath: backupPath)
         }
 
     }
@@ -63,7 +65,7 @@ public struct UpdateBackupPath: Interface {
 
 public extension UpdateBackupPath.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let backupPath: String
 

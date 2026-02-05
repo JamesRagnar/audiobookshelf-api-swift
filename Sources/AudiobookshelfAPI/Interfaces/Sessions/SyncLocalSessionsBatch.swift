@@ -19,19 +19,21 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let path: String = "/api/session/local-all"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = ArrayBody<SyncLocalSession.Parameters.LocalPlaybackSession>
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
         /// Sync Local Sessions Batch Parameters
         ///
         /// - Parameter sessions: The array of local playback session data to sync with the server.
-        public init(sessions: [LocalPlaybackSession]) throws {
-            self.body = try JSONEncoder().encode(sessions)
+        public init(sessions: [SyncLocalSession.Parameters.LocalPlaybackSession]) {
+            self.body = ArrayBody(sessions)
         }
 
     }
@@ -52,7 +54,7 @@ public struct SyncLocalSessionsBatch: Interface {
         200: .success(Response.self),
 
         /// Invalid request data or empty array provided.
-        400: .failure(AudiobookshelfError.badRequest),
+        400: .failure(AudiobookshelfError.badRequest)
 
     ]
 

@@ -19,11 +19,13 @@ public struct CreateUser: Interface {
 
         public let path: String = "/api/users"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -34,16 +36,14 @@ public struct CreateUser: Interface {
             isActive: Bool = true,
             librariesAccessible: [String]? = nil,
             permissions: UserPermissions? = nil
-        ) throws {
-            self.body = try JSONEncoder().encode(
-                Body(
-                    username: username,
-                    password: password,
-                    type: type,
-                    isActive: isActive,
-                    librariesAccessible: librariesAccessible,
-                    permissions: permissions
-                )
+        ) {
+            self.body = Payload(
+                username: username,
+                password: password,
+                type: type,
+                isActive: isActive,
+                librariesAccessible: librariesAccessible,
+                permissions: permissions
             )
         }
 
@@ -67,7 +67,7 @@ public struct CreateUser: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -75,7 +75,7 @@ public struct CreateUser: Interface {
 
 public extension CreateUser.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let username: String
 

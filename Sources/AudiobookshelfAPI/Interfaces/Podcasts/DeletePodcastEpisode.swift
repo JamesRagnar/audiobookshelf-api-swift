@@ -19,11 +19,11 @@ public struct DeletePodcastEpisode: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 

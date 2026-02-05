@@ -19,11 +19,13 @@ public struct UpdateAuthor: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,15 +43,13 @@ public struct UpdateAuthor: Interface {
             description: String? = nil,
             imagePath: String? = nil,
             asin: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/authors/\(authorId)"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    name: name,
-                    description: description,
-                    imagePath: imagePath,
-                    asin: asin
-                )
+            self.body = Payload(
+                name: name,
+                description: description,
+                imagePath: imagePath,
+                asin: asin
             )
         }
 
@@ -69,7 +69,7 @@ public struct UpdateAuthor: Interface {
 
         200: .success(Response.self),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 
@@ -77,7 +77,7 @@ public struct UpdateAuthor: Interface {
 
 public extension UpdateAuthor.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String?
 

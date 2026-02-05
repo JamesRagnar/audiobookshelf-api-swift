@@ -19,11 +19,11 @@ public struct CollectionRemoveBook: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data? = nil
+        public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
 
@@ -41,31 +41,30 @@ public struct CollectionRemoveBook: Interface {
         }
 
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Collection
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case forbidden
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// A user with delete permissions is required to remove a book from a collection.
         403: .failure(AudiobookshelfError.forbidden),
-        
-        /// No collection with the specified ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-        
-    ]
-    
-}
 
+        /// No collection with the specified ID exists.
+        404: .failure(AudiobookshelfError.notFound)
+
+    ]
+
+}

@@ -19,11 +19,13 @@ public struct UploadFile: Interface {
 
         public let path: String = "/api/upload"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]?
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = BinaryBody
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -33,8 +35,7 @@ public struct UploadFile: Interface {
             libraryId: String? = nil,
             folderId: String? = nil
         ) {
-            self.headers = ["Content-Type": contentType]
-            self.body = fileData
+            self.body = BinaryBody(data: fileData, contentType: contentType)
         }
 
     }
@@ -57,7 +58,7 @@ public struct UploadFile: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 

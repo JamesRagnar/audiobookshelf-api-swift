@@ -19,18 +19,18 @@ public struct ReorderLibraries: Interface {
 
         public let path: String = "/api/libraries/order"
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
-        public init(libraries: [LibraryOrder]) throws {
-            self.body = try JSONEncoder().encode(
-                Body(libraries: libraries)
-            )
+        public init(libraries: [LibraryOrder]) {
+            self.body = Payload(libraries: libraries)
         }
 
     }
@@ -53,7 +53,7 @@ public struct ReorderLibraries: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 
@@ -61,7 +61,7 @@ public struct ReorderLibraries: Interface {
 
 public extension ReorderLibraries {
 
-    struct LibraryOrder: Encodable {
+    struct LibraryOrder: Encodable, Sendable {
 
         public let id: String
 
@@ -78,7 +78,7 @@ public extension ReorderLibraries {
 
 public extension ReorderLibraries.Parameters {
 
-    struct Body: Encodable {
+    struct Payload: RequestBody, Encodable, Sendable {
 
         let libraries: [ReorderLibraries.LibraryOrder]
 

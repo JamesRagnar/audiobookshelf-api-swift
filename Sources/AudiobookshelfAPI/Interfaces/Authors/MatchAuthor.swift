@@ -19,11 +19,13 @@ public struct MatchAuthor: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
-        public let body: Data?
+        public typealias Body = Payload
+
+        public let body: Body?
 
         public let authentication: AuthenticationType = .bearer
 
@@ -39,14 +41,12 @@ public struct MatchAuthor: Interface {
             query: String? = nil,
             asin: String? = nil,
             region: String? = nil
-        ) throws {
+        ) {
             self.path = "/api/authors/\(authorId)/match"
-            self.body = try JSONEncoder().encode(
-                Body(
-                    q: query,
-                    asin: asin,
-                    region: region
-                )
+            self.body = Payload(
+                query: query,
+                asin: asin,
+                region: region
             )
         }
     }
@@ -72,9 +72,15 @@ public struct MatchAuthor: Interface {
 
 public extension MatchAuthor.Parameters {
 
-    struct Body: Encodable {
-        let q: String?
+    struct Payload: RequestBody, Encodable, Sendable {
+        let query: String?
         let asin: String?
         let region: String?
+
+        private enum CodingKeys: String, CodingKey {
+            case query = "q"
+            case asin
+            case region
+        }
     }
 }
