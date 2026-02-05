@@ -18,7 +18,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../RagnarNetworking"),
+        .package(
+            url: "https://github.com/JamesRagnar/RagnarNetworking",
+            branch: "main"
+        )
     ],
     targets: [
         .target(
