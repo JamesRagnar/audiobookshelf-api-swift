@@ -10,9 +10,9 @@ import Foundation
 extension Dictionary where Key == String, Value == String? {
     
     mutating func setIfPresent(_ key: String, _ value: String?) {
-        if let value {
-            self[key] = value
-        }
+        guard let value else { return }
+
+        self[key] = value
     }
 
 }
