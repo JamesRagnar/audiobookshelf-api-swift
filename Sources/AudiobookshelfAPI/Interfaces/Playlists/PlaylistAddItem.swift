@@ -10,25 +10,25 @@ import RagnarNetworking
 
 /// This endpoint adds an item to a playlist and returns the updated playlist.
 public struct PlaylistAddItem: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
 
         public let method: RequestMethod = .post
 
         public let path: String
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
         public typealias Body = Payload
 
         public let body: Body?
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Playlist Add Item Parameters
         ///
         /// - Parameters:
@@ -46,37 +46,40 @@ public struct PlaylistAddItem: Interface {
                 episodeId: episodeID
             )
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Playlist
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case badRequest
-        
+
         case forbidden
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
-        /// No library item with the provided ID exists, the library item is in a different library from the playlist, the library item is already in the playlist, the library item is not a podcast and an episodeId was provided, the library item is a podcast and an episodeId was not provided, or no podcast episode with the provided ID exists in the library item.
+
+        /// No library item with the provided ID exists, the library item is in a different library from the playlist,
+        /// the library item is already in the playlist, the library item is not a podcast and an episodeId was
+        /// provided, the library item is a podcast and an episodeId was not provided, or no podcast episode with the
+        /// provided ID exists in the library item.
         400: .failure(AudiobookshelfError.badRequest),
-        
+
         /// The playlist does not belong to the authenticated user.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// No playlist with the provided ID exists.    
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
 
 }

@@ -19,10 +19,9 @@ public struct GetCustomMetadataProviders: Interface {
 
         public let path: String = "/api/custom-metadata-providers"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -46,7 +45,7 @@ public struct GetCustomMetadataProviders: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 

@@ -10,24 +10,23 @@ import RagnarNetworking
 
 /// This endpoint searches a library for the query and returns the results.
 public struct SearchLibrary: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
+
         public let queryItems: [String: String?]?
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Search Library Parameters
         ///
         /// - Parameters:
@@ -40,22 +39,24 @@ public struct SearchLibrary: Interface {
             limit: Int? = nil
         ) {
             self.path = "/api/libraries/\(libraryID)/search"
-            
+
             self.queryItems = [
                 "q": query,
                 "limit": limit?.description
             ]
         }
     }
-    
+
     // MARK: Response
-    
+
     public struct Response: Decodable, Sendable {
-        
-        /// The item results of the search. This attribute will be book or podcast depending on the library's media type.
+
+        /// The item results of the search. This attribute will be book or podcast depending on the library's media
+        /// type.
         public let book: [LibraryItemSearchResult]?
-        
-        /// The item results of the search. This attribute will be book or podcast depending on the library's media type.
+
+        /// The item results of the search. This attribute will be book or podcast depending on the library's media
+        /// type.
         public let podcast: [LibraryItemSearchResult]?
 
         /// The tag results of the search.
@@ -63,50 +64,50 @@ public struct SearchLibrary: Interface {
 
         /// The series results of the search.
         public let series: [SeriesSearchResult]?
-        
+
         /// The author results of the search.
         public let authors: [Author]?
-        
+
     }
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case badRequest
-        
+
         case notFound
-        
+
     }
-    
+
     public static let responseCases: ResponseCases = [
-        
+
         /// Success
         200: .success(Response.self),
-        
+
         /// No query string.
         400: .failure(AudiobookshelfError.badRequest),
-        
+
         /// The user cannot access the library, or no library with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
 
 }
 
 public extension SearchLibrary.Response {
-    
+
     struct LibraryItemSearchResult: Decodable, Sendable {
-        
+
         /// The matched library item.
         public let libraryItem: LibraryItem
-        
+
         /// What the library item was matched on.
         public let matchKey: String?
-        
+
         /// The text in the library item that the query matched to.
         public let matchText: String?
-        
+
     }
-    
+
     struct SeriesSearchResult: Decodable, Sendable {
 
         public let series: Series

@@ -10,18 +10,18 @@ import RagnarNetworking
 
 /// A series was created.
 public struct SeriesAddedEvent: SocketEvent {
-    
+
     public static let name = "series_added"
-    
+
     public typealias Schema = Series
 
 }
 
 /// A series was updated.
 public struct SeriesUpdatedEvent: SocketEvent {
-    
+
     public static let name = "series_updated"
-    
+
     public typealias Schema = Series
 
 }

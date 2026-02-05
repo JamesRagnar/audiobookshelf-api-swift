@@ -10,22 +10,21 @@ import RagnarNetworking
 
 /// This endpoint retrieves a playlist.
 public struct GetPlaylist: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
 
         /// Get Playlist Parameters
@@ -34,32 +33,32 @@ public struct GetPlaylist: Interface {
         public init(playlistID: String) {
             self.path = "/api/playlists/\(playlistID)"
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Playlist
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case forbidden
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// The playlist does not belong to the authenticated user.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// No playlist with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
-    
+
 }

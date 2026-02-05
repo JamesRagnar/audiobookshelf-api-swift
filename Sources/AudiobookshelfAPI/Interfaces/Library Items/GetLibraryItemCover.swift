@@ -10,32 +10,31 @@ import RagnarNetworking
 
 /// This endpoint retrieves a library item's cover image.
 public struct GetLibraryItemCover: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public enum Format: String {
-            
+
             case webp
-            
+
             case jpeg
-            
+
         }
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String : String?]?
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]?
+
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Get Library Item Cover Parameters
         ///
         /// - Parameters:
@@ -52,7 +51,7 @@ public struct GetLibraryItemCover: Interface {
             raw: Bool? = nil
         ) {
             self.path = "/api/items/\(itemID)/cover"
-            
+
             var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("width", width?.description)
             queryItems.setIfPresent("height", height?.description)
@@ -60,32 +59,32 @@ public struct GetLibraryItemCover: Interface {
             queryItems.setIfPresent("raw", raw?.binaryString)
             self.queryItems = queryItems
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case notFound
-        
+
         case internalServerError
-        
+
     }
-    
+
     public typealias Response = Data
-    
+
     public static let responseCases: ResponseCases = [
-        
+
         /// Success
         200: .success(Response.self),
-        
+
         /// Either no library item exists with the given ID, or the item does not have a cover.
         404: .failure(AudiobookshelfError.notFound),
-        
+
         /// There was an error when attempting to read the cover file.
-        500: .failure(AudiobookshelfError.internalServerError),
-        
+        500: .failure(AudiobookshelfError.internalServerError)
+
     ]
-    
+
 }

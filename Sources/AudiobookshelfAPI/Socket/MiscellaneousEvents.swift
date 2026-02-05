@@ -38,45 +38,46 @@ public extension InitEvent {
 
 /// An invalid token was given when authenticating. Response to auth client event.
 public struct InvalidTokenEvent: SocketEvent {
-    
+
     public static let name = "invalid_token"
-    
+
     public typealias Schema = SocketEmptyBody
 
 }
 
-/// A single log event. Emitted after set_log_listener client event is sent. Cancelable with remove_log_listener client event.
+/// A single log event. Emitted after set_log_listener client event is sent. Cancelable with remove_log_listener client
+/// event.
 public struct LogEvent: SocketEvent {
-    
+
     public static let name = "log"
-    
+
     public typealias Schema = LogEventObject
 
 }
 
 /// The current day's log events. Response to fetch_daily_logs client event.
 public struct DailyLogsEvent: SocketEvent {
-    
+
     public static let name = "daily_logs"
-    
+
     public typealias Schema = [LogEventObject]
 
 }
 
 /// A message sent by an admin user.
 public struct AdminMessageEvent: SocketEvent {
-    
+
     public static let name = "admin_message"
-    
+
     public typealias Schema = String
 
 }
 
 /// Response to ping client event.
 public struct PongEvent: SocketEvent {
-    
+
     public static let name = "pong"
-    
+
     public typealias Schema = SocketEmptyBody
 
 }

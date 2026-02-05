@@ -19,10 +19,9 @@ public struct GetAllAPIKeys: Interface {
 
         public let path: String = "/api/api-keys"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 

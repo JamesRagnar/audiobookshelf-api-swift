@@ -19,9 +19,9 @@ public struct CreateLibrary: Interface {
 
         public let path: String = "/api/libraries"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 
@@ -69,7 +69,7 @@ public struct CreateLibrary: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 

@@ -19,9 +19,9 @@ public struct MatchAuthor: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 
@@ -44,7 +44,7 @@ public struct MatchAuthor: Interface {
         ) {
             self.path = "/api/authors/\(authorId)/match"
             self.body = Payload(
-                q: query,
+                query: query,
                 asin: asin,
                 region: region
             )
@@ -73,8 +73,14 @@ public struct MatchAuthor: Interface {
 public extension MatchAuthor.Parameters {
 
     struct Payload: RequestBody, Encodable, Sendable {
-        let q: String?
+        let query: String?
         let asin: String?
         let region: String?
+
+        private enum CodingKeys: String, CodingKey {
+            case query = "q"
+            case asin
+            case region
+        }
     }
 }

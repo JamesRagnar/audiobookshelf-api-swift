@@ -19,9 +19,9 @@ public struct ValidateCronExpression: Interface {
 
         public let path: String = "/api/validate-cron"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

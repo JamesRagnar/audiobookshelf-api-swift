@@ -19,9 +19,9 @@ public struct UpdateLibraryItemCover: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 
@@ -58,7 +58,7 @@ public struct UpdateLibraryItemCover: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

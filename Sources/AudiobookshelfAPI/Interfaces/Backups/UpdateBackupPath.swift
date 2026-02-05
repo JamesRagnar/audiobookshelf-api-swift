@@ -19,9 +19,9 @@ public struct UpdateBackupPath: Interface {
 
         public let path: String = "/api/backups/path"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

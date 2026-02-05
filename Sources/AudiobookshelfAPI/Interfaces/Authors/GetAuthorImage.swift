@@ -10,46 +10,45 @@ import RagnarNetworking
 
 /// This endpoint retrieves an author's image.
 public struct GetAuthorImage: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public enum Format: String {
-            
+
             case webp
-            
+
             case jpeg
-            
+
         }
-        
+
         struct Auth {
             let id: String
             let name: String
-            
+
             var imageResource: ImageResource {
                 .author(id)
             }
         }
-        
+
         enum ImageResource {
             case libraryItem(String)
             case author(String)
         }
-        
+
         public let method: RequestMethod = .get
 
         public let path: String
-        
-        public let queryItems: [String : String?]?
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]?
+
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Get Author Image Parameters
         /// 
         /// - Parameters:
@@ -66,7 +65,7 @@ public struct GetAuthorImage: Interface {
             raw: Bool? = nil
         ) {
             self.path = "/api/authors/\(authorID)/image"
-            
+
             var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("width", width?.description)
             queryItems.setIfPresent("height", height?.description)
@@ -74,32 +73,32 @@ public struct GetAuthorImage: Interface {
             queryItems.setIfPresent("raw", raw?.binaryString)
             self.queryItems = queryItems
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case notFound
-        
+
         case internalServerError
-        
+
     }
-    
+
     public typealias Response = Data
-    
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// No author with provided ID exists, or the author does not have an image.
         404: .failure(AudiobookshelfError.notFound),
-        
+
         /// There was an error when attempting to read the image file.
-        500: .failure(AudiobookshelfError.internalServerError),
-        
+        500: .failure(AudiobookshelfError.internalServerError)
+
     ]
-    
+
 }

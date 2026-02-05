@@ -19,10 +19,9 @@ public struct BrowseFilesystem: Interface {
 
         public let path: String = "/api/filesystem"
 
-        public let queryItems: [String : String?]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -52,7 +51,7 @@ public struct BrowseFilesystem: Interface {
 
         200: .success(Response.self),
 
-        403: .failure(AudiobookshelfError.forbidden),
+        403: .failure(AudiobookshelfError.forbidden)
 
     ]
 

@@ -8,7 +8,7 @@
 import Foundation
 
 extension Dictionary where Key == String, Value == String? {
-    
+
     mutating func setIfPresent(_ key: String, _ value: String?) {
         guard let value else { return }
 

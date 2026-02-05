@@ -10,27 +10,27 @@ import RagnarNetworking
 
 /// A playlist was created.
 public struct PlaylistAddedEvent: SocketEvent {
-    
+
     public static let name = "playlist_added"
-    
+
     public typealias Schema = Playlist
 
 }
 
 /// A playlist was updated.
 public struct PlaylistUpdatedEvent: SocketEvent {
-    
+
     public static let name = "playlist_updated"
-    
+
     public typealias Schema = Playlist
 
 }
 
 /// A playlist was deleted.
 public struct PlaylistRemovedEvent: SocketEvent {
-    
+
     public static let name = "playlist_removed"
-    
+
     public typealias Schema = Playlist
 
 }

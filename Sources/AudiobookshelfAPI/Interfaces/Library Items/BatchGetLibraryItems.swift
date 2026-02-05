@@ -19,9 +19,9 @@ public struct BatchGetLibraryItems: Interface {
 
         public let path: String = "/api/items/batch/get"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 
@@ -52,7 +52,7 @@ public struct BatchGetLibraryItems: Interface {
 
     public static let responseCases: ResponseCases = [
 
-        200: .success(Response.self),
+        200: .success(Response.self)
 
     ]
 

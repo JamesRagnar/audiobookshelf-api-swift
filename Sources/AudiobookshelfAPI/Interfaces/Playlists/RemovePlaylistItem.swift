@@ -11,24 +11,23 @@ import RagnarNetworking
 /// This endpoint removes an item from a playlist and returns the updated playlist.
 /// Then, if the playlist is empty, it will be deleted.
 public struct RemovePlaylistItem: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .delete
 
         public let path: String
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Remove Playlist Item Parameters
         ///
         /// - Parameters:
@@ -40,38 +39,38 @@ public struct RemovePlaylistItem: Interface {
             libraryItemID: String,
             episodeID: String? = nil
         ) {
-            var path :String = "/api/playlists/\(playlistID)/item/\(libraryItemID)"
+            var path: String = "/api/playlists/\(playlistID)/item/\(libraryItemID)"
             if let episodeID {
                 path += "/\(episodeID)"
             }
             self.path = path
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Playlist
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case forbidden
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// The playlist does not belong to the authenticated user.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// No playlist with the provided ID exists, or the playlist does not contain the provided item.
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
-    
+
 }

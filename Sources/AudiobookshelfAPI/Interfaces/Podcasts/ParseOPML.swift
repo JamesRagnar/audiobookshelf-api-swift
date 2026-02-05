@@ -19,9 +19,9 @@ public struct ParseOPML: Interface {
 
         public let path: String = "/api/podcasts/opml/parse"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

@@ -10,23 +10,23 @@ import RagnarNetworking
 
 /// This endpoint creates a collection and returns it.
 public struct CreateCollection: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
 
         public let method: RequestMethod = .post
 
         public let path: String = "/api/collections"
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
         public typealias Body = Payload
 
         public let body: Body?
-        
+
         public let authentication: AuthenticationType = .bearer
 
         /// Create Collection Parameters
@@ -51,32 +51,32 @@ public struct CreateCollection: Interface {
 
             self.body = body
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Collection
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case forbidden
-        
+
         case internalError
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// A user with update permissions is required to create collections.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// libraryId and name are required parameters.
-        500: .failure(AudiobookshelfError.internalError),
-        
+        500: .failure(AudiobookshelfError.internalError)
+
     ]
 
 }

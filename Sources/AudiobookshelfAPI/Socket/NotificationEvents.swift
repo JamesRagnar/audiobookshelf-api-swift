@@ -10,9 +10,9 @@ import RagnarNetworking
 
 /// A notification was fired.
 public struct NotificationsUpdatedEvent: SocketEvent {
-    
+
     public static let name = "notifications_updated"
-    
+
     public typealias Schema = NotificationSettings
 
 }

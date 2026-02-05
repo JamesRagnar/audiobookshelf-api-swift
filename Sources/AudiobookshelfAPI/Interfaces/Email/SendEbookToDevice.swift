@@ -19,9 +19,9 @@ public struct SendEbookToDevice: Interface {
 
         public let path: String = "/api/emails/send-ebook-to-device"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

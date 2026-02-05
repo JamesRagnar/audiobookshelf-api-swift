@@ -19,9 +19,9 @@ public struct SyncLocalSession: Interface {
 
         public let path: String = "/api/session/local"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = LocalPlaybackSession
 
@@ -54,7 +54,7 @@ public struct SyncLocalSession: Interface {
         200: .success(Response.self),
 
         /// Invalid request data.
-        400: .failure(AudiobookshelfError.badRequest),
+        400: .failure(AudiobookshelfError.badRequest)
 
     ]
 

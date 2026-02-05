@@ -19,10 +19,9 @@ public struct DeleteSession: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -53,7 +52,7 @@ public struct DeleteSession: Interface {
         200: .success(Response.self),
 
         /// Session with the provided ID does not exist or user cannot access it.
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

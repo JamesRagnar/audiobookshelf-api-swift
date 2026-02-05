@@ -19,9 +19,9 @@ public struct RenameTag: Interface {
 
         public let path: String = "/api/tags/rename"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

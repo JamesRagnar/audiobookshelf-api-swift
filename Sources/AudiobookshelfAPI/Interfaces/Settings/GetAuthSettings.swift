@@ -19,10 +19,9 @@ public struct GetAuthSettings: Interface {
 
         public let path: String = "/api/auth-settings"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 

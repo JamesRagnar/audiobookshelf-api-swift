@@ -19,9 +19,9 @@ public struct AuthorizeUser: Interface {
 
         public let path: String = "/api/authorize"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 
@@ -53,7 +53,7 @@ public struct AuthorizeUser: Interface {
 
         400: .failure(AudiobookshelfError.badRequest),
 
-        401: .failure(AudiobookshelfError.unauthorized),
+        401: .failure(AudiobookshelfError.unauthorized)
 
     ]
 

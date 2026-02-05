@@ -19,9 +19,9 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let path: String = "/api/session/local-all"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = ArrayBody<SyncLocalSession.Parameters.LocalPlaybackSession>
 
@@ -54,7 +54,7 @@ public struct SyncLocalSessionsBatch: Interface {
         200: .success(Response.self),
 
         /// Invalid request data or empty array provided.
-        400: .failure(AudiobookshelfError.badRequest),
+        400: .failure(AudiobookshelfError.badRequest)
 
     ]
 

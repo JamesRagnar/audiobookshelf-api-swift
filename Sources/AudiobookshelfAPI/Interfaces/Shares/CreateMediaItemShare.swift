@@ -19,9 +19,9 @@ public struct CreateMediaItemShare: Interface {
 
         public let path: String = "/api/share/mediaitem"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

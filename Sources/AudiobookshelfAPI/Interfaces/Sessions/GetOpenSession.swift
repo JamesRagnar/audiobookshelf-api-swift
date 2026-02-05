@@ -19,10 +19,9 @@ public struct GetOpenSession: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -53,7 +52,7 @@ public struct GetOpenSession: Interface {
         200: .success(Response.self),
 
         /// No listening session with the provided ID is open, or the session belongs to another user.
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

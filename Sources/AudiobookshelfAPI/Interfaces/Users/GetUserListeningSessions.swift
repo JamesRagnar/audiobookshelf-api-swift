@@ -19,10 +19,9 @@ public struct GetUserListeningSessions: Interface {
 
         public let path: String
 
-        public let queryItems: [String : String?]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -64,7 +63,7 @@ public struct GetUserListeningSessions: Interface {
 
         403: .failure(AudiobookshelfError.forbidden),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

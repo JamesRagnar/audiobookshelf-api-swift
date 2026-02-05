@@ -19,10 +19,9 @@ public struct SearchExternalAuthors: Interface {
 
         public let path: String = "/api/search/authors"
 
-        public let queryItems: [String : String?]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -43,7 +42,7 @@ public struct SearchExternalAuthors: Interface {
 
     public static let responseCases: ResponseCases = [
 
-        200: .success(Response.self),
+        200: .success(Response.self)
 
     ]
 

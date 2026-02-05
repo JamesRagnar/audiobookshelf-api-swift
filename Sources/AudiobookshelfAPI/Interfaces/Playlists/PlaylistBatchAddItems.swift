@@ -10,19 +10,19 @@ import RagnarNetworking
 
 /// This endpoint batch adds items to a playlist and returns the updated playlist.
 public struct PlaylistBatchAddItems: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
 
         public struct Item: Encodable, Sendable {
-            
+
             /// The ID of the library item the playlist item is for.
             public let libraryItemId: String
-            
+
             /// The ID of the podcast episode the playlist item is for.
             public let episodeId: String?
-            
+
             public init(
                 libraryItemId: String,
                 episodeId: String?
@@ -32,21 +32,21 @@ public struct PlaylistBatchAddItems: Interface {
             }
 
         }
-        
+
         public let method: RequestMethod = .post
 
         public let path: String
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
         public typealias Body = ArrayBody<Item>
 
         public let body: Body?
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Playlist Batch Add Items Parameters
         ///
         /// - Parameters:
@@ -59,42 +59,42 @@ public struct PlaylistBatchAddItems: Interface {
             self.path = "/api/playlists/\(playlistID)/batch/add"
             self.body = ArrayBody(items)
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Playlist
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case badRequest
-        
+
         case forbidden
-        
+
         case notFound
-        
+
         case internalError
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// One or more of the provided items does not have a libraryItemId.
         400: .failure(AudiobookshelfError.badRequest),
-        
+
         /// The playlist does not belong to the authenticated user.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// No playlist with the provided ID exists.
         404: .failure(AudiobookshelfError.notFound),
-        
+
         /// The provided items array was empty or did not exist.
-        500: .failure(AudiobookshelfError.internalError),
-        
+        500: .failure(AudiobookshelfError.internalError)
+
     ]
-    
+
 }

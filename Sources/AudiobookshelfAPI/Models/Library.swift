@@ -8,10 +8,10 @@
 import Foundation
 
 public struct Library {
-    
+
     /// The ID of the library. (Read Only)
     public let id: String
-    
+
     /// The name of the library.
     public let name: String
 
@@ -32,7 +32,7 @@ public struct Library {
 
     /// The settings for the library.
     public let settings: LibrarySettings
-    
+
     /// The time (in ms since POSIX epoch) when the library was created. (Read Only)
     public let createdAt: Int
 

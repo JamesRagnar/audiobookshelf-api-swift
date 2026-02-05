@@ -10,25 +10,25 @@ import RagnarNetworking
 
 /// This endpoint syncs the position of an open listening session from the client to the server and returns the session.
 public struct SyncOpenSession: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
 
         public let method: RequestMethod = .post
 
         public let path: String
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
         public typealias Body = Payload
 
         public let body: Body?
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Sync Open Session Parameters
         ///
         /// - Parameters:
@@ -50,32 +50,32 @@ public struct SyncOpenSession: Interface {
                 duration: duration
             )
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = String
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case notFound
-        
+
         case internalServerError
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// No listening session with the provided ID is open, or the session belongs to another user.
         404: .failure(AudiobookshelfError.notFound),
-        
+
         /// There was an error syncing the session.
-        500: .failure(AudiobookshelfError.internalServerError),
-        
+        500: .failure(AudiobookshelfError.internalServerError)
+
     ]
 
 }

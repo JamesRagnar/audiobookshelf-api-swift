@@ -19,9 +19,9 @@ public struct UpdateEmailSettings: Interface {
 
         public let path: String = "/api/emails/settings"
 
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 

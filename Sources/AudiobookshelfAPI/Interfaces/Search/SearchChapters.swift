@@ -19,9 +19,9 @@ public struct SearchChapters: Interface {
 
         public let path: String = "/api/search/chapters"
 
-        public let queryItems: [String : String?]?
+        public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 

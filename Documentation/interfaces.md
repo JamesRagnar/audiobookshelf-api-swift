@@ -24,7 +24,7 @@ public struct MyInterface: Interface {
 		// If a parameter requires a dynamic input value, include it in the init below
         public let path: String
         
-        public let queryItems: [String : String?]? = nil
+        public let queryItems: [String: String?]? = nil
         
         public let headers: [String : String]? = nil
         

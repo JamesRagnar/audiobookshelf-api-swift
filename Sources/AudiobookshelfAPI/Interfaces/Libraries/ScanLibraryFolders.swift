@@ -10,22 +10,21 @@ import RagnarNetworking
 
 /// This endpoint starts a scan of a library's folders for new library items and changes to existing library items.
 public struct ScanLibraryFolders: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public let method: RequestMethod = .post
 
         public let path: String
-        
-        public let queryItems: [String : String?]?
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]?
+
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
-        
+
         public let authentication: AuthenticationType = .bearer
 
         /// Scan Library Folders Parameters
@@ -38,37 +37,37 @@ public struct ScanLibraryFolders: Interface {
             force: Bool? = nil
         ) {
             self.path = "/api/libraries/\(libraryID)/scan"
-            
+
             var queryItems: [String: String?] = [:]
             queryItems.setIfPresent("force", force?.binaryString)
             self.queryItems = queryItems
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = String
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case forbidden
-        
+
         case notFound
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// An admin user is required to start a scan.
         403: .failure(AudiobookshelfError.forbidden),
-        
+
         /// The user cannot access the library, or no library with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-        
+        404: .failure(AudiobookshelfError.notFound)
+
     ]
-    
+
 }

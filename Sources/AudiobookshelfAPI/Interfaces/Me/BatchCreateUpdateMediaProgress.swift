@@ -10,11 +10,11 @@ import RagnarNetworking
 
 /// This endpoint batch creates/updates your media progress.
 public struct BatchCreateUpdateMediaProgress: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
-        
+
         public struct ProgressItem: Encodable, Sendable {
 
             /// The ID of the library item the media progress is for.
@@ -26,7 +26,8 @@ public struct BatchCreateUpdateMediaProgress: Interface {
             /// The total duration (in seconds) of the media.
             public let duration: Float
 
-            /// The percentage completion progress of the media. Will automatically be set to 1 if the media is finished.
+            /// The percentage completion progress of the media. Will automatically be set to 1 if the media is
+            /// finished.
             public let progress: Float
 
             /// The current time (in seconds) of your progress.
@@ -38,10 +39,12 @@ public struct BatchCreateUpdateMediaProgress: Interface {
             /// Whether the media will be hidden from the "Continue Listening" shelf.
             public let hideFromContinueListening: Bool
 
-            /// The time (in ms since POSIX epoch) when the user finished the media. The default will be Date.now() if isFinished is true.
+            /// The time (in ms since POSIX epoch) when the user finished the media. The default will be Date.now() if
+            /// isFinished is true.
             public let finishedAt: Int?
 
-            /// Date.now() or finishedAt    The time (in ms since POSIX epoch) when the user started consuming the media. The default will be the value of finishedAt if isFinished is true.
+            /// Date.now() or finishedAt    The time (in ms since POSIX epoch) when the user started consuming the
+            /// media. The default will be the value of finishedAt if isFinished is true.
             public let startedAt: Int
 
             public init(
@@ -67,48 +70,48 @@ public struct BatchCreateUpdateMediaProgress: Interface {
             }
 
         }
-        
+
         public let method: RequestMethod = .patch
 
         public let path: String = "/api/me/progress/batch/update"
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
-        
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
+
         public typealias Body = ArrayBody<ProgressItem>
 
         public let body: Body?
-        
+
         public let authentication: AuthenticationType = .bearer
-        
+
         /// Batch Create/Update Media Progress Parameters
         ///
         /// - Parameter progressItems: The Progress items to update
         public init(progressItems: [ProgressItem]) {
             self.body = ArrayBody(progressItems)
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = String
 
     public enum AudiobookshelfError: Error {
-        
+
         case badRequest
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// The provided array must have a non-zero length.
-        400: .failure(AudiobookshelfError.badRequest),
-        
+        400: .failure(AudiobookshelfError.badRequest)
+
     ]
-    
+
 }

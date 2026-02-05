@@ -8,10 +8,10 @@
 import Foundation
 
 public struct RSSFeed {
-    
+
     /// The ID of the RSS feed.
     public let id: UUID
-    
+
     /// The slug (the last part of the URL) for the RSS feed.
     /// - Note: RSS Feed Minified - Removed Attribute
     public let slug: String?
@@ -59,8 +59,10 @@ public struct RSSFeed {
 }
 
 extension RSSFeed: Decodable {
+
     enum CodingKeys: String, CodingKey {
-        case id, slug, userId, entityType, entityId, coverPath, serverAddress, feedUrl, meta, episodes, createdAt, updatedAt, entityUpdatedAt
+        case id, slug, userId, entityType, entityId, coverPath, serverAddress
+        case feedUrl, meta, episodes, createdAt, updatedAt, entityUpdatedAt
     }
 
     public init(from decoder: Decoder) throws {

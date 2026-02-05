@@ -21,8 +21,7 @@ public struct GetRecentEpisodes: Interface {
 
         public let queryItems: [String: String?]?
 
-        public let headers: [String : String]? = nil
-
+        public let headers: [String: String]? = nil
 
         public let body: Body? = nil
 
@@ -76,7 +75,7 @@ public struct GetRecentEpisodes: Interface {
 
         200: .success(Response.self),
 
-        404: .failure(AudiobookshelfError.notFound),
+        404: .failure(AudiobookshelfError.notFound)
 
     ]
 

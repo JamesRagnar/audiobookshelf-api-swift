@@ -10,9 +10,9 @@ import RagnarNetworking
 
 /// This endpoint creates a playlist and returns it.
 public struct CreatePlaylist: Interface {
-    
+
     // MARK: Request
-    
+
     public struct Parameters: RequestParameters {
 
         /// An Encodable version of PlaylistItem,
@@ -34,19 +34,19 @@ public struct CreatePlaylist: Interface {
             }
 
         }
-        
+
         public let method: RequestMethod = .post
 
         public let path: String = "/api/playlists"
-        
-        public let queryItems: [String : String?]? = nil
-        
-        public let headers: [String : String]? = nil
+
+        public let queryItems: [String: String?]? = nil
+
+        public let headers: [String: String]? = nil
 
         public typealias Body = Payload
 
         public let body: Body?
-        
+
         public let authentication: AuthenticationType = .bearer
 
         /// Create Playlist Parameters
@@ -72,27 +72,27 @@ public struct CreatePlaylist: Interface {
                 items: items
             )
         }
-        
+
     }
-    
+
     // MARK: Response
-    
+
     public typealias Response = Playlist
-    
+
     public enum AudiobookshelfError: Error {
-        
+
         case badRequest
-        
+
     }
-        
+
     public static let responseCases: ResponseCases = [
 
         /// Success
         200: .success(Response.self),
-        
+
         /// The provided playlist data was invalid.
-        400: .failure(AudiobookshelfError.badRequest),
-        
+        400: .failure(AudiobookshelfError.badRequest)
+
     ]
 
 }
