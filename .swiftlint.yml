@@ -10,11 +10,13 @@ excluded:
 disabled_rules:
 
 # Opt-in rules are off by default; enable if/when desired.
-# opt_in_rules:
-#   - empty_count
-#   - empty_string
-#   - first_where
-#   - sorted_imports
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - first_where
+  - sorted_imports
+  - implicit_optional_initialization
+  - explicit_init
 
 reporter: "xcode"
 
@@ -29,3 +31,6 @@ nesting:
 function_body_length:
   warning: 80
   error: 120
+
+analyzer_rules:
+  - unused_import

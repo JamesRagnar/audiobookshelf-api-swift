@@ -1,5 +1,5 @@
-import Testing
 @testable import AudiobookshelfAPI
+import Testing
 
 @Suite
 struct SetHelperTests {
