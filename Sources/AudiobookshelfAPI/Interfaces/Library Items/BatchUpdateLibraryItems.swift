@@ -73,9 +73,9 @@ public extension BatchUpdateLibraryItems.Parameters {
 
             public let id: String
 
-            public let mediaPayload: LibraryItemMediaPayload
+            public let mediaPayload: UpdateLibraryItemMedia.Parameters.LibraryItemMediaPayload
 
-            public init(id: String, mediaPayload: LibraryItemMediaPayload) {
+            public init(id: String, mediaPayload: UpdateLibraryItemMedia.Parameters.LibraryItemMediaPayload) {
                 self.id = id
                 self.mediaPayload = mediaPayload
             }

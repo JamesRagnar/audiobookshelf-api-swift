@@ -23,7 +23,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let headers: [String : String]? = nil
 
-        public typealias Body = ArrayBody<LocalPlaybackSession>
+        public typealias Body = ArrayBody<SyncLocalSession.Parameters.LocalPlaybackSession>
 
         public let body: Body?
 
@@ -32,7 +32,7 @@ public struct SyncLocalSessionsBatch: Interface {
         /// Sync Local Sessions Batch Parameters
         ///
         /// - Parameter sessions: The array of local playback session data to sync with the server.
-        public init(sessions: [LocalPlaybackSession]) {
+        public init(sessions: [SyncLocalSession.Parameters.LocalPlaybackSession]) {
             self.body = ArrayBody(sessions)
         }
 
