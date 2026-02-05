@@ -23,7 +23,6 @@ public struct SearchChapters: Interface {
 
         public let headers: [String : String]? = nil
 
-
         public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
@@ -39,7 +38,7 @@ public struct SearchChapters: Interface {
             libraryId: String? = nil,
             limit: Int? = nil
         ) {
-            var items: [String: String] = ["q": query]
+            var items: [String: String?] = ["q": query]
 
             if let libraryId = libraryId {
                 items["libraryId"] = libraryId

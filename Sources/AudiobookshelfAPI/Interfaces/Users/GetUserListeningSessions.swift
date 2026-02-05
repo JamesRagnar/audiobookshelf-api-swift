@@ -34,7 +34,7 @@ public struct GetUserListeningSessions: Interface {
             itemsPerPage: Int? = nil
         ) {
             self.path = "/api/users/\(userId)/listening-sessions"
-            var items: [String: String] = [:]
+            var items: [String: String?] = [:]
             if let page = page {
                 items["page"] = String(page)
             }

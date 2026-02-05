@@ -39,7 +39,7 @@ public struct SearchExternalBooks: Interface {
             author: String? = nil,
             provider: String? = nil
         ) {
-            var items: [String: String] = [:]
+            var items: [String: String?] = [:]
             if let title = title {
                 items["title"] = title
             }

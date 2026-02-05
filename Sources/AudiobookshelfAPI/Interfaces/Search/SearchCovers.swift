@@ -23,7 +23,6 @@ public struct SearchCovers: Interface {
 
         public let headers: [String : String]? = nil
 
-
         public let body: Body? = nil
 
         public let authentication: AuthenticationType = .bearer
@@ -39,7 +38,7 @@ public struct SearchCovers: Interface {
             provider: String,
             asin: String? = nil
         ) {
-            var items: [String: String] = [
+            var items: [String: String?] = [
                 "q": query,
                 "provider": provider
             ]
