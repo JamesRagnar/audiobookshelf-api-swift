@@ -23,7 +23,6 @@ public struct RefreshToken: Interface {
         
         public let headers: [String : String]?
         
-        public typealias Body = EmptyBody
 
         public let body: Body? = nil
         

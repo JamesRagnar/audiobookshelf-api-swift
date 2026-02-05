@@ -23,7 +23,6 @@ public struct Healthcheck: Interface {
         
         public let headers: [String : String]? = nil
         
-        public typealias Body = EmptyBody
 
         public let body: Body? = nil
         

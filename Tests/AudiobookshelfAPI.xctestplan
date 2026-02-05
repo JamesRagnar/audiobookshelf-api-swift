@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "EDB86ADC-2975-4E5B-9411-BCADA9719CD4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "AudiobookshelfAPI",
+          "name" : "AudiobookshelfAPI"
+        }
+      ]
+    },
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AudiobookshelfAPITests",
+        "name" : "AudiobookshelfAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}
