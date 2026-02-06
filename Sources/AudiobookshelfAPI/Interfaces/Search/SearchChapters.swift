@@ -54,11 +54,11 @@ public struct SearchChapters: Interface {
 
     // MARK: Response
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
     }
 
-    public static let responseCases: ResponseCases = [
-        200: .success(Response.self)
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
     ]
 }
 

@@ -40,7 +40,7 @@ public struct GetPlaylist: Interface {
 
     public typealias Response = Playlist
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -48,17 +48,14 @@ public struct GetPlaylist: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// The playlist does not belong to the authenticated user.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No playlist with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

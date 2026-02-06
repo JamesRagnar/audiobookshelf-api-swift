@@ -57,20 +57,18 @@ public struct GetSeriesById: Interface {
 
     public typealias Response = Series
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// No series with provided ID exists.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

@@ -39,7 +39,7 @@ public struct AuthorizeUser: Interface {
 
     public typealias Response = User
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case unauthorized
 
@@ -47,14 +47,11 @@ public struct AuthorizeUser: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        400: .failure(AudiobookshelfError.badRequest),
-
-        401: .failure(AudiobookshelfError.unauthorized)
-
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(401, .error(AudiobookshelfError.unauthorized)),
     ]
 
 }

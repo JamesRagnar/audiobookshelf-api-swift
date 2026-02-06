@@ -45,7 +45,7 @@ public struct GetShareAudioTrack: Interface {
 
     public typealias Response = Data
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
@@ -53,16 +53,12 @@ public struct GetShareAudioTrack: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        204: .success(Response.self),
-
-        404: .failure(AudiobookshelfError.notFound),
-
-        500: .failure(AudiobookshelfError.internalError)
-
+        .code(200, .decode),
+        .code(204, .noContent),
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(500, .error(AudiobookshelfError.internalError)),
     ]
 
 }

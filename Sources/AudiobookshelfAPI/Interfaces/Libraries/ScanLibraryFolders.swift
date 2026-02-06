@@ -47,9 +47,9 @@ public struct ScanLibraryFolders: Interface {
 
     // MARK: Response
 
-    public typealias Response = String
+    public typealias Response = EmptyResponse
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -57,17 +57,14 @@ public struct ScanLibraryFolders: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// An admin user is required to start a scan.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// The user cannot access the library, or no library with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

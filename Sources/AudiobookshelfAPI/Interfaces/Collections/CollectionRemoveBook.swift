@@ -46,7 +46,7 @@ public struct CollectionRemoveBook: Interface {
 
     public typealias Response = Collection
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -54,17 +54,14 @@ public struct CollectionRemoveBook: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// A user with delete permissions is required to remove a book from a collection.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

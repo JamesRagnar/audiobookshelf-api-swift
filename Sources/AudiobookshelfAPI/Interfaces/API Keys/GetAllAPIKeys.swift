@@ -35,18 +35,16 @@ public struct GetAllAPIKeys: Interface {
 
     public typealias Response = APIKeys
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        403: .failure(AudiobookshelfError.forbidden)
-
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden)),
     ]
 
 }

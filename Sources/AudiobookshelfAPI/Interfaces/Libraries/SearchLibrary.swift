@@ -70,7 +70,7 @@ public struct SearchLibrary: Interface {
 
     }
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -78,17 +78,14 @@ public struct SearchLibrary: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// No query string.
-        400: .failure(AudiobookshelfError.badRequest),
-
+        .code(400, .error(AudiobookshelfError.badRequest)),
         /// The user cannot access the library, or no library with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

@@ -41,9 +41,9 @@ public struct BatchEmbedMetadata: Interface {
 
     // MARK: Response
 
-    public typealias Response = Data
+    public typealias Response = EmptyResponse
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -51,14 +51,11 @@ public struct BatchEmbedMetadata: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        400: .failure(AudiobookshelfError.badRequest),
-
-        403: .failure(AudiobookshelfError.forbidden)
-
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
     ]
 
 }

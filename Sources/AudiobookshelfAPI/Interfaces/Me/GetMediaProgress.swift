@@ -50,20 +50,18 @@ public struct GetMediaProgress: Interface {
 
     public typealias Response = MediaProgress
 
-    public enum AudiobookshelfError: Swift.Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// No media progress was found that matches the given IDs.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

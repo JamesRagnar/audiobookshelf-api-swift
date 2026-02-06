@@ -41,13 +41,13 @@ public struct UpdateUserEReaderDevices: Interface {
 
     public typealias Response = User
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
         case badRequest
     }
 
-    public static let responseCases: ResponseCases = [
-        200: .success(Response.self),
-        400: .failure(AudiobookshelfError.badRequest)
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
     ]
 }
 

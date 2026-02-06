@@ -33,41 +33,27 @@ public struct GetEmailSettings: Interface {
 
     // MARK: Response
 
-    public typealias Response = EmailSettings
+    public typealias Response = EmailSettingsResponse
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        403: .failure(AudiobookshelfError.forbidden)
-
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden)),
     ]
 
 }
 
 public extension GetEmailSettings {
 
-    struct EmailSettings: Decodable, Sendable {
+    struct EmailSettingsResponse: Decodable, Sendable {
 
-        public let host: String?
-
-        public let port: Int?
-
-        public let secure: Bool?
-
-        public let user: String?
-
-        public let pass: String?
-
-        public let fromAddress: String?
-
-        public let testAddress: String?
+        public let settings: EmailSettings
 
     }
 

@@ -45,7 +45,7 @@ public struct CheckNewPodcastEpisodes: Interface {
 
     }
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -53,14 +53,11 @@ public struct CheckNewPodcastEpisodes: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        403: .failure(AudiobookshelfError.forbidden),
-
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

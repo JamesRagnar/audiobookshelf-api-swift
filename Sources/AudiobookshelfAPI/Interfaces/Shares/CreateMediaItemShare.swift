@@ -77,7 +77,7 @@ public struct CreateMediaItemShare: Interface {
 
     }
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -91,20 +91,14 @@ public struct CreateMediaItemShare: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        201: .success(Response.self),
-
-        400: .failure(AudiobookshelfError.badRequest),
-
-        403: .failure(AudiobookshelfError.forbidden),
-
-        404: .failure(AudiobookshelfError.notFound),
-
-        409: .failure(AudiobookshelfError.conflict),
-
-        500: .failure(AudiobookshelfError.internalError)
-
+        .code(201, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(409, .error(AudiobookshelfError.conflict)),
+        .code(500, .error(AudiobookshelfError.internalError)),
     ]
 
 }

@@ -40,7 +40,7 @@ public struct GetPodcastEpisode: Interface {
 
     public typealias Response = PodcastEpisode
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -50,20 +50,16 @@ public struct GetPodcastEpisode: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// The user is not allowed to access the library item.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No podcast episode with the given ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-
+        .code(404, .error(AudiobookshelfError.notFound)),
         /// The library item is not a podcast.
-        500: .failure(AudiobookshelfError.internalServerError)
-
+        .code(500, .error(AudiobookshelfError.internalServerError)),
     ]
 
 }

@@ -45,14 +45,15 @@ public struct GetEbookFile: Interface {
 
     public typealias Response = Data
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
         case badRequest
         case notFound
     }
 
-    public static let responseCases: ResponseCases = [
-        200: .success(Response.self),
-        400: .failure(AudiobookshelfError.badRequest),
-        404: .failure(AudiobookshelfError.notFound)
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
+        .code(204, .noContent),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 }

@@ -90,22 +90,20 @@ public struct PatchMediaProgress: Interface {
 
     // MARK: Response
 
-    public typealias Response = String
+    public typealias Response = EmptyResponse
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         // Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         // No library items or podcast episodes were found with the given IDs.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

@@ -49,7 +49,7 @@ public struct CollectionAddBook: Interface {
 
     public typealias Response = Collection
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -59,20 +59,16 @@ public struct CollectionAddBook: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// A user with update permissions is required to update collections.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-
+        .code(404, .error(AudiobookshelfError.notFound)),
         /// The provided library item ID could not be found, is in a different library, or is already in the collection.
-        500: .failure(AudiobookshelfError.internalError)
-
+        .code(500, .error(AudiobookshelfError.internalError)),
     ]
 
 }

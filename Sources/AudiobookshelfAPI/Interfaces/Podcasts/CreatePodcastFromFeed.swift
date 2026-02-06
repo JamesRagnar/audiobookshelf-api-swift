@@ -55,17 +55,17 @@ public struct CreatePodcastFromFeed: Interface {
 
     public typealias Response = LibraryItem
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
         case badRequest
         case forbidden
         case notFound
     }
 
-    public static let responseCases: ResponseCases = [
-        200: .success(Response.self),
-        400: .failure(AudiobookshelfError.badRequest),
-        403: .failure(AudiobookshelfError.forbidden),
-        404: .failure(AudiobookshelfError.notFound)
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 }
 

@@ -46,20 +46,24 @@ public struct UpdateLibraryItemMedia: Interface {
 
     // MARK: Response
 
-    public typealias Response = LibraryItem
+    public struct Response: Decodable, Sendable {
 
-    public enum AudiobookshelfError: Error {
+        public let updated: Bool
+
+        public let libraryItem: LibraryItem
+
+    }
+
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(200, .decode),
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

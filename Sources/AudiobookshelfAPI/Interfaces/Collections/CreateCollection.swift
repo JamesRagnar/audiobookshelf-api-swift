@@ -58,7 +58,7 @@ public struct CreateCollection: Interface {
 
     public typealias Response = Collection
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -66,17 +66,14 @@ public struct CreateCollection: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// A user with update permissions is required to create collections.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// libraryId and name are required parameters.
-        500: .failure(AudiobookshelfError.internalError)
-
+        .code(500, .error(AudiobookshelfError.internalError)),
     ]
 
 }

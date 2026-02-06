@@ -53,7 +53,7 @@ public struct PlaylistAddItem: Interface {
 
     public typealias Response = Playlist
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -63,23 +63,19 @@ public struct PlaylistAddItem: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// No library item with the provided ID exists, the library item is in a different library from the playlist,
         /// the library item is already in the playlist, the library item is not a podcast and an episodeId was
         /// provided, the library item is a podcast and an episodeId was not provided, or no podcast episode with the
         /// provided ID exists in the library item.
-        400: .failure(AudiobookshelfError.badRequest),
-
+        .code(400, .error(AudiobookshelfError.badRequest)),
         /// The playlist does not belong to the authenticated user.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No playlist with the provided ID exists.    
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
 
 }

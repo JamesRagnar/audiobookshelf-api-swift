@@ -50,10 +50,9 @@ public struct BatchGetLibraryItems: Interface {
 
     public typealias Response = [LibraryItem]
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self)
-
+        .code(200, .decode),
     ]
 
 }
