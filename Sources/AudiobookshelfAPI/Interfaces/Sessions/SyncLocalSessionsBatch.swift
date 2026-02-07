@@ -23,7 +23,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let headers: [String: String]? = nil
 
-        public typealias Body = ArrayBody<SyncLocalSession.Parameters.LocalPlaybackSession>
+        public typealias Body = Payload
 
         public let body: Body?
 
@@ -31,16 +31,40 @@ public struct SyncLocalSessionsBatch: Interface {
 
         /// Sync Local Sessions Batch Parameters
         ///
-        /// - Parameter sessions: The array of local playback session data to sync with the server.
-        public init(sessions: [SyncLocalSession.Parameters.LocalPlaybackSession]) {
-            self.body = ArrayBody(sessions)
+        /// - Parameters:
+        ///   - sessions: The array of local playback session data to sync with the server.
+        ///   - deviceInfo: Optional device info to associate with synced sessions.
+        public init(
+            sessions: [SyncLocalSession.Parameters.LocalPlaybackSession],
+            deviceInfo: SyncLocalSession.Parameters.LocalDeviceInfo? = nil
+        ) {
+            self.body = Payload(
+                sessions: sessions,
+                deviceInfo: deviceInfo
+            )
         }
 
     }
 
     // MARK: Response
 
-    public typealias Response = String
+    public struct Response: Decodable, Sendable {
+
+        public let results: [SyncResult]
+
+    }
+
+    public struct SyncResult: Decodable, Sendable {
+
+        public let id: String
+
+        public let success: Bool
+
+        public let progressSynced: Bool?
+
+        public let error: String?
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 
@@ -55,5 +79,17 @@ public struct SyncLocalSessionsBatch: Interface {
         /// Invalid request data or empty array provided.
         .code(400, .error(AudiobookshelfError.badRequest))
     ]
+
+}
+
+public extension SyncLocalSessionsBatch.Parameters {
+
+    struct Payload: RequestBody, Encodable, Sendable {
+
+        let sessions: [SyncLocalSession.Parameters.LocalPlaybackSession]
+
+        let deviceInfo: SyncLocalSession.Parameters.LocalDeviceInfo?
+
+    }
 
 }
