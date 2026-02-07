@@ -36,17 +36,29 @@ public struct BatchUpdateLibraryItems: Interface {
 
     // MARK: Response
 
-    public typealias Response = [LibraryItem]
+    public struct Response: Decodable, Sendable {
+
+        public let success: Bool
+
+        public let updates: Int
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        case badRequest
+
         case forbidden
+
+        case notFound
 
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(404, .error(AudiobookshelfError.notFound)),
         .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
