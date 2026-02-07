@@ -85,7 +85,7 @@ public struct SearchLibrary: Interface {
         /// No query string.
         .code(400, .error(AudiobookshelfError.badRequest)),
         /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

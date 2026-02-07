@@ -55,7 +55,7 @@ public struct DeleteCollection: Interface {
         /// A user with delete permissions is required to delete a collection.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

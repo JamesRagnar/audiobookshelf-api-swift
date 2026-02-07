@@ -77,7 +77,7 @@ public struct UpdatePlaylist: Interface {
         /// The playlist does not belong to the authenticated user.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No playlist with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

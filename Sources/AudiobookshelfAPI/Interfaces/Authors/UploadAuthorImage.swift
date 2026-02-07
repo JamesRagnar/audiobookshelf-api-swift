@@ -67,7 +67,7 @@ public struct UploadAuthorImage: Interface {
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

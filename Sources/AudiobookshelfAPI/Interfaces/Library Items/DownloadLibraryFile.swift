@@ -50,7 +50,7 @@ public struct DownloadLibraryFile: Interface {
         .code(200, .decode),
         .code(204, .noContent),
         .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

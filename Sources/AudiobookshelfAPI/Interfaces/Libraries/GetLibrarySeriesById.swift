@@ -65,7 +65,7 @@ public struct GetLibrarySeriesById: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

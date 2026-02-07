@@ -75,7 +75,7 @@ public struct UpdateCollection: Interface {
         /// A user with update permissions is required to update collections.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

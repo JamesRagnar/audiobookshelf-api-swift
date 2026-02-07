@@ -67,7 +67,7 @@ public struct RemovePlaylistItem: Interface {
         /// The playlist does not belong to the authenticated user.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No playlist with the provided ID exists, or the playlist does not contain the provided item.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

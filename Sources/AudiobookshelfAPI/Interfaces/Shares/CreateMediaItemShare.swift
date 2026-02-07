@@ -98,7 +98,7 @@ public struct CreateMediaItemShare: Interface {
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound)),
         .code(409, .error(AudiobookshelfError.conflict)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

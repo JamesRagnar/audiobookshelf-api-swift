@@ -68,7 +68,7 @@ public struct CollectionAddBook: Interface {
         /// No collection with the specified ID exists.
         .code(404, .error(AudiobookshelfError.notFound)),
         /// The provided library item ID could not be found, is in a different library, or is already in the collection.
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

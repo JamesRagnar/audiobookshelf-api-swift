@@ -90,7 +90,7 @@ public struct CreatePlaylist: Interface {
         /// Success
         .code(200, .decode),
         /// The provided playlist data was invalid.
-        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(400, .error(AudiobookshelfError.badRequest))
     ]
 
 }

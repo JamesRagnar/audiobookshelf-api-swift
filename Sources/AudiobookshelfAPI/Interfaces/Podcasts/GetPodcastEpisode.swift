@@ -59,7 +59,7 @@ public struct GetPodcastEpisode: Interface {
         /// No podcast episode with the given ID exists.
         .code(404, .error(AudiobookshelfError.notFound)),
         /// The library item is not a podcast.
-        .code(500, .error(AudiobookshelfError.internalServerError)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

@@ -46,7 +46,7 @@ public struct GetAllSessions: Interface {
         /// Success
         .code(200, .decode),
         /// Unauthorized
-        .code(401, .error(AudiobookshelfError.unauthorized)),
+        .code(401, .error(AudiobookshelfError.unauthorized))
     ]
 
 }

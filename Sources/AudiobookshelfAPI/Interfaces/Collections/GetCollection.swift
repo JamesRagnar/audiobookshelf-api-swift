@@ -66,7 +66,7 @@ public struct GetCollection: Interface {
         /// Success
         .code(200, .decode),
         /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

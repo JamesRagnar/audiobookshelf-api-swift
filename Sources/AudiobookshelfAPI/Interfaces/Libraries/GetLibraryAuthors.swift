@@ -49,7 +49,7 @@ public struct GetLibraryAuthors: Interface {
     public static let responseCases: ResponseMap = [
 
         /// The requested authors.
-        .code(200, .decode),
+        .code(200, .decode)
     ]
 
 }

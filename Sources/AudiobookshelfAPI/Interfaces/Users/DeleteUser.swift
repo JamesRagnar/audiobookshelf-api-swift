@@ -56,7 +56,7 @@ public struct DeleteUser: Interface {
 
         .code(200, .decode),
         .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

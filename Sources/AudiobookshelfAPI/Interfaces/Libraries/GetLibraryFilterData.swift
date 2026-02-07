@@ -51,7 +51,7 @@ public struct GetLibraryFilterData: Interface {
         /// Success
         .code(200, .decode),
         /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

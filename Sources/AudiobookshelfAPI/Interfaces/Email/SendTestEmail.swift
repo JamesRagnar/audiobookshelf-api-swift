@@ -47,7 +47,7 @@ public struct SendTestEmail: Interface {
 
         .code(200, .noContent),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

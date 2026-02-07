@@ -51,7 +51,7 @@ public struct DeleteSession: Interface {
         /// Success
         .code(200, .noContent),
         /// Session with the provided ID does not exist or user cannot access it.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

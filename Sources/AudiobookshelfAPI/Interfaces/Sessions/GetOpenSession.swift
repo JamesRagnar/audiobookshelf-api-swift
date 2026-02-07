@@ -51,7 +51,7 @@ public struct GetOpenSession: Interface {
         /// Success
         .code(200, .decode),
         /// No listening session with the provided ID is open, or the session belongs to another user.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

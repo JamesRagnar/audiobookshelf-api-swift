@@ -69,7 +69,7 @@ public struct StartPlaybackSession: Interface {
     public static let responseCases: ResponseMap = [
         .code(200, .decode),
         .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 }
 

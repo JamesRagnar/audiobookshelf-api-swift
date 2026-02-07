@@ -67,7 +67,7 @@ public struct CollectionBatchRemoveBooks: Interface {
         /// No collection with the specified ID exists.
         .code(404, .error(AudiobookshelfError.notFound)),
         /// The provided books array must not be empty.
-        .code(500, .error(AudiobookshelfError.internalServerError)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

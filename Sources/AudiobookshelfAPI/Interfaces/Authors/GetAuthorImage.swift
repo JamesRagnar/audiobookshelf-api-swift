@@ -95,7 +95,7 @@ public struct GetAuthorImage: Interface {
         /// No author with provided ID exists, or the author does not have an image.
         .code(404, .error(AudiobookshelfError.notFound)),
         /// There was an error when attempting to read the image file.
-        .code(500, .error(AudiobookshelfError.internalServerError)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

@@ -73,7 +73,7 @@ public struct CreateCollection: Interface {
         /// A user with update permissions is required to create collections.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// libraryId and name are required parameters.
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

@@ -44,7 +44,7 @@ public struct PurgeItemsCache: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .noContent),
-        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

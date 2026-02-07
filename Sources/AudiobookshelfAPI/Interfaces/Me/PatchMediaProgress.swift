@@ -103,7 +103,7 @@ public struct PatchMediaProgress: Interface {
         // Success
         .code(200, .noContent),
         // No library items or podcast episodes were found with the given IDs.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

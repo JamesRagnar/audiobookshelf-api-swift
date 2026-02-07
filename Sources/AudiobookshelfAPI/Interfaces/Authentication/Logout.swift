@@ -56,7 +56,7 @@ public struct Logout: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Success
-        .code(200, .decode),
+        .code(200, .decode)
     ]
 
 }

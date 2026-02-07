@@ -72,7 +72,7 @@ public struct GetAuthor: Interface {
         /// Success
         .code(200, .decode),
         /// No author with provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

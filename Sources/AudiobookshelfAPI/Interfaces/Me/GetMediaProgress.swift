@@ -61,7 +61,7 @@ public struct GetMediaProgress: Interface {
         /// Success
         .code(200, .decode),
         /// No media progress was found that matches the given IDs.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

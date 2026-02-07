@@ -53,7 +53,7 @@ public struct TestNotification: Interface {
 
         .code(200, .noContent),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

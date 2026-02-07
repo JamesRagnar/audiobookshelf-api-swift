@@ -61,7 +61,7 @@ public struct SearchCovers: Interface {
     public static let responseCases: ResponseMap = [
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 }
 

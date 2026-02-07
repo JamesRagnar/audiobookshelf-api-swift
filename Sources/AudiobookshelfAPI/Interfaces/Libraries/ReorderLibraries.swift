@@ -51,7 +51,7 @@ public struct ReorderLibraries: Interface {
 
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

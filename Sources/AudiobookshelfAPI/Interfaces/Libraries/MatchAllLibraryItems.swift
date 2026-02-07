@@ -58,7 +58,7 @@ public struct MatchAllLibraryItems: Interface {
         /// An admin user is required to match library items.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

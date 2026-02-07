@@ -86,7 +86,7 @@ public struct OpenFeedForItem: Interface {
         .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

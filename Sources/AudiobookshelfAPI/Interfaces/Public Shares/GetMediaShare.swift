@@ -83,7 +83,7 @@ public struct GetMediaShare: Interface {
 
         .code(200, .decode),
         .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

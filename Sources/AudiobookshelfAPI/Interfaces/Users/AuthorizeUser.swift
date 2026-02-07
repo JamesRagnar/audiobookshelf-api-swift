@@ -51,7 +51,7 @@ public struct AuthorizeUser: Interface {
 
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(401, .error(AudiobookshelfError.unauthorized)),
+        .code(401, .error(AudiobookshelfError.unauthorized))
     ]
 
 }

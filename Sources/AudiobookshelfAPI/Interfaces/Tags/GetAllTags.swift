@@ -48,7 +48,7 @@ public struct GetAllTags: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

@@ -58,7 +58,7 @@ public struct GetShareAudioTrack: Interface {
         .code(200, .decode),
         .code(204, .noContent),
         .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

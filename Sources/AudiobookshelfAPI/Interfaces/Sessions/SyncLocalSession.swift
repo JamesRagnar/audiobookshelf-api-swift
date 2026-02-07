@@ -53,7 +53,7 @@ public struct SyncLocalSession: Interface {
         /// Success
         .code(200, .decode),
         /// Invalid request data.
-        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(400, .error(AudiobookshelfError.badRequest))
     ]
 
 }

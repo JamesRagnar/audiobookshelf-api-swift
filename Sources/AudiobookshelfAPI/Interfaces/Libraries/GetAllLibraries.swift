@@ -43,7 +43,7 @@ public struct GetAllLibraries: Interface {
     public static let responseCases: ResponseMap = [
 
         /// The requested libraries.
-        .code(200, .decode),
+        .code(200, .decode)
     ]
 
 }

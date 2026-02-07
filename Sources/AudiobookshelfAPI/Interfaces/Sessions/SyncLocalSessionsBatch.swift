@@ -53,7 +53,7 @@ public struct SyncLocalSessionsBatch: Interface {
         /// Success
         .code(200, .decode),
         /// Invalid request data or empty array provided.
-        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(400, .error(AudiobookshelfError.badRequest))
     ]
 
 }

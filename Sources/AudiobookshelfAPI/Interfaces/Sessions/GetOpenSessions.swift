@@ -37,7 +37,7 @@ public struct GetOpenSessions: Interface {
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode),
+        .code(200, .decode)
     ]
 
 }

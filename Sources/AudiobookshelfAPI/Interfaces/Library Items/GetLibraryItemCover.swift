@@ -82,7 +82,7 @@ public struct GetLibraryItemCover: Interface {
         /// Either no library item exists with the given ID, or the item does not have a cover.
         .code(404, .error(AudiobookshelfError.notFound)),
         /// There was an error when attempting to read the cover file.
-        .code(500, .error(AudiobookshelfError.internalServerError)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

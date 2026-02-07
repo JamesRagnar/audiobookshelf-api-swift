@@ -109,7 +109,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
         /// Success
         .code(200, .noContent),
         /// The provided array must have a non-zero length.
-        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(400, .error(AudiobookshelfError.badRequest))
     ]
 
 }

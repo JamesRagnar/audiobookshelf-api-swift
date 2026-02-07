@@ -89,7 +89,7 @@ public struct PlaylistBatchAddItems: Interface {
         /// No playlist with the provided ID exists.
         .code(404, .error(AudiobookshelfError.notFound)),
         /// The provided items array was empty or did not exist.
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

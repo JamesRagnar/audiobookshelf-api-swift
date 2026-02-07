@@ -75,7 +75,7 @@ public struct RefreshToken: Interface {
         /// Success
         .code(200, .decode),
         /// Invalid username or password.
-        .code(401, .error(AudiobookshelfError.unauthorized)),
+        .code(401, .error(AudiobookshelfError.unauthorized))
     ]
 
 }

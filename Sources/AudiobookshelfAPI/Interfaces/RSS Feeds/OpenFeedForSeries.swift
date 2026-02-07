@@ -83,7 +83,7 @@ public struct OpenFeedForSeries: Interface {
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
         .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

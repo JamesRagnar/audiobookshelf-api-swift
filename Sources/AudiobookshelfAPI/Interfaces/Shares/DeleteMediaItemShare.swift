@@ -56,7 +56,7 @@ public struct DeleteMediaItemShare: Interface {
         .code(204, .noContent),
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

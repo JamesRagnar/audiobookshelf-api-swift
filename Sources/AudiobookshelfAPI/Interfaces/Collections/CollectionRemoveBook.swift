@@ -61,7 +61,7 @@ public struct CollectionRemoveBook: Interface {
         /// A user with delete permissions is required to remove a book from a collection.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

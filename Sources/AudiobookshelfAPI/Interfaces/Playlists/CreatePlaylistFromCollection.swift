@@ -55,7 +55,7 @@ public struct CreatePlaylistFromCollection: Interface {
         /// The user cannot access any books contained in the collection.
         .code(400, .error(AudiobookshelfError.badRequest)),
         /// No collection with the given ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

@@ -44,7 +44,7 @@ public struct RemoveMediaProgress: Interface {
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .noContent),
+        .code(200, .noContent)
     ]
 
 }

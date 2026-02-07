@@ -56,7 +56,7 @@ public struct UpdateEReaderDevices: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(400, .error(AudiobookshelfError.badRequest))
     ]
 
 }

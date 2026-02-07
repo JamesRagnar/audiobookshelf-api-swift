@@ -68,7 +68,7 @@ public struct GetSeriesById: Interface {
         /// Success
         .code(200, .decode),
         /// No series with provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

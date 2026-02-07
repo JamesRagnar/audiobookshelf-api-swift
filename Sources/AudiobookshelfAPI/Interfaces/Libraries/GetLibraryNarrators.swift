@@ -43,7 +43,7 @@ public struct GetLibraryNarrators: Interface {
     public static let responseCases: ResponseMap = [
 
         /// The requested narrators.
-        .code(200, .decode),
+        .code(200, .decode)
     ]
 
 }

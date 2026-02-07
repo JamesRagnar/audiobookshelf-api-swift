@@ -71,7 +71,7 @@ public struct GetLibraryItem: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Library Item or, if expanded was requested, Library Item Expanded with optional extra attributes.
-        .code(200, .decode),
+        .code(200, .decode)
     ]
 
 }
