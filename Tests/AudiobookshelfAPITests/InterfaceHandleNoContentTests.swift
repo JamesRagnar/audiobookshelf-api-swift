@@ -21,11 +21,7 @@ struct InterfaceHandleNoContentTests {
 
         do {
             let decoded = try interface.handle((data: Data(), response: response))
-            if let data = decoded as? Data {
-                #expect(data.isEmpty)
-            } else {
-                #expect(Bool(false))
-            }
+            #expect(decoded is RagnarNetworking.EmptyResponse)
         } catch {
             #expect(Bool(false))
         }
