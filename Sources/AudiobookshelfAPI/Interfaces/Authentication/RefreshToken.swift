@@ -64,20 +64,18 @@ public struct RefreshToken: Interface {
 
     }
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case unauthorized
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// Invalid username or password.
-        401: .failure(AudiobookshelfError.unauthorized)
-
+        .code(401, .error(AudiobookshelfError.unauthorized))
     ]
 
 }

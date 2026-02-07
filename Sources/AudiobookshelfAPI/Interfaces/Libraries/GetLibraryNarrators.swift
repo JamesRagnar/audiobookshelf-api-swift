@@ -40,11 +40,10 @@ public struct GetLibraryNarrators: Interface {
 
     // MARK: Response
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// The requested narrators.
-        200: .success(Response.self)
-
+        .code(200, .decode)
     ]
 
 }

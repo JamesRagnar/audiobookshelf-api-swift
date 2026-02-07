@@ -19,7 +19,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/JamesRagnar/RagnarNetworking",
+            url: "https://github.com/JamesRagnar/RagnarNetworking.git",
             branch: "main"
         )
     ],

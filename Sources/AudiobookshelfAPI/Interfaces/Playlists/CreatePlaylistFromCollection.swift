@@ -40,7 +40,7 @@ public struct CreatePlaylistFromCollection: Interface {
 
     public typealias Response = Playlist
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -48,17 +48,14 @@ public struct CreatePlaylistFromCollection: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// The user cannot access any books contained in the collection.
-        400: .failure(AudiobookshelfError.badRequest),
-
+        .code(400, .error(AudiobookshelfError.badRequest)),
         /// No collection with the given ID exists.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

@@ -40,20 +40,18 @@ public struct GetOpenSession: Interface {
 
     public typealias Response = PlaybackSession
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// No listening session with the provided ID is open, or the session belongs to another user.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

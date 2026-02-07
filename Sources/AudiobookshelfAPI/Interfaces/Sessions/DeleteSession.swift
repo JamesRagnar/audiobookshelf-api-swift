@@ -38,22 +38,20 @@ public struct DeleteSession: Interface {
 
     // MARK: Response
 
-    public typealias Response = String
+    public typealias Response = EmptyResponse
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .noContent),
         /// Session with the provided ID does not exist or user cannot access it.
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

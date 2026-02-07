@@ -66,7 +66,7 @@ public struct PlaylistBatchAddItems: Interface {
 
     public typealias Response = Playlist
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -78,23 +78,18 @@ public struct PlaylistBatchAddItems: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// One or more of the provided items does not have a libraryItemId.
-        400: .failure(AudiobookshelfError.badRequest),
-
+        .code(400, .error(AudiobookshelfError.badRequest)),
         /// The playlist does not belong to the authenticated user.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No playlist with the provided ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-
+        .code(404, .error(AudiobookshelfError.notFound)),
         /// The provided items array was empty or did not exist.
-        500: .failure(AudiobookshelfError.internalError)
-
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

@@ -53,15 +53,15 @@ public struct SearchCovers: Interface {
 
     // MARK: Response
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
         case badRequest
         case internalError
     }
 
-    public static let responseCases: ResponseCases = [
-        200: .success(Response.self),
-        400: .failure(AudiobookshelfError.badRequest),
-        500: .failure(AudiobookshelfError.internalError)
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 }
 

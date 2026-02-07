@@ -40,12 +40,11 @@ public struct RemoveMediaProgress: Interface {
 
     // MARK: Response
 
-    public typealias Response = String
+    public typealias Response = EmptyResponse
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self)
-
+        .code(200, .noContent)
     ]
 
 }

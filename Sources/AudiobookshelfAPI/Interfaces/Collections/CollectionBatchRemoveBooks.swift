@@ -48,7 +48,7 @@ public struct CollectionBatchRemoveBooks: Interface {
 
     public typealias Response = Collection
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
@@ -58,20 +58,16 @@ public struct CollectionBatchRemoveBooks: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// A user with update permissions is required to update collections.
-        403: .failure(AudiobookshelfError.forbidden),
-
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.
-        404: .failure(AudiobookshelfError.notFound),
-
+        .code(404, .error(AudiobookshelfError.notFound)),
         /// The provided books array must not be empty.
-        500: .failure(AudiobookshelfError.internalServerError)
-
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

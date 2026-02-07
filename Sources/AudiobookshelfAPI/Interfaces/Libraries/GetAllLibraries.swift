@@ -40,11 +40,10 @@ public struct GetAllLibraries: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// The requested libraries.
-        200: .success(Response.self)
-
+        .code(200, .decode)
     ]
 
 }

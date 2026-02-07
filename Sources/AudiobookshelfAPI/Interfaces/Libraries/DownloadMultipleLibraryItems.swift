@@ -38,7 +38,7 @@ public struct DownloadMultipleLibraryItems: Interface {
 
     public typealias Response = Data
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -48,16 +48,12 @@ public struct DownloadMultipleLibraryItems: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        400: .failure(AudiobookshelfError.badRequest),
-
-        403: .failure(AudiobookshelfError.forbidden),
-
-        404: .failure(AudiobookshelfError.notFound)
-
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

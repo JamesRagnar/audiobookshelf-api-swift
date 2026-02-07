@@ -64,7 +64,7 @@ public struct GetLibraryItemCover: Interface {
 
     // MARK: Response
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
 
@@ -74,17 +74,15 @@ public struct GetLibraryItemCover: Interface {
 
     public typealias Response = Data
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
+        .code(204, .noContent),
         /// Either no library item exists with the given ID, or the item does not have a cover.
-        404: .failure(AudiobookshelfError.notFound),
-
+        .code(404, .error(AudiobookshelfError.notFound)),
         /// There was an error when attempting to read the cover file.
-        500: .failure(AudiobookshelfError.internalServerError)
-
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

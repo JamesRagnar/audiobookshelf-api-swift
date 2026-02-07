@@ -39,20 +39,40 @@ public struct BrowseFilesystem: Interface {
 
     // MARK: Response
 
-    public typealias Response = Data
+    public typealias Response = BrowseFilesystemResponse
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case forbidden
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        403: .failure(AudiobookshelfError.forbidden)
-
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
+
+}
+
+public extension BrowseFilesystem {
+
+    struct BrowseFilesystemResponse: Decodable, Sendable {
+
+        public let posix: Bool
+
+        public let directories: [Directory]
+
+    }
+
+    struct Directory: Decodable, Sendable {
+
+        public let path: String
+
+        public let dirname: String
+
+        public let level: Int
+
+    }
 
 }

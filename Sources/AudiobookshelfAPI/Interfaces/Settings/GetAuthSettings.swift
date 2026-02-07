@@ -33,10 +33,9 @@ public struct GetAuthSettings: Interface {
 
     // MARK: Response
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self)
-
+        .code(200, .decode)
     ]
 
 }

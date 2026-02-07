@@ -68,11 +68,10 @@ public struct GetLibraryItem: Interface {
 
     public typealias Response = LibraryItem
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Library Item or, if expanded was requested, Library Item Expanded with optional extra attributes.
-        200: .success(Response.self)
-
+        .code(200, .decode)
     ]
 
 }

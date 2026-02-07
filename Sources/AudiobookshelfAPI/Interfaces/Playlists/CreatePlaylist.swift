@@ -79,20 +79,18 @@ public struct CreatePlaylist: Interface {
 
     public typealias Response = Playlist
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
         /// Success
-        200: .success(Response.self),
-
+        .code(200, .decode),
         /// The provided playlist data was invalid.
-        400: .failure(AudiobookshelfError.badRequest)
-
+        .code(400, .error(AudiobookshelfError.badRequest))
     ]
 
 }

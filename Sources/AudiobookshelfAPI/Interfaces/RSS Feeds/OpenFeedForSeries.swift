@@ -68,7 +68,7 @@ public struct OpenFeedForSeries: Interface {
 
     }
 
-    public enum AudiobookshelfError: Error {
+    public enum AudiobookshelfError: Error, Sendable {
 
         case badRequest
 
@@ -78,16 +78,12 @@ public struct OpenFeedForSeries: Interface {
 
     }
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self),
-
-        400: .failure(AudiobookshelfError.badRequest),
-
-        404: .failure(AudiobookshelfError.notFound),
-
-        500: .failure(AudiobookshelfError.internalError)
-
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(500, .error(AudiobookshelfError.internalError))
     ]
 
 }

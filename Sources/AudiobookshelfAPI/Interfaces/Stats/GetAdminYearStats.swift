@@ -40,10 +40,9 @@ public struct GetAdminYearStats: Interface {
 
     public typealias Response = YearStats
 
-    public static let responseCases: ResponseCases = [
+    public static let responseCases: ResponseMap = [
 
-        200: .success(Response.self)
-
+        .code(200, .decode)
     ]
 
 }
