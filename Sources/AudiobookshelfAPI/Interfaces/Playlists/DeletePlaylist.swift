@@ -51,7 +51,7 @@ public struct DeletePlaylist: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Success
-        .code(200, .decode),
+        .code(200, .noContent),
         /// The playlist does not belong to the authenticated user.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No playlist with the provided ID exists.    

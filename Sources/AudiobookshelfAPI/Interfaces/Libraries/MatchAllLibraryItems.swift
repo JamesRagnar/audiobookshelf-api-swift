@@ -54,7 +54,7 @@ public struct MatchAllLibraryItems: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Success
-        .code(200, .decode),
+        .code(200, .noContent),
         /// An admin user is required to match library items.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// The user cannot access the library, or no library with the provided ID exists.

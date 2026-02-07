@@ -68,7 +68,7 @@ public struct CreatePodcastsFromOPML: Interface {
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode),
+        .code(200, .noContent),
         .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound)),

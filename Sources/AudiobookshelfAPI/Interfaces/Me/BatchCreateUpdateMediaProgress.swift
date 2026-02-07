@@ -107,7 +107,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Success
-        .code(200, .decode),
+        .code(200, .noContent),
         /// The provided array must have a non-zero length.
         .code(400, .error(AudiobookshelfError.badRequest)),
     ]

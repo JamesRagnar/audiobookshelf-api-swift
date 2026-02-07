@@ -66,12 +66,9 @@ public struct MyInterface: Interface {
     }
 
     // The expected response cases, with the known body or error types.
-    public static let responseCases: ResponseCases = [
-
-        200: .success(Response.self),
-        
-        404: .failure(AudiobookshelfError.notFound),
-        
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
+        .code(404, .error(AudiobookshelfError.notFound)),
     ]
     
 }
@@ -150,11 +147,9 @@ public struct MyInterface: Interface {
 
 	// MARK: Response
 
-    public static let responseCases: ResponseCases = [
-
+    public static let responseCases: ResponseMap = [
         /// The requested narrators.
-        200: .success(Response.self),
-
+        .code(200, .decode),
     ]
 
 }
@@ -173,6 +168,18 @@ public extension MyInterface {
 ```
 
 Responses may also be a raw response type, one of String or Data.
+
+For no-body endpoints, prefer `EmptyResponse` + `.noContent`:
+
+```swift
+public struct DeleteThing: Interface {
+    public typealias Response = EmptyResponse
+
+    public static let responseCases: ResponseMap = [
+        .code(200, .noContent),
+    ]
+}
+```
 
 ## Design Considerations
 

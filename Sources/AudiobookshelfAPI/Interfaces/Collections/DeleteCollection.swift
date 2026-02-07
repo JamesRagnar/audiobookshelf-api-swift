@@ -51,7 +51,7 @@ public struct DeleteCollection: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Success
-        .code(200, .decode),
+        .code(200, .noContent),
         /// A user with delete permissions is required to delete a collection.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// No collection with the specified ID exists.

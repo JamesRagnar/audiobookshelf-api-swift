@@ -2,7 +2,7 @@
 
 **Server Version**: audiobookshelf 2.32.1
 **Package Version**: audiobookshelf-api-swift 2.32.0
-**Last Updated**: 2026-01-29
+**Last Updated**: 2026-02-06
 
 ## Overview
 
@@ -265,7 +265,7 @@ This document provides the authoritative mapping between the audiobookshelf serv
 | /api/upload | POST | None | UploadFile | EmptyResponse | File upload |
 | /api/tasks | GET | Task array | GetTasks | [Task] | `include=queue` |
 | /api/watcher/update | POST | None | UpdateWatchedPath | EmptyResponse | Updates watcher |
-| /api/validate-cron | POST | Status | ValidateCronExpression | CronValidationResult | Validates cron |
+| /api/validate-cron | POST | None (200) / Error text (400) | ValidateCronExpression | EmptyResponse | `200` uses `sendStatus(200)` |
 | /api/logger-data | GET | Logger data | GetLoggerData | LoggerData | Log levels |
 | /api/filesystem | GET | Filesystem data | GetDirectories | FilesystemResponse | Browse filesystem |
 | /api/filesystem/pathexists | POST | Exists boolean | CheckPathExists | PathExistsResponse | Path validation |
@@ -352,7 +352,7 @@ This document provides the authoritative mapping between the audiobookshelf serv
 
 | Endpoint | Method | Response Model | Swift Interface | Swift Response Model | Notes |
 |----------|--------|----------------|-----------------|----------------------|-------|
-| /api/cache/purge | POST | None | PurgeCacheAll | String | ✅ Implemented 2026-01-28 |
+| /api/cache/purge | POST | None | PurgeCacheAll | EmptyResponse | `sendStatus(200)` |
 | /api/cache/items/purge | POST | None | PurgeItemsCache | EmptyResponse | Purge items cache |
 
 ---

@@ -49,7 +49,7 @@ public struct CloseFeed: Interface {
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode),
+        .code(200, .noContent),
         .code(404, .error(AudiobookshelfError.notFound)),
     ]
 

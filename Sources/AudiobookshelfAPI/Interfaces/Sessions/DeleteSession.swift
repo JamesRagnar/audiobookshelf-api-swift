@@ -49,7 +49,7 @@ public struct DeleteSession: Interface {
     public static let responseCases: ResponseMap = [
 
         /// Success
-        .code(200, .decode),
+        .code(200, .noContent),
         /// Session with the provided ID does not exist or user cannot access it.
         .code(404, .error(AudiobookshelfError.notFound)),
     ]

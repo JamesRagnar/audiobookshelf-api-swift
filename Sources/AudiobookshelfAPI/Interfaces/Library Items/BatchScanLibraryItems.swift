@@ -47,7 +47,7 @@ public struct BatchScanLibraryItems: Interface {
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode),
+        .code(200, .noContent),
         .code(403, .error(AudiobookshelfError.forbidden)),
     ]
 
