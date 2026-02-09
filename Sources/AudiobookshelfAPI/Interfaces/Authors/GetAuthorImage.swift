@@ -57,14 +57,14 @@ public struct GetAuthorImage: Interface {
         ///   - height: The requested height of the image. If null the image is scaled proportionately.
         ///   - format: The requested format of the image. The default value depends on the request headers.
         ///   - raw: Whether to get the raw cover image file instead of a scaled version.
-        ///   - ts: Cache-busting timestamp (typically the author's updatedAt value).
+        ///   - timestamp: Cache-busting timestamp (typically the author's updatedAt value).
         public init(
             authorID: String,
             width: Int? = nil,
             height: Int? = nil,
             format: Format? = nil,
             raw: Bool? = nil,
-            ts: Int? = nil
+            timestamp: Int? = nil
         ) {
             self.path = "/api/authors/\(authorID)/image"
 
@@ -73,7 +73,7 @@ public struct GetAuthorImage: Interface {
             queryItems.setIfPresent("height", height?.description)
             queryItems.setIfPresent("format", format?.rawValue)
             queryItems.setIfPresent("raw", raw?.binaryString)
-            queryItems.setIfPresent("ts", ts?.description)
+            queryItems.setIfPresent("ts", timestamp?.description)
             self.queryItems = queryItems
         }
 
