@@ -36,7 +36,7 @@ public struct SyncLocalSessionsBatch: Interface {
         ///   - deviceInfo: Optional device info to associate with synced sessions.
         public init(
             sessions: [SyncLocalSession.Parameters.LocalPlaybackSession],
-            deviceInfo: SyncLocalSession.Parameters.LocalDeviceInfo? = nil
+            deviceInfo: LocalDeviceInfo? = nil
         ) {
             self.body = Payload(
                 sessions: sessions,
@@ -84,11 +84,43 @@ public struct SyncLocalSessionsBatch: Interface {
 
 public extension SyncLocalSessionsBatch.Parameters {
 
+    struct LocalDeviceInfo: Encodable, Sendable {
+
+        public let deviceId: String?
+
+        public let clientVersion: String?
+
+        public let deviceName: String?
+
+        public let browserName: String?
+
+        public let osName: String?
+
+        public let osVersion: String?
+
+        public init(
+            deviceId: String? = nil,
+            clientVersion: String? = nil,
+            deviceName: String? = nil,
+            browserName: String? = nil,
+            osName: String? = nil,
+            osVersion: String? = nil
+        ) {
+            self.deviceId = deviceId
+            self.clientVersion = clientVersion
+            self.deviceName = deviceName
+            self.browserName = browserName
+            self.osName = osName
+            self.osVersion = osVersion
+        }
+
+    }
+
     struct Payload: RequestBody, Encodable, Sendable {
 
         let sessions: [SyncLocalSession.Parameters.LocalPlaybackSession]
 
-        let deviceInfo: SyncLocalSession.Parameters.LocalDeviceInfo?
+        let deviceInfo: LocalDeviceInfo?
 
     }
 

@@ -68,6 +68,9 @@ public extension SyncLocalSession.Parameters {
     /// This represents the client-side data sent when syncing local session state.
     struct LocalPlaybackSession: RequestBody, Encodable, Sendable {
 
+        /// Client-generated session identifier echoed by batch sync results.
+        public let id: String
+
         /// The ID of the library item.
         public let libraryItemId: String
 
@@ -96,6 +99,7 @@ public extension SyncLocalSession.Parameters {
         public let updatedAt: Int
 
         public init(
+            id: String,
             libraryItemId: String,
             episodeId: String? = nil,
             mediaType: String,
@@ -106,6 +110,7 @@ public extension SyncLocalSession.Parameters {
             startedAt: Int,
             updatedAt: Int
         ) {
+            self.id = id
             self.libraryItemId = libraryItemId
             self.episodeId = episodeId
             self.mediaType = mediaType
@@ -115,38 +120,6 @@ public extension SyncLocalSession.Parameters {
             self.timeListening = timeListening
             self.startedAt = startedAt
             self.updatedAt = updatedAt
-        }
-
-    }
-
-    struct LocalDeviceInfo: Encodable, Sendable {
-
-        public let deviceId: String?
-
-        public let clientVersion: String?
-
-        public let deviceName: String?
-
-        public let browserName: String?
-
-        public let osName: String?
-
-        public let osVersion: String?
-
-        public init(
-            deviceId: String? = nil,
-            clientVersion: String? = nil,
-            deviceName: String? = nil,
-            browserName: String? = nil,
-            osName: String? = nil,
-            osVersion: String? = nil
-        ) {
-            self.deviceId = deviceId
-            self.clientVersion = clientVersion
-            self.deviceName = deviceName
-            self.browserName = browserName
-            self.osName = osName
-            self.osVersion = osVersion
         }
 
     }
