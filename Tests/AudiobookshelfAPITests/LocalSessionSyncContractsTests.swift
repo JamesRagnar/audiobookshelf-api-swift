@@ -73,4 +73,29 @@ struct LocalSessionSyncContractsTests {
         }
     }
 
+    @Test
+    func batchProgressItemEncodesLastUpdateWhenProvided() throws {
+        let payload = BatchCreateUpdateMediaProgress.Parameters.ProgressItem(
+            libraryItemId: "item-1",
+            episodeId: nil,
+            duration: 3600,
+            progress: 0.5,
+            currentTime: 1800,
+            isFinished: false,
+            hideFromContinueListening: false,
+            finishedAt: nil,
+            startedAt: 1000,
+            lastUpdate: 2000
+        )
+
+        let encoded = try JSONEncoder().encode(payload)
+        let object = try #require(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+
+        #expect(object["libraryItemId"] as? String == "item-1")
+        #expect(object["startedAt"] as? Int == 1000)
+        #expect(object["lastUpdate"] as? Int == 2000)
+    }
+
 }
