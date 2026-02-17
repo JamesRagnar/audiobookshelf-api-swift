@@ -47,6 +47,9 @@ public struct BatchCreateUpdateMediaProgress: Interface {
             /// media. The default will be the value of finishedAt if isFinished is true.
             public let startedAt: Int
 
+            /// The time (in ms since POSIX epoch) when the progress was last updated.
+            public let lastUpdate: Int?
+
             public init(
                 libraryItemId: String,
                 episodeId: String? = nil,
@@ -56,7 +59,8 @@ public struct BatchCreateUpdateMediaProgress: Interface {
                 isFinished: Bool,
                 hideFromContinueListening: Bool,
                 finishedAt: Int? = nil,
-                startedAt: Int
+                startedAt: Int,
+                lastUpdate: Int? = nil
             ) {
                 self.libraryItemId = libraryItemId
                 self.episodeId = episodeId
@@ -67,6 +71,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
                 self.hideFromContinueListening = hideFromContinueListening
                 self.finishedAt = finishedAt
                 self.startedAt = startedAt
+                self.lastUpdate = lastUpdate
             }
 
         }
