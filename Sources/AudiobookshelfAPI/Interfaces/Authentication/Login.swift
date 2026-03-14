@@ -9,7 +9,6 @@ import Foundation
 import RagnarNetworking
 
 /// This endpoint logs in a client to the server, returning information about the user and server.
-/// The`Authorize` endpoint is also available if an API token was persisted.
 public struct Login: Interface {
 
     // MARK: Request

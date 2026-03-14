@@ -40,6 +40,15 @@ struct InterfaceErrorMappingTests {
         #expect(forbidden?.statusCode == 403)
     }
 
+    @Test
+    func getSearchProvidersMapsNotFoundForPre231Servers() {
+        let notFound = captureResponseError(
+            for: GetSearchProviders.self,
+            statusCode: 404
+        )
+        #expect(notFound?.statusCode == 404)
+    }
+
     private func captureResponseError<T: Interface>(
         for interface: T.Type,
         statusCode: Int,

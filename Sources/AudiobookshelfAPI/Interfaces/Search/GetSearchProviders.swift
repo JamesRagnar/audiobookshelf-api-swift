@@ -9,6 +9,7 @@ import Foundation
 import RagnarNetworking
 
 /// Get all available metadata search providers.
+/// - Note: This endpoint was added in server `2.31.0`.
 public struct GetSearchProviders: Interface {
 
     // MARK: Request
@@ -39,9 +40,17 @@ public struct GetSearchProviders: Interface {
 
     }
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// Endpoint is unavailable on server versions before `2.31.0`.
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }
