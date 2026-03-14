@@ -50,9 +50,22 @@ public struct CreateBookmark: Interface {
 
     public typealias Response = AudioBookmark
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        case badRequest
+
+        case forbidden
+
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

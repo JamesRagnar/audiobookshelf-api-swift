@@ -1,12 +1,32 @@
 # Audiobookshelf Server Mapping
 
-**Server Version**: audiobookshelf 2.32.1
-**Package Version**: audiobookshelf-api-swift 2.32.0
-**Last Updated**: 2026-02-06
+**Server Version**: audiobookshelf 2.33.0
+**Package Version**: audiobookshelf-api-swift 2.33.0
+**Last Updated**: 2026-03-14
 
 ## Overview
 
 This document provides the authoritative mapping between the audiobookshelf server API and the Swift interface/model implementations. It serves as both a reference for developers and an audit tool for package maintenance.
+
+## Compatibility Range
+
+- **Supported server range**: `>= 2.26.0` and `<= 2.33.x`
+- **Exception (`>= 2.31.0`)**: `/api/search/providers` (`GetSearchProviders`)
+- **Deprecated/Removed in package `2.33.0`**: legacy `/api/authorize` wrapper (`AuthorizeUser`)
+
+## 2.33.0 Behavior Updates
+
+- `/api/me/item/listening-sessions/:libraryItemId/:episodeId?` now enforces library access and returns `403` for inaccessible items.
+- Bookmark endpoints now enforce library access and may return `403`:
+  - `POST /api/me/item/:id/bookmark`
+  - `PATCH /api/me/item/:id/bookmark`
+  - `DELETE /api/me/item/:id/bookmark/:time`
+- `DELETE /api/me/progress/:id` now validates ownership and returns `404` when the progress ID is not owned by the current user.
+- `PATCH /api/me/progress/:libraryItemId/:episodeId?` may return `400` when a non-book library item is patched without an episode ID.
+- Open session endpoints now return `403` (instead of `404`) for non-admin users attempting to access another user's open session:
+  - `GET /api/session/:id`
+  - `POST /api/session/:id/sync`
+  - `POST /api/session/:id/close`
 
 ## How to Use This Document
 
@@ -63,7 +83,7 @@ This document provides the authoritative mapping between the audiobookshelf serv
 | /api/users/:id/openid-unlink | PATCH | None | UnlinkUserFromOpenID | EmptyResponse | Removes OpenID link |
 | /api/users/:id/listening-sessions | GET | PlaybackSession array | GetUserListeningSessions | PaginatedSessions | Paginated results |
 | /api/users/:id/listening-stats | GET | Stats object | GetUserListeningStats | ListeningStats | Aggregate stats |
-| /api/authorize | POST | User | AuthorizeUser | User | Legacy endpoint |
+| /api/authorize | POST | User | _(removed in package 2.33.0)_ | - | Legacy endpoint; use JWT login/refresh flow |
 | /api/users/:id/purge-media-progress | DELETE | None | _(no interface - endpoint not found in server)_ | - | No server endpoint exists |
 
 ### 3. Me Endpoints (18 endpoints)
@@ -296,7 +316,7 @@ This document provides the authoritative mapping between the audiobookshelf serv
 |----------|--------|----------------|-----------------|----------------------|-------|
 | /login | POST | User + token | Login | LoginResponse | JWT auth |
 | /logout | POST | None | Logout | EmptyResponse | Ends session |
-| /refresh | POST | Refreshed token | RefreshToken | RefreshTokenResponse | Renews JWT |
+| /auth/refresh | POST | Refreshed token | RefreshToken | RefreshTokenResponse | Renews JWT |
 | /status | GET | Server status | GetServerStatus | ServerStatus | Health check |
 | /healthcheck | GET | Health status | Healthcheck | HealthcheckResponse | Simple check |
 | /ping | GET | Pong | Ping | PingResponse | Connectivity test |

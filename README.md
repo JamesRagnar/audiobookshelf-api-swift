@@ -2,16 +2,23 @@
 
 A thin Swift client for the Audiobookshelf API, providing async/await request functions and model structs.
 
+## Supported Server Range
+
+**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.33.x`**
+
+- **Exception**: `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`.
+- **Deprecated/Removed in package `2.33.0`**: legacy `AuthorizeUser` (`/api/authorize`) wrapper was removed. Use JWT auth endpoints instead.
+
 ## Installation
 
 Add this package to your project using Swift Package Manager:
 
 ```swift
-// In your Package.swift
+// In your Package.swift — use the version matching your target server minor
 dependencies: [
     .package(
         url: "https://github.com/JamesRagnar/audiobookshelf-api-swift.git",
-        from: "1.0.0"
+        .upToNextMinor(from: "1.2.0")
     ),
 ]
 ```
@@ -42,8 +49,8 @@ Because this package mirrors the server API closely (like an OpenAPI-generated c
 import AudiobookshelfAPI
 
 let server = ServerConfiguration(
-    baseURL: URL(string: "http://localhost:13378")!, 
-    token: "your_api_token"
+    url: URL(string: "http://localhost:13378")!,
+    authToken: "your_api_token"
 )
 
 do {

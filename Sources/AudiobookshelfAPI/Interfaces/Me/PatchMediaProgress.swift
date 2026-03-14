@@ -94,6 +94,8 @@ public struct PatchMediaProgress: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        case badRequest
+
         case notFound
 
     }
@@ -102,6 +104,8 @@ public struct PatchMediaProgress: Interface {
 
         // Success
         .code(200, .noContent),
+        // Invalid request payload for the target media.
+        .code(400, .error(AudiobookshelfError.badRequest)),
         // No library items or podcast episodes were found with the given IDs.
         .code(404, .error(AudiobookshelfError.notFound))
     ]
