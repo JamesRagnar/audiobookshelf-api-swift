@@ -42,9 +42,16 @@ public struct RemoveMediaProgress: Interface {
 
     public typealias Response = EmptyResponse
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .noContent)
+        .code(200, .noContent),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

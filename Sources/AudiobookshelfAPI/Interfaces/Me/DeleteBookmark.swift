@@ -45,9 +45,22 @@ public struct DeleteBookmark: Interface {
 
     public typealias Response = EmptyResponse
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        case badRequest
+
+        case forbidden
+
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .noContent)
+        .code(200, .noContent),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

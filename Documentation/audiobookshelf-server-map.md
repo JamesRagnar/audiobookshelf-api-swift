@@ -1,12 +1,22 @@
 # Audiobookshelf Server Mapping
 
-**Server Version**: audiobookshelf 2.32.1
-**Package Version**: audiobookshelf-api-swift 2.32.0
-**Last Updated**: 2026-02-06
+**Server Version**: audiobookshelf 2.33.0
+**Package Version**: audiobookshelf-api-swift 2.33.0
+**Last Updated**: 2026-03-14
 
 ## Overview
 
 This document provides the authoritative mapping between the audiobookshelf server API and the Swift interface/model implementations. It serves as both a reference for developers and an audit tool for package maintenance.
+
+## 2.33.0 Behavior Updates
+
+- `/api/me/item/listening-sessions/:libraryItemId/:episodeId?` now enforces library access and returns `403` for inaccessible items.
+- Bookmark endpoints now enforce library access and may return `403`:
+  - `POST /api/me/item/:id/bookmark`
+  - `PATCH /api/me/item/:id/bookmark`
+  - `DELETE /api/me/item/:id/bookmark/:time`
+- `DELETE /api/me/progress/:id` now validates ownership and returns `404` when the progress ID is not owned by the current user.
+- `PATCH /api/me/progress/:libraryItemId/:episodeId?` may return `400` when a non-book library item is patched without an episode ID.
 
 ## How to Use This Document
 
