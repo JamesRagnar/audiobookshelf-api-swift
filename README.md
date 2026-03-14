@@ -14,11 +14,11 @@ A thin Swift client for the Audiobookshelf API, providing async/await request fu
 Add this package to your project using Swift Package Manager:
 
 ```swift
-// In your Package.swift
+// In your Package.swift — use the version matching your target server minor
 dependencies: [
     .package(
         url: "https://github.com/JamesRagnar/audiobookshelf-api-swift.git",
-        from: "1.0.0"
+        .upToNextMinor(from: "1.2.0")
     ),
 ]
 ```

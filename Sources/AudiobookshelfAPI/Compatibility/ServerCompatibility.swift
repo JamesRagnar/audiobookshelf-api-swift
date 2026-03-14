@@ -3,7 +3,7 @@
 //  AudiobookshelfAPI
 //
 
-/// The result of evaluating a server version string against the app's known-compatible range.
+/// The result of evaluating a server version string against the package's known-compatible range.
 public enum CompatibilityResult: Sendable, Equatable {
 
     /// The server version is within the supported range.
@@ -20,7 +20,7 @@ public enum CompatibilityResult: Sendable, Equatable {
 
 }
 
-/// Evaluates audiobookshelf server version strings against the range Rost is known to support.
+/// Evaluates audiobookshelf server version strings against the package's known-compatible range.
 ///
 /// Compatibility is evaluated at the `MAJOR.MINOR` level. Patch releases are assumed
 /// non-breaking per semver convention and are not used to gate compatibility.
