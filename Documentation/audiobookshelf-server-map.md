@@ -23,6 +23,10 @@ This document provides the authoritative mapping between the audiobookshelf serv
   - `DELETE /api/me/item/:id/bookmark/:time`
 - `DELETE /api/me/progress/:id` now validates ownership and returns `404` when the progress ID is not owned by the current user.
 - `PATCH /api/me/progress/:libraryItemId/:episodeId?` may return `400` when a non-book library item is patched without an episode ID.
+- Open session endpoints now return `403` (instead of `404`) for non-admin users attempting to access another user's open session:
+  - `GET /api/session/:id`
+  - `POST /api/session/:id/sync`
+  - `POST /api/session/:id/close`
 
 ## How to Use This Document
 

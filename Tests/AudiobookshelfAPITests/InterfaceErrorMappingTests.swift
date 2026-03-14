@@ -49,6 +49,33 @@ struct InterfaceErrorMappingTests {
         #expect(notFound?.statusCode == 404)
     }
 
+    @Test
+    func getOpenSessionMapsForbidden() {
+        let forbidden = captureResponseError(
+            for: GetOpenSession.self,
+            statusCode: 403
+        )
+        #expect(forbidden?.statusCode == 403)
+    }
+
+    @Test
+    func syncOpenSessionMapsForbidden() {
+        let forbidden = captureResponseError(
+            for: SyncOpenSession.self,
+            statusCode: 403
+        )
+        #expect(forbidden?.statusCode == 403)
+    }
+
+    @Test
+    func closeOpenSessionMapsForbidden() {
+        let forbidden = captureResponseError(
+            for: CloseOpenSession.self,
+            statusCode: 403
+        )
+        #expect(forbidden?.statusCode == 403)
+    }
+
     private func captureResponseError<T: Interface>(
         for interface: T.Type,
         statusCode: Int,
