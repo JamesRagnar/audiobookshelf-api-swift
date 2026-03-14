@@ -49,8 +49,8 @@ Because this package mirrors the server API closely (like an OpenAPI-generated c
 import AudiobookshelfAPI
 
 let server = ServerConfiguration(
-    baseURL: URL(string: "http://localhost:13378")!, 
-    token: "your_api_token"
+    url: URL(string: "http://localhost:13378")!,
+    authToken: "your_api_token"
 )
 
 do {
