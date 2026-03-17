@@ -34,7 +34,7 @@ public struct DeleteBookmark: Interface {
         ///   - time: The time (in seconds) of the bookmark to delete.
         public init(
             libraryItemId: String,
-            time: Int
+            time: Double
         ) {
             self.path = "/api/me/item/\(libraryItemId)/bookmark/\(time)"
         }

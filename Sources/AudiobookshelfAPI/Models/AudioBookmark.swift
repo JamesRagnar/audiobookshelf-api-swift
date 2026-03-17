@@ -16,7 +16,7 @@ public struct AudioBookmark {
     public let title: String
 
     /// The time (in seconds) the bookmark is at in the book.
-    public let time: Int
+    public let time: Double
 
     /// The time (in ms since POSIX epoch) when the bookmark was created.
     public let createdAt: Int
