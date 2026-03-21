@@ -1,8 +1,8 @@
 # Audiobookshelf Server Mapping
 
-**Server Version**: audiobookshelf 2.33.0
-**Package Version**: audiobookshelf-api-swift 2.33.0
-**Last Updated**: 2026-03-14
+**Server Version**: audiobookshelf 2.33.1
+**Package Version**: audiobookshelf-api-swift 2.33.1
+**Last Updated**: 2026-03-21
 
 ## Overview
 
