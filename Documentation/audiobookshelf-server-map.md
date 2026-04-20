@@ -1,8 +1,8 @@
 # Audiobookshelf Server Mapping
 
-**Server Version**: audiobookshelf 2.33.1
-**Package Version**: audiobookshelf-api-swift 2.33.1
-**Last Updated**: 2026-03-21
+**Server Version**: audiobookshelf 2.33.2
+**Package Version**: audiobookshelf-api-swift 2.33.2
+**Last Updated**: 2026-04-20
 
 ## Overview
 
@@ -10,9 +10,15 @@ This document provides the authoritative mapping between the audiobookshelf serv
 
 ## Compatibility Range
 
-- **Supported server range**: `>= 2.26.0` and `<= 2.33.x`
+- **Supported server range**: `>= 2.26.0` and `<= 2.33.2`
 - **Exception (`>= 2.31.0`)**: `/api/search/providers` (`GetSearchProviders`)
 - **Deprecated/Removed in package `2.33.0`**: legacy `/api/authorize` wrapper (`AuthorizeUser`)
+
+## 2.33.2 Behavior Updates
+
+- No public REST endpoint additions/removals in `v2.33.1..v2.33.2`.
+- `item_removed` socket payload now includes `libraryId` in addition to item `id`.
+  - Swift socket decoding supports both legacy payloads without `libraryId` and `2.33.2` payloads with `libraryId`.
 
 ## 2.33.0 Behavior Updates
 
@@ -459,7 +465,7 @@ Events emitted to all authorized clients:
 | EpisodeDownloadQueueCleared | episode_download_queue_cleared | String (Library ID) | Podcasts |
 | EpisodeDownloadQueued | episode_download_queued | PodcastEpisodeDownload | Podcasts |
 | EpisodeDownloadStarted | episode_download_started | PodcastEpisodeDownload | Podcasts |
-| ItemRemoved | item_removed | String (ID) | Library Items |
+| ItemRemoved | item_removed | Custom (`id`, optional `libraryId`) | Library Items |
 | LibraryAdded | library_added | Library | Libraries |
 | LibraryRemoved | library_removed | String (ID) | Libraries |
 | LibraryUpdated | library_updated | Library | Libraries |
