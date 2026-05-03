@@ -1,8 +1,8 @@
 # Audiobookshelf Server Mapping
 
-**Server Version**: audiobookshelf 2.33.2
-**Package Version**: audiobookshelf-api-swift 2.33.2
-**Last Updated**: 2026-04-20
+**Server Version**: audiobookshelf 2.34.0
+**Package Version**: audiobookshelf-api-swift 2.34.0
+**Last Updated**: 2026-05-03
 
 ## Overview
 
@@ -10,9 +10,20 @@ This document provides the authoritative mapping between the audiobookshelf serv
 
 ## Compatibility Range
 
-- **Supported server range**: `>= 2.26.0` and `<= 2.33.2`
+- **Supported server range**: `>= 2.26.0` and `<= 2.34.0`
 - **Exception (`>= 2.31.0`)**: `/api/search/providers` (`GetSearchProviders`)
 - **Deprecated/Removed in package `2.33.0`**: legacy `/api/authorize` wrapper (`AuthorizeUser`)
+
+## 2.34.0 Behavior Updates
+
+- No public REST endpoint additions/removals in `v2.33.2..v2.34.0`.
+- Access control hardening on existing endpoints:
+  - Collection and playlist create/list/get flows now enforce library access checks.
+  - Library item batch endpoints now enforce per-item access checks and may return `403` in more cases.
+- Podcast and library item updates now validate `autoDownloadSchedule` cron expressions and return `400` for invalid values.
+- Public share `?t` query argument now overrides cached playback position when `0 < t < duration`.
+- Recent-episodes cache invalidation now clears on user-progress changes.
+- Podcast creation now sanitizes description HTML before persistence.
 
 ## 2.33.2 Behavior Updates
 
