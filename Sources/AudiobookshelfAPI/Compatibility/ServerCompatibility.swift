@@ -26,11 +26,11 @@ public enum CompatibilityResult: Sendable, Equatable {
 /// non-breaking per semver convention and are not used to gate compatibility.
 ///
 /// - Minimum supported minor: **2.26**
-/// - Maximum tested minor: **2.34**
+/// - Maximum tested minor: **2.35**
 public enum ServerCompatibility: Sendable {
 
     private static let minimumVersion = Version(major: 2, minor: 26, patch: 0)
-    private static let maximumTestedVersion = Version(major: 2, minor: 34, patch: .max)
+    private static let maximumTestedVersion = Version(major: 2, minor: 35, patch: .max)
 
     /// Evaluates whether `serverVersion` falls within the supported range.
     public static func evaluate(serverVersion: String) -> CompatibilityResult {
