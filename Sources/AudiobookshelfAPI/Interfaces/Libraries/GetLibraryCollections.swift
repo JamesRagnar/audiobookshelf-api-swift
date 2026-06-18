@@ -83,28 +83,28 @@ public struct GetLibraryCollections: Interface {
         public let results: [Collection]
 
         /// The total number of results.
-        public let rtotal: Int
+        public let total: Int
 
         /// The limit set in the request.
-        public let rlimit: Int
+        public let limit: Int
 
         /// The page set in request.
-        public let rpage: Int
+        public let page: Int
 
         /// The sort set in the request. Will not exist if no sort was set.
-        public let rsortBy: String?
+        public let sortBy: String?
 
         /// Whether to reverse the sort order.
-        public let rsortDesc: Bool
+        public let sortDesc: Bool
 
         /// The filter set in the request, URL decoded. Will not exist if no filter was set.
-        public let rfilterBy: String?
+        public let filterBy: String?
 
         /// Whether minified was set in the request.
-        public let rminified: Bool
+        public let minified: Bool
 
         /// The requested include.
-        public let rinclude: String
+        public let include: String
 
     }
 
