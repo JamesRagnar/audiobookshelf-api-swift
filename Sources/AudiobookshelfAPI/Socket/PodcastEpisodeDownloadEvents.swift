@@ -28,7 +28,7 @@ public struct EpisodeDownloadQueueUpdatedEvent: SocketEvent {
 
 extension EpisodeDownloadQueueUpdatedEvent {
 
-    public struct Body: Decodable {
+    public struct Body: Decodable, Sendable {
 
         /// The podcast episode currently being downloaded. Will only exist if an episode download is in progress.
         public let currentDownload: PodcastEpisodeDownload?

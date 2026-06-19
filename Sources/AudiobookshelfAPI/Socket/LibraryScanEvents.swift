@@ -19,7 +19,7 @@ public struct ScanStartEvent: SocketEvent {
 
 public extension ScanStartEvent {
 
-    struct CustomResponse: Decodable {
+    struct CustomResponse: Decodable, Sendable {
 
         /// The ID of the scanned library.
         public let id: String
@@ -35,7 +35,7 @@ public extension ScanStartEvent {
 
     }
 
-    struct ScanResults: Decodable {
+    struct ScanResults: Decodable, Sendable {
 
         /// The number of library items added during the scan.
         public let added: Int

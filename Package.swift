@@ -20,7 +20,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking.git",
-            exact: .init(0, 2, 0)
+            branch: "socket-schema-sendable"
         )
     ],
     targets: [
