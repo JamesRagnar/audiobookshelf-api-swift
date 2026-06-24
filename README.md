@@ -7,18 +7,17 @@ A thin Swift client for the Audiobookshelf API, providing async/await request fu
 **Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.35.1`**
 
 - **Exception**: `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`.
-- **Deprecated/Removed in package `2.33.0`**: legacy `AuthorizeUser` (`/api/authorize`) wrapper was removed. Use JWT auth endpoints instead.
+- **Removed in server `2.33.0`**: legacy `AuthorizeUser` (`/api/authorize`) endpoint was removed. Use JWT auth endpoints instead.
 
 ## Installation
 
 Add this package to your project using Swift Package Manager:
 
 ```swift
-// In your Package.swift — use the version matching your target server minor
 dependencies: [
     .package(
         url: "https://github.com/JamesRagnar/audiobookshelf-api-swift.git",
-        .upToNextMinor(from: "1.2.0")
+        from: "3.0.0"
     ),
 ]
 ```
@@ -28,20 +27,6 @@ Or in Xcode:
 1. File → Add Packages…
 2. Enter the repository URL: `https://github.com/JamesRagnar/audiobookshelf-api-swift.git`
 3. Choose the version you need
-
-## Versioning
-
-This package is a **thin Swift client** for the upstream Audiobookshelf API.
-Version numbers are aligned with the corresponding server API version:
-
-```
-<server-major>.<server-minor>.<client-patch>
-```
-
-* **MAJOR / MINOR** indicate the supported server API version
-* **PATCH** releases contain client-side fixes and corrections
-
-Because this package mirrors the server API closely (like an OpenAPI-generated client), upgrades *may* require changes to how the API is used — even on PATCH bumps. Always review release notes for breaking changes.
 
 ## Usage
 
