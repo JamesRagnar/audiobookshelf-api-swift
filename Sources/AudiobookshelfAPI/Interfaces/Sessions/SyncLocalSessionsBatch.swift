@@ -84,18 +84,25 @@ public struct SyncLocalSessionsBatch: Interface {
 
 public extension SyncLocalSessionsBatch.Parameters {
 
+    /// Device metadata to associate with a batch sync request.
     struct LocalDeviceInfo: Encodable, Sendable {
 
+        /// A stable identifier for the device (e.g. `UIDevice.current.identifierForVendor`).
         public let deviceId: String?
 
+        /// The client app's version string (e.g. `CFBundleShortVersionString`).
         public let clientVersion: String?
 
+        /// A human-readable name for the device (e.g. "James's iPhone").
         public let deviceName: String?
 
+        /// The browser name. Typically nil for native clients.
         public let browserName: String?
 
+        /// The operating system name (e.g. "iOS").
         public let osName: String?
 
+        /// The operating system version string (e.g. "17.4").
         public let osVersion: String?
 
         public init(

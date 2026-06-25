@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OSLog
 import RagnarNetworking
 
 /// Wraps SocketIOClient with the ABS-specific auth handshake.
@@ -78,11 +77,11 @@ public actor ABSSocketSession {
         if serverURL == currentServerURL {
             await updateToken(token)
         } else {
-            currentServerURL = serverURL
-            currentToken = token
             guard let wsURL = SocketIOClient.webSocketURL(for: serverURL) else {
                 return
             }
+            currentServerURL = serverURL
+            currentToken = token
             await client.reconnect(to: wsURL)
         }
     }
@@ -91,8 +90,12 @@ public actor ABSSocketSession {
     public func updateToken(_ token: String) async {
         currentToken = token
         guard isConnected else { return }
-        try? await client.emit(AuthEvent.self, token)
-        setAuthState(.authenticating)
+        do {
+            try await client.emit(AuthEvent.self, token)
+            setAuthState(.authenticating)
+        } catch {
+            setAuthState(.failed(message: error.localizedDescription))
+        }
     }
 
     /// Close the connection and reset auth state. Existing event streams are preserved for reconnect.
@@ -112,15 +115,13 @@ public actor ABSSocketSession {
 
     /// Emit a typed client event.
     public func emit<E: SocketEvent>(_ type: E.Type, _ payload: E.Schema) async throws
-        where E.Schema: Encodable & Sendable
-    {
+        where E.Schema: Encodable & Sendable {
         try await client.emit(type, payload)
     }
 
     /// Emit a typed client event with no payload.
     public func emit<E: SocketEvent>(_ type: E.Type) async throws
-        where E.Schema == SocketEmptyBody
-    {
+        where E.Schema == SocketEmptyBody {
         try await client.emit(type)
     }
 
@@ -175,8 +176,12 @@ public actor ABSSocketSession {
     private func handleStatusChange(_ status: SocketIOClient.Status) async {
         isConnected = (status == .connected)
         if status == .connected, let token = currentToken {
-            try? await client.emit(AuthEvent.self, token)
-            setAuthState(.authenticating)
+            do {
+                try await client.emit(AuthEvent.self, token)
+                setAuthState(.authenticating)
+            } catch {
+                setAuthState(.failed(message: error.localizedDescription))
+            }
         }
     }
 

@@ -62,7 +62,8 @@ extension ItemRemovedEvent {
             if let id = try container.decodeIfPresent(String.self, forKey: .id) {
                 self.id = id
                 self.libraryItemIds = [id]
-            } else if let ids = try container.decodeIfPresent([String].self, forKey: .libraryItemIds), let first = ids.first {
+            } else if let ids = try container.decodeIfPresent([String].self, forKey: .libraryItemIds),
+                      let first = ids.first {
                 self.id = first
                 self.libraryItemIds = ids
             } else {

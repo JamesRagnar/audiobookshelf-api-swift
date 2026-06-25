@@ -72,24 +72,6 @@ public struct GetItemListeningSessions: Interface {
         /// The page set in the request.
         public let page: Int
 
-        enum CodingKeys: String, CodingKey {
-            case sessions
-            case total
-            case numPages
-            case itemsPerPage
-            case page
-        }
-
-        public init(from decoder: any Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.sessions = try container.decode([PlaybackSession].self, forKey: .sessions)
-            self.total = try container.decode(Int.self, forKey: .total)
-            self.numPages = try container.decode(Int.self, forKey: .numPages)
-            self.page = try container.decode(Int.self, forKey: .page)
-
-            self.itemsPerPage = try container.decode(Int.self, forKey: .itemsPerPage)
-        }
-
     }
 
     public enum AudiobookshelfError: Error, Sendable {
