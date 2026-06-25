@@ -43,7 +43,8 @@ extension ItemRemovedEvent {
         public let id: String
 
         /// The IDs of removed library items.
-        /// - Note: Legacy compatibility alias for `id`.
+        /// On current servers this is always `[id]`. On legacy servers that sent a
+        /// `libraryItemIds` array instead of a singular `id`, this reflects that array.
         public let libraryItemIds: [String]
 
         /// The ID of the library.

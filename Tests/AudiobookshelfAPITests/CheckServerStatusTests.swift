@@ -1,4 +1,4 @@
-@testable import AudiobookshelfAPI
+import AudiobookshelfAPI
 import Foundation
 import Testing
 
@@ -104,6 +104,26 @@ struct CheckServerStatusTests {
         #expect(response.authFormData?.authLoginCustomMessage == nil)
         #expect(response.authFormData?.authOpenIDButtonText == "Login with Okta")
         #expect(response.authFormData?.authOpenIDAutoLaunch == true)
+    }
+
+    // MARK: authFormData absent (pre-2.31 servers)
+
+    @Test
+    func missingAuthFormDataDecodesAsNil() throws {
+        let json = """
+        {
+          "app": "audiobookshelf",
+          "serverVersion": "2.26.0",
+          "isInit": true,
+          "language": "en-us",
+          "authMethods": ["local"]
+        }
+        """
+
+        let response = try decode(json)
+
+        #expect(response.serverVersion == "2.26.0")
+        #expect(response.authFormData == nil)
     }
 
     // MARK: Helpers

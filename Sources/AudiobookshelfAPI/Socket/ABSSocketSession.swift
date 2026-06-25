@@ -71,8 +71,11 @@ public actor ABSSocketSession {
     // MARK: - Public API
 
     /// Connect (or reconnect) to the given server URL with the provided JWT.
-    /// - Same URL: re-emits auth with the new token if connected; no reconnect.
-    /// - New URL: switches the underlying WebSocket connection, preserving existing event streams.
+    ///
+    /// - Same URL: re-emits auth with the new token if already connected; does not reconnect.
+    /// - New URL: switches the underlying WebSocket connection, preserving all existing event streams.
+    ///
+    /// This method is a no-op if `serverURL` cannot be converted to a WebSocket URL.
     public func connect(to serverURL: URL, token: String) async {
         if serverURL == currentServerURL {
             await updateToken(token)
