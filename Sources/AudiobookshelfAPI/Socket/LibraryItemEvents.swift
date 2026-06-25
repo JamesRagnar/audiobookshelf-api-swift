@@ -43,7 +43,8 @@ extension ItemRemovedEvent {
         public let id: String
 
         /// The IDs of removed library items.
-        /// - Note: Legacy compatibility alias for `id`.
+        /// On current servers this is always `[id]`. On legacy servers that sent a
+        /// `libraryItemIds` array instead of a singular `id`, this reflects that array.
         public let libraryItemIds: [String]
 
         /// The ID of the library.
@@ -62,7 +63,8 @@ extension ItemRemovedEvent {
             if let id = try container.decodeIfPresent(String.self, forKey: .id) {
                 self.id = id
                 self.libraryItemIds = [id]
-            } else if let ids = try container.decodeIfPresent([String].self, forKey: .libraryItemIds), let first = ids.first {
+            } else if let ids = try container.decodeIfPresent([String].self, forKey: .libraryItemIds),
+                      let first = ids.first {
                 self.id = first
                 self.libraryItemIds = ids
             } else {
@@ -111,7 +113,7 @@ public struct BatchQuickMatchCompleteEvent: SocketEvent {
 
 extension BatchQuickMatchCompleteEvent {
 
-    public struct BatchQuickMatchResult: Decodable {
+    public struct BatchQuickMatchResult: Decodable, Sendable {
 
         /// Whether library items were successfully updated.
         public let success: Bool

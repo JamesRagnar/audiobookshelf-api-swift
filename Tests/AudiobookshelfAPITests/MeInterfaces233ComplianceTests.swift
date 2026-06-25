@@ -1,4 +1,4 @@
-@testable import AudiobookshelfAPI
+import AudiobookshelfAPI
 import Foundation
 import RagnarNetworking
 import Testing

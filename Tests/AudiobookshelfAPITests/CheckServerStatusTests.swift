@@ -1,4 +1,4 @@
-@testable import AudiobookshelfAPI
+import AudiobookshelfAPI
 import Foundation
 import Testing
 
@@ -34,9 +34,9 @@ struct CheckServerStatusTests {
         #expect(response.configPath == nil)
         #expect(response.metadataPath == nil)
 
-        #expect(response.authFormData.authLoginCustomMessage == "Welcome back")
-        #expect(response.authFormData.authOpenIDButtonText == "Sign in with SSO")
-        #expect(response.authFormData.authOpenIDAutoLaunch == false)
+        #expect(response.authFormData?.authLoginCustomMessage == "Welcome back")
+        #expect(response.authFormData?.authOpenIDButtonText == "Sign in with SSO")
+        #expect(response.authFormData?.authOpenIDAutoLaunch == false)
     }
 
     // MARK: Missing required fields fails decode
@@ -101,9 +101,29 @@ struct CheckServerStatusTests {
         let response = try decode(json)
 
         #expect(response.authMethods == ["local", "openid"])
-        #expect(response.authFormData.authLoginCustomMessage == nil)
-        #expect(response.authFormData.authOpenIDButtonText == "Login with Okta")
-        #expect(response.authFormData.authOpenIDAutoLaunch == true)
+        #expect(response.authFormData?.authLoginCustomMessage == nil)
+        #expect(response.authFormData?.authOpenIDButtonText == "Login with Okta")
+        #expect(response.authFormData?.authOpenIDAutoLaunch == true)
+    }
+
+    // MARK: authFormData absent (pre-2.31 servers)
+
+    @Test
+    func missingAuthFormDataDecodesAsNil() throws {
+        let json = """
+        {
+          "app": "audiobookshelf",
+          "serverVersion": "2.26.0",
+          "isInit": true,
+          "language": "en-us",
+          "authMethods": ["local"]
+        }
+        """
+
+        let response = try decode(json)
+
+        #expect(response.serverVersion == "2.26.0")
+        #expect(response.authFormData == nil)
     }
 
     // MARK: Helpers

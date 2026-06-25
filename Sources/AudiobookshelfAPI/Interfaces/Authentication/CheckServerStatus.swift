@@ -52,7 +52,8 @@ public struct CheckServerStatus: Interface {
         public let authMethods: [String]
 
         /// Additional form-level auth configuration supplied by the server.
-        public let authFormData: AuthFormData
+        /// - Note: Present on server `>= 2.31.0`. Nil on older servers.
+        public let authFormData: AuthFormData?
 
         /// The server's config path. Will only exist if `isInit` is false.
         public let configPath: String?

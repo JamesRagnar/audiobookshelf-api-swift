@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "AudiobookshelfAPI",
     platforms: [
-        .iOS(.v15),
-        .macOS(.v12),
+        .iOS(.v17),
+        .macOS(.v14),
     ],
     products: [
         .library(
@@ -20,7 +20,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking.git",
-            exact: .init(0, 2, 0)
+            branch: "main"
         )
     ],
     targets: [
