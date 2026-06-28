@@ -23,7 +23,7 @@ public struct Logout: Interface {
 
         public let headers: [String: String]?
 
-        public let body: Body? = nil
+        public let body: Body = .init()
 
         public let authentication: AuthenticationType = .none
 

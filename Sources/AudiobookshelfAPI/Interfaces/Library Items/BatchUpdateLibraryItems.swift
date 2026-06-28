@@ -24,7 +24,7 @@ public struct BatchUpdateLibraryItems: Interface {
 
         public typealias Body = BatchBody
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

@@ -45,7 +45,7 @@ public struct CreatePlaylist: Interface {
 
         public typealias Body = Payload
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

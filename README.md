@@ -1,56 +1,91 @@
 # Audiobookshelf API Swift
 
-A thin Swift client for the Audiobookshelf API, providing async/await request functions and model structs.
+`AudiobookshelfAPI` is a Swift Package for integrating Apple-platform apps with the `audiobookshelf` server API. It provides typed REST interface definitions, shared payload models, server compatibility helpers, and socket support for realtime updates.
+
+## What This Package Provides
+
+- Typed request/response interfaces for the REST API
+- Shared models for REST and socket payloads
+- Runtime server compatibility checks
+- Socket.IO auth/session wrapper for typed event streams
+- Swift 6 package with Apple platform support
+
+## Package Structure
+
+- `Sources/AudiobookshelfAPI/Interfaces/`: typed endpoint wrappers
+- `Sources/AudiobookshelfAPI/Models/`: shared response and payload models
+- `Sources/AudiobookshelfAPI/Socket/`: realtime socket types and `ABSSocketSession`
+- `Sources/AudiobookshelfAPI/Compatibility/`: server compatibility helpers
+
+## Why Use It
+
+- Keeps API integration typed and explicit
+- Centralizes endpoint paths, parameters, and response handling
+- Reduces ad hoc decoding and transport glue in app code
+- Supports both request/response and realtime integration patterns
 
 ## Supported Server Range
 
 **Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.35.x`**
 
-- **Exception**: `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`.
-- **Removed in server `2.33.0`**: legacy `AuthorizeUser` (`/api/authorize`) endpoint was removed. Use JWT auth endpoints instead.
+- `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`
+- Legacy `AuthorizeUser` (`/api/authorize`) was removed from the package for server `>= 2.33.0`
 
-Use `ServerCompatibility` to evaluate a server version string at runtime before making requests:
+Use `ServerCompatibility` to gate behavior at runtime:
 
 ```swift
+import AudiobookshelfAPI
+
 switch ServerCompatibility.evaluate(serverVersion: status.serverVersion) {
 case .supported:
-    // proceed
+    break
 case .belowMinimum:
-    // tell the user to upgrade their server
+    // Require a newer audiobookshelf server
 case .aboveTestedRange:
-    // newer server — requests may still work, but warn the user
+    // Newer server version; proceed carefully
 case .unknownVersionFormat:
-    // could not parse the version string
+    // Could not parse server version
 }
 ```
 
+## Requirements
+
+- Swift 6.0+
+- iOS 16+, macOS 13+, tvOS 16+, watchOS 9+, visionOS 1+
+- An `audiobookshelf` server in the supported range
+
 ## Installation
 
-Add this package to your project using Swift Package Manager:
+Add the package with Swift Package Manager:
 
 ```swift
 dependencies: [
     .package(
         url: "https://github.com/JamesRagnar/audiobookshelf-api-swift.git",
         from: "3.0.0"
-    ),
+    )
+]
+```
+
+Then add the product to your target:
+
+```swift
+dependencies: [
+    .product(name: "AudiobookshelfAPI", package: "audiobookshelf-api-swift")
 ]
 ```
 
 Or in Xcode:
 
-1. File → Add Packages…
-2. Enter the repository URL: `https://github.com/JamesRagnar/audiobookshelf-api-swift.git`
-3. Choose the version you need
+1. Open **File** → **Add Packages…**
+2. Enter `https://github.com/JamesRagnar/audiobookshelf-api-swift.git`
+3. Select the package version you need
 
 ## Usage
 
-### HTTP requests
-
-Create an `APIClient` (from `RagnarNetworking`) and call `send(_:_:)` with any `Interface` type:
-
 ```swift
 import AudiobookshelfAPI
+import RagnarNetworking
 
 let client = APIClient(
     baseURL: URL(string: "http://localhost:13378")!,
@@ -58,44 +93,27 @@ let client = APIClient(
     refresh: { try await myAuthService.refresh() }
 )
 
-// Check server status (no auth required)
-let status = try await client.send(CheckServerStatus.self, .init())
+let status = try await client.send(
+    CheckServerStatus.self,
+    .init()
+)
 
-// Fetch a library item
-let item = try await client.send(GetLibraryItem.self, .init(libraryItemId: "item-id"))
+let item = try await client.send(
+    GetLibraryItem.self,
+    .init(libraryItemId: "item-id")
+)
 ```
 
-### Socket events
+See the guides in `Documentation/` for request flow, compatibility handling, socket integration, and package architecture.
 
-Use `ABSSocketSession` to connect to the server's Socket.IO endpoint and receive typed events.
-The session handles the ABS auth handshake automatically on every (re)connect.
+## Documentation
 
-```swift
-let socketClient = SocketIOClient()
-let session = ABSSocketSession(client: socketClient)
-
-// Connect with a JWT
-await session.connect(to: serverURL, token: accessToken)
-
-// Observe auth state
-for await state in await session.authStateUpdates() {
-    switch state {
-    case .authenticated(let userID, _): print("Authenticated as \(userID)")
-    case .failed(let message): print("Auth failed: \(message)")
-    default: break
-    }
-}
-
-// Subscribe to typed events
-for await event in await session.events(for: ItemsUpdatedEvent.self) {
-    print("Items updated: \(event.map(\.id))")
-}
-```
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request.
+- Documentation index: `Documentation/README.md`
+- Architecture overview: `Documentation/architecture.md`
+- Request guide: `Documentation/requests.md`
+- Compatibility guide: `Documentation/compatibility.md`
+- Socket guide: `Documentation/sockets.md`
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE.txt) for details.
+Apache License 2.0. See `LICENSE.txt`.

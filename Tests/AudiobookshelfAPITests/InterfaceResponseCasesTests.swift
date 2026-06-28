@@ -24,6 +24,7 @@ struct InterfaceResponseCasesTests {
             switch outcome {
             case .noContent:
                 isNoContent = true
+
             default:
                 isNoContent = false
             }

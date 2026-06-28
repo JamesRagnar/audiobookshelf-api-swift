@@ -10,10 +10,10 @@ import RagnarNetworking
 
 /// Wraps SocketIOClient with the ABS-specific auth handshake.
 ///
-/// Auth protocol: on every SocketIOClient `.connected` transition, emits `AuthEvent` with the
+/// Auth protocol: on every socket `.connected` transition, emits `AuthEvent` with the
 /// current JWT. Server responds with the private `InitEvent` (success) or `AuthFailedEvent`.
 ///
-/// All event streams and status streams are delegated to the underlying `SocketIOClient`,
+/// All event streams and status streams are delegated to the underlying socket transport,
 /// which keeps them alive across disconnect/reconnect cycles without re-subscription.
 public actor ABSSocketSession {
 
@@ -47,7 +47,7 @@ public actor ABSSocketSession {
 
     // MARK: - Private State
 
-    private let client: SocketIOClient
+    private let client: any SocketClient
     private var currentToken: String?
     private var currentServerURL: URL?
     private var isConnected = false
@@ -62,7 +62,7 @@ public actor ABSSocketSession {
 
     /// Create a session backed by the given client. The client need not be connected yet;
     /// call `connect(to:token:)` when ready.
-    public init(client: SocketIOClient) {
+    public init(client: any SocketClient) {
         self.client = client
         // Actor init is nonisolated in Swift 6 — schedule observation on the actor executor.
         Task { await self.startObservation() }
@@ -80,7 +80,7 @@ public actor ABSSocketSession {
         if serverURL == currentServerURL {
             await updateToken(token)
         } else {
-            guard let wsURL = SocketIOClient.webSocketURL(for: serverURL) else {
+            guard let wsURL = SocketIOURL.webSocketURL(for: serverURL) else {
                 return
             }
             currentServerURL = serverURL
@@ -140,15 +140,15 @@ public actor ABSSocketSession {
         return stream
     }
 
-    /// Stream of connection status changes. Delegates to the underlying SocketIOClient.
-    public func statusUpdates() async -> AsyncStream<SocketIOClient.Status> {
+    /// Stream of connection status changes. Delegates to the underlying socket transport.
+    public func statusUpdates() async -> AsyncStream<SocketConnectionStatus> {
         await client.statusUpdates()
     }
 
     // MARK: - Private: Observation
 
     // Started once in init. These tasks run for the lifetime of the session actor.
-    // SocketIOClient continuations persist across reconnects, so these tasks naturally
+    // Transport continuations persist across reconnects, so these tasks naturally
     // resume receiving events after a disconnect/reconnect cycle.
     private func startObservation() {
         statusObserverTask = Task {
@@ -176,7 +176,7 @@ public actor ABSSocketSession {
         }
     }
 
-    private func handleStatusChange(_ status: SocketIOClient.Status) async {
+    private func handleStatusChange(_ status: SocketConnectionStatus) async {
         isConnected = (status == .connected)
         if status == .connected, let token = currentToken {
             do {

@@ -1,9 +1,15 @@
+# macOS
 .DS_Store
-/.build
-/Packages
+
+# SwiftPM
+/.build/
+/Packages/
+/.swiftpm/
+
+# Xcode
 xcuserdata/
 DerivedData/
-.swiftpm/configuration/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+
+# Local tooling
+.swiftlint-cache/
 .netrc
-.swiftlint-cache

@@ -1,169 +1,79 @@
 # Sockets
 
-## Summary
+`AudiobookshelfAPI` includes `ABSSocketSession` for integrating with audiobookshelf realtime events over Socket.IO.
 
-An overview of Socket structure, components, and exceptions.
+## Purpose
 
-## Overview
+`ABSSocketSession` wraps any `SocketClient` from `RagnarNetworking` and handles the audiobookshelf auth handshake on connect and reconnect.
 
-The Socket protocol is defined in RagnarNetworking, and provides a structure of defining the event name and expected response type.
+It is useful when your app needs:
+
+- item and library update events
+- playback-related realtime updates
+- a typed event-stream API over Socket.IO
+
+## Basic Setup
 
 ```swift
-// Provide a comment describing the event and expected actions.
-public protocol SocketEvent: Sendable {
-    
-	// The event name to observe
-    static var name: String { get }
-    
-    // The expected response type
-    associatedtype Schema: Decodable
-    
-}
+import AudiobookshelfAPI
+import RagnarNetworking
+
+let socketClient = SocketIOClient()
+let session = ABSSocketSession(client: socketClient)
+
+await session.connect(to: serverURL, token: accessToken)
 ```
 
-## Common Patterns
+## Auth State
 
-### Shared Response Models
-
-Socket events will generally emit an update to a notification, referencing a shared Model. This can be associated inline by using a typealias.
+`ABSSocketSession` tracks auth state separately from raw transport state.
 
 ```swift
-public struct ExampleEvent: SocketEvent {
-    
-    public static let name = "example_event"
-    
-    public typealias Schema = SharedModel
-
-}
-```
-
-### Custom Response Models
-
-In the event the Socket fires a one-off or modified event, the shared Model should not be updated. Instead, a local reference can be defined in an extension to the Event struct. The extension, struct, and parameters must be marked as public.
-
-```swift
-public struct ExampleEvent: SocketEvent {
-    
-    public static let name = "example_event"
-    
-    public typealias Schema = CustomResponse
-
-}
-
-public extension ExampleEvent {
-
-	public struct CustomResponse: Decodable {
-
-		public let parameter: String
-
-	}
-
-}
-```
-
-## Design Considerations
-
-- Ensure SocketEvents and components are marked as public.
-- Comments should be minimal and dedicated to explaining API operations. Avoid example code blocks or superfluous descriptions, the models should be clear and explicit.
-
-## Validation Checklist
-
-Before submitting a SocketEvent implementation, verify:
-
-- [ ] All types marked `public` (struct, enum)
-- [ ] Event struct conforms to SocketEvent protocol
-- [ ] Static `name` property defined with correct event name
-- [ ] Schema typealias defined (pointing to Model or custom Response)
-- [ ] Custom Response in extension if needed (not inline)
-- [ ] All custom Response properties marked `public let`
-- [ ] Custom Response conforms to Decodable
-- [ ] Top-level comment describes socket event operation
-- [ ] File header includes proper copyright and creation info
-- [ ] Imports Foundation and RagnarNetworking
-
-## Common Mistakes
-
-### WRONG: Missing public modifier on event
-
-```swift
-struct ExampleEvent: SocketEvent {  // Missing public
-    static let name = "example_event"
-    typealias Schema = SharedModel
-}
-```
-
-### CORRECT: Public event struct
-
-```swift
-public struct ExampleEvent: SocketEvent {
-    public static let name = "example_event"
-    public typealias Schema = SharedModel
-}
-```
-
-### WRONG: Custom response inline
-
-```swift
-public struct ExampleEvent: SocketEvent {
-    public static let name = "example_event"
-
-    public struct CustomResponse: Decodable {  // DON'T DO THIS
-        public let id: String
-    }
-
-    public typealias Schema = CustomResponse
-}
-```
-
-### CORRECT: Custom response in extension
-
-```swift
-public struct ExampleEvent: SocketEvent {
-    public static let name = "example_event"
-    public typealias Schema = CustomResponse
-}
-
-public extension ExampleEvent {
-    struct CustomResponse: Decodable {  // DO THIS
-        public let id: String
+for await state in await session.authStateUpdates() {
+    switch state {
+    case .authenticated(let userID, let username):
+        print("Authenticated as \(userID) / \(username)")
+    case .failed(let message):
+        print("Socket auth failed: \(message)")
+    default:
+        break
     }
 }
 ```
 
-### WRONG: Missing public on custom response properties
+## Event Streams
+
+Use typed socket event streams for server events:
 
 ```swift
-public extension ExampleEvent {
-    struct CustomResponse: Decodable {
-        let id: String  // Missing public
-    }
+for await event in await session.events(for: ItemsUpdatedEvent.self) {
+    print(event)
 }
 ```
 
-### CORRECT: All properties public
+The session delegates event streams to the underlying socket transport, so subscriptions survive reconnects without requiring re-registration in normal use.
+
+## Token Updates
+
+If your app refreshes its auth token while connected, update the session token:
 
 ```swift
-public extension ExampleEvent {
-    struct CustomResponse: Decodable {
-        public let id: String
-    }
-}
+await session.updateToken(newAccessToken)
 ```
 
-### WRONG: Missing static on name property
+The session re-emits the auth event when appropriate.
+
+## Disconnect Behavior
 
 ```swift
-public struct ExampleEvent: SocketEvent {
-    public let name = "example_event"  // Should be static
-    public typealias Schema = SharedModel
-}
+await session.disconnect()
 ```
 
-### CORRECT: Static name property
+Disconnect resets session auth state while preserving the application-owned socket session object for later reuse.
 
-```swift
-public struct ExampleEvent: SocketEvent {
-    public static let name = "example_event"
-    public typealias Schema = SharedModel
-}
-```
+## Integration Guidance
+
+- Own a `SocketClient` implementation at the application boundary
+- Treat `ABSSocketSession` as the audiobookshelf-specific socket layer
+- Keep token refresh and reconnect policy in app-level infrastructure
+- Use typed event consumers instead of stringly-typed event dispatch in feature code

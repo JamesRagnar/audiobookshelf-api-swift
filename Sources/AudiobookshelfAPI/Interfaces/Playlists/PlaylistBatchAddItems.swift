@@ -43,7 +43,7 @@ public struct PlaylistBatchAddItems: Interface {
 
         public typealias Body = ArrayBody<Item>
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 
