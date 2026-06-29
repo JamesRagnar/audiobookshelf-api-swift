@@ -11,6 +11,11 @@ private struct TestSocketEvent: SocketEvent {
     }
 }
 
+private struct EmptyTestSocketEvent: SocketEvent {
+    static let name = "empty_test_event"
+    typealias Schema = SocketEmptyBody
+}
+
 private actor MockSocketClient: SocketClient {
 
     struct EmittedEvent: Sendable {
@@ -280,5 +285,49 @@ struct ABSSocketSessionTests {
 
         let event = await iterator.next()
         #expect(event == .init(value: "after-reconnect"))
+    }
+
+    @Test("emit with payload passes through to transport")
+    func emitWithPayloadPassesThrough() async throws {
+        let client = MockSocketClient()
+        let session = ABSSocketSession(client: client)
+
+        try await session.emit(TestSocketEvent.self, .init(value: "payload"))
+
+        let events = await client.emittedEvents
+        #expect(events.count == 1)
+        #expect(events.first?.name == TestSocketEvent.name)
+
+        let data = try #require(events.first?.payload)
+        let payload = try JSONDecoder().decode(TestSocketEvent.Schema.self, from: data)
+        #expect(payload == .init(value: "payload"))
+    }
+
+    @Test("emit without payload passes through to transport")
+    func emitWithoutPayloadPassesThrough() async throws {
+        let client = MockSocketClient()
+        let session = ABSSocketSession(client: client)
+
+        try await session.emit(EmptyTestSocketEvent.self)
+
+        let events = await client.emittedEvents
+        #expect(events.count == 1)
+        #expect(events.first?.name == EmptyTestSocketEvent.name)
+        #expect(events.first?.payload == nil)
+    }
+
+    @Test("status updates stream delegates current and subsequent transport status")
+    func statusUpdatesDelegateTransportStatus() async {
+        let client = MockSocketClient()
+        let session = ABSSocketSession(client: client)
+        let stream = await session.statusUpdates()
+        var iterator = stream.makeAsyncIterator()
+
+        let initial = await iterator.next()
+        #expect(initial == .disconnected)
+
+        await client.pushStatus(.connecting)
+        let connecting = await iterator.next()
+        #expect(connecting == .connecting)
     }
 }

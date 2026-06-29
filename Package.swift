@@ -21,7 +21,8 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "RagnarNetworking", path: "../RagnarNetworking"
+            url: "https://github.com/JamesRagnar/RagnarNetworking",
+            branch: "main"
         )
     ],
     targets: [

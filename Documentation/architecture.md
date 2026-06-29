@@ -29,7 +29,7 @@ The package is not responsible for:
 ### `RagnarNetworking`
 
 - owns request transport and socket transport primitives
-- provides `APIClient`, `SocketIOClient`, and shared networking protocols
+- provides `APIClient`, socket transport implementations, and shared networking protocols
 - executes the interfaces defined by this package
 
 ### Your app

@@ -8,7 +8,7 @@
 import Foundation
 import RagnarNetworking
 
-/// Wraps SocketIOClient with the ABS-specific auth handshake.
+/// Wraps a socket transport with the ABS-specific auth handshake.
 ///
 /// Auth protocol: on every socket `.connected` transition, emits `AuthEvent` with the
 /// current JWT. Server responds with the private `InitEvent` (success) or `AuthFailedEvent`.
@@ -111,7 +111,7 @@ public actor ABSSocketSession {
     }
 
     /// Returns a typed `AsyncStream` for the given event type. Delegates directly to the
-    /// underlying `SocketIOClient`, so the stream survives reconnects without re-subscription.
+    /// underlying socket transport, so the stream survives reconnects without re-subscription.
     public func events<E: SocketEvent>(for type: E.Type) async -> AsyncStream<E.Schema> {
         await client.events(for: type)
     }
