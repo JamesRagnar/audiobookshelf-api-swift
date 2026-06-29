@@ -170,8 +170,7 @@ extension Series: Decodable {
         self.hasActiveBook = try container.decodeIfPresent(Bool.self, forKey: .hasActiveBook)
         self.hideFromContinueListening = try container.decodeIfPresent(Bool.self, forKey: .hideFromContinueListening)
         self.bookInProgressLastUpdate = try container.decodeIfPresent(Int.self, forKey: .bookInProgressLastUpdate)
-        let firstBookUnread = try container.decodeIfPresent(LibraryItem.self, forKey: .firstBookUnread)
-        self.firstBookUnread = firstBookUnread != nil ? [firstBookUnread!] : nil
+        self.firstBookUnread = try container.decodeIfPresent(LibraryItem.self, forKey: .firstBookUnread).map { [$0] }
     }
 }
 

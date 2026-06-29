@@ -25,7 +25,7 @@ public struct CloseOpenSession: Interface {
 
         public typealias Body = CloseBody
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

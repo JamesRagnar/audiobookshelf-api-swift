@@ -25,7 +25,7 @@ public struct SyncLocalSession: Interface {
 
         public typealias Body = LocalPlaybackSession
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

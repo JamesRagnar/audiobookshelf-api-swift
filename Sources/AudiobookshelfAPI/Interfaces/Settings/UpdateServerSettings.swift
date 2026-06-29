@@ -25,7 +25,7 @@ public struct UpdateServerSettings: Interface {
 
         public typealias Body = ServerSettingsUpdate
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 
@@ -75,6 +75,7 @@ public extension UpdateServerSettings.Parameters {
                 switch self {
                 case .cron(let value):
                     try container.encode(value)
+
                 case .disabled:
                     try container.encode(false)
                 }

@@ -25,7 +25,7 @@ public struct UploadBackup: Interface {
 
         public typealias Body = BinaryBody
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

@@ -99,6 +99,7 @@ public enum CollectionBooks {
         switch self {
         case .ids(let ids):
             return ids
+
         case .items(let items):
             return items.map { $0.id }
         }
@@ -109,6 +110,7 @@ public enum CollectionBooks {
         switch self {
         case .ids:
             return nil
+
         case .items(let items):
             return items
         }

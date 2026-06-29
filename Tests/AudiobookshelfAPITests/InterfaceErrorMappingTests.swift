@@ -7,14 +7,14 @@ import Testing
 struct InterfaceErrorMappingTests {
 
     @Test
-    func sendTestEmailMapsKnownErrors() {
-        let badRequest = captureResponseError(
+    func sendTestEmailMapsKnownErrors() throws {
+        let badRequest = try captureResponseError(
             for: SendTestEmail.self,
             statusCode: 400
         )
         #expect(badRequest?.statusCode == 400)
 
-        let forbidden = captureResponseError(
+        let forbidden = try captureResponseError(
             for: SendTestEmail.self,
             statusCode: 403
         )
@@ -22,8 +22,8 @@ struct InterfaceErrorMappingTests {
     }
 
     @Test
-    func validateCronExpressionMapsBadRequest() {
-        let badRequest = captureResponseError(
+    func validateCronExpressionMapsBadRequest() throws {
+        let badRequest = try captureResponseError(
             for: ValidateCronExpression.self,
             statusCode: 400,
             body: Data("Invalid cron expression".utf8)
@@ -32,8 +32,8 @@ struct InterfaceErrorMappingTests {
     }
 
     @Test
-    func updateNotificationSettingsMapsForbidden() {
-        let forbidden = captureResponseError(
+    func updateNotificationSettingsMapsForbidden() throws {
+        let forbidden = try captureResponseError(
             for: UpdateNotificationSettings.self,
             statusCode: 403
         )
@@ -41,8 +41,8 @@ struct InterfaceErrorMappingTests {
     }
 
     @Test
-    func getSearchProvidersMapsNotFoundForPre231Servers() {
-        let notFound = captureResponseError(
+    func getSearchProvidersMapsNotFoundForPre231Servers() throws {
+        let notFound = try captureResponseError(
             for: GetSearchProviders.self,
             statusCode: 404
         )
@@ -50,8 +50,8 @@ struct InterfaceErrorMappingTests {
     }
 
     @Test
-    func getOpenSessionMapsForbidden() {
-        let forbidden = captureResponseError(
+    func getOpenSessionMapsForbidden() throws {
+        let forbidden = try captureResponseError(
             for: GetOpenSession.self,
             statusCode: 403
         )
@@ -59,8 +59,8 @@ struct InterfaceErrorMappingTests {
     }
 
     @Test
-    func syncOpenSessionMapsForbidden() {
-        let forbidden = captureResponseError(
+    func syncOpenSessionMapsForbidden() throws {
+        let forbidden = try captureResponseError(
             for: SyncOpenSession.self,
             statusCode: 403
         )
@@ -68,8 +68,8 @@ struct InterfaceErrorMappingTests {
     }
 
     @Test
-    func closeOpenSessionMapsForbidden() {
-        let forbidden = captureResponseError(
+    func closeOpenSessionMapsForbidden() throws {
+        let forbidden = try captureResponseError(
             for: CloseOpenSession.self,
             statusCode: 403
         )
@@ -80,8 +80,8 @@ struct InterfaceErrorMappingTests {
         for interface: T.Type,
         statusCode: Int,
         body: Data = Data()
-    ) -> ResponseError? {
-        let response = makeResponse(statusCode: statusCode)
+    ) throws -> ResponseError? {
+        let response = try makeResponse(statusCode: statusCode)
 
         do {
             _ = try interface.handle((data: body, response: response))
@@ -91,13 +91,14 @@ struct InterfaceErrorMappingTests {
         }
     }
 
-    private func makeResponse(statusCode: Int) -> URLResponse {
-        HTTPURLResponse(
-            url: URL(string: "https://example.com")!,
+    private func makeResponse(statusCode: Int) throws -> URLResponse {
+        let url = try #require(URL(string: "https://example.com"))
+        return try #require(HTTPURLResponse(
+            url: url,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil
-        )!
+        ))
     }
 
 }

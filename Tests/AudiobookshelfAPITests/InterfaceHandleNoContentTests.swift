@@ -7,17 +7,17 @@ import Testing
 struct InterfaceHandleNoContentTests {
 
     @Test
-    func noContentInterfacesDecodeEmptyDataOn200() {
-        expectNoContentHandle(PurgeCacheAll.self)
-        expectNoContentHandle(PurgeItemsCache.self)
-        expectNoContentHandle(SendTestEmail.self)
-        expectNoContentHandle(UpdateNotificationSettings.self)
-        expectNoContentHandle(ValidateCronExpression.self)
-        expectNoContentHandle(DeleteSession.self)
+    func noContentInterfacesDecodeEmptyDataOn200() throws {
+        try expectNoContentHandle(PurgeCacheAll.self)
+        try expectNoContentHandle(PurgeItemsCache.self)
+        try expectNoContentHandle(SendTestEmail.self)
+        try expectNoContentHandle(UpdateNotificationSettings.self)
+        try expectNoContentHandle(ValidateCronExpression.self)
+        try expectNoContentHandle(DeleteSession.self)
     }
 
-    private func expectNoContentHandle<T: Interface>(_ interface: T.Type) {
-        let response = makeResponse(statusCode: 200)
+    private func expectNoContentHandle<T: Interface>(_ interface: T.Type) throws {
+        let response = try makeResponse(statusCode: 200)
 
         do {
             let decoded = try interface.handle((data: Data(), response: response))
@@ -27,13 +27,14 @@ struct InterfaceHandleNoContentTests {
         }
     }
 
-    private func makeResponse(statusCode: Int) -> URLResponse {
-        HTTPURLResponse(
-            url: URL(string: "https://example.com")!,
+    private func makeResponse(statusCode: Int) throws -> URLResponse {
+        let url = try #require(URL(string: "https://example.com"))
+        return try #require(HTTPURLResponse(
+            url: url,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil
-        )!
+        ))
     }
 
 }

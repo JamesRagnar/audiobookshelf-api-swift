@@ -22,9 +22,9 @@ struct BinaryInterfacesTests {
     }
 
     @Test
-    func binary200DecodesRawBytes() {
+    func binary200DecodesRawBytes() throws {
         let payload = Data([0x01, 0x02, 0x03])
-        let response = makeResponse(statusCode: 200)
+        let response = try makeResponse(statusCode: 200)
 
         do {
             let decoded = try GetHLSStreamFile.handle((data: payload, response: response))
@@ -35,8 +35,8 @@ struct BinaryInterfacesTests {
     }
 
     @Test
-    func binary204NoContentReturnsEmptyData() {
-        let response = makeResponse(statusCode: 204)
+    func binary204NoContentReturnsEmptyData() throws {
+        let response = try makeResponse(statusCode: 204)
 
         do {
             let decoded = try GetLibraryFile.handle((data: Data(), response: response))
@@ -55,6 +55,7 @@ struct BinaryInterfacesTests {
             switch outcome {
             case .decode:
                 isDecode = true
+
             default:
                 isDecode = false
             }
@@ -74,6 +75,7 @@ struct BinaryInterfacesTests {
             switch outcome {
             case .noContent:
                 isNoContent = true
+
             default:
                 isNoContent = false
             }
@@ -84,13 +86,14 @@ struct BinaryInterfacesTests {
         #expect(isNoContent)
     }
 
-    private func makeResponse(statusCode: Int) -> URLResponse {
-        HTTPURLResponse(
-            url: URL(string: "https://example.com")!,
+    private func makeResponse(statusCode: Int) throws -> URLResponse {
+        let url = try #require(URL(string: "https://example.com"))
+        return try #require(HTTPURLResponse(
+            url: url,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil
-        )!
+        ))
     }
 
 }

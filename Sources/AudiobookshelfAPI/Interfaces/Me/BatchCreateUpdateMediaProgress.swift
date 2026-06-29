@@ -86,7 +86,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
 
         public typealias Body = ArrayBody<ProgressItem>
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

@@ -29,7 +29,7 @@ public struct GetPersonalizedLibrary: Interface {
 
         public let headers: [String: String]? = nil
 
-        public let body: Body? = nil
+        public let body: Body = .init()
 
         public let authentication: AuthenticationType = .bearer
 
@@ -117,9 +117,11 @@ public extension GetPersonalizedLibrary {
             case .book, .podcast, .episode:
                 let libraryItems = try container.decode([LibraryItem].self, forKey: .entities)
                 self.entities = libraryItems.map { .libraryItem($0) }
+
             case .series:
                 let libraryItems = try container.decode([Series].self, forKey: .entities)
                 self.entities = libraryItems.map { .series($0) }
+
             case .authors:
                 let libraryItems = try container.decode([Author].self, forKey: .entities)
                 self.entities = libraryItems.map { .author($0) }
@@ -133,8 +135,10 @@ public extension GetPersonalizedLibrary {
             switch self {
             case .libraryItem(let item):
                 return item.id
+
             case .series(let series):
                 return series.id
+
             case .author(let author):
                 return author.id
             }

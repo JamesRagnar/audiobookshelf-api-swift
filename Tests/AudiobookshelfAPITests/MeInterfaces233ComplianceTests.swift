@@ -7,25 +7,25 @@ import Testing
 struct MeInterfaces233ComplianceTests {
 
     @Test(arguments: [400, 403, 404])
-    func bookmarkEndpointsMapErrorStatusCodes(statusCode: Int) {
-        assertMappedError(CreateBookmark.self, statusCode: statusCode)
-        assertMappedError(UpdateBookmark.self, statusCode: statusCode)
-        assertMappedError(DeleteBookmark.self, statusCode: statusCode)
+    func bookmarkEndpointsMapErrorStatusCodes(statusCode: Int) throws {
+        try assertMappedError(CreateBookmark.self, statusCode: statusCode)
+        try assertMappedError(UpdateBookmark.self, statusCode: statusCode)
+        try assertMappedError(DeleteBookmark.self, statusCode: statusCode)
     }
 
     @Test(arguments: [403, 404])
-    func getItemListeningSessionsMapsAccessAndNotFound(statusCode: Int) {
-        assertMappedError(GetItemListeningSessions.self, statusCode: statusCode)
+    func getItemListeningSessionsMapsAccessAndNotFound(statusCode: Int) throws {
+        try assertMappedError(GetItemListeningSessions.self, statusCode: statusCode)
     }
 
     @Test
-    func removeMediaProgressMapsNotFound() {
-        assertMappedError(RemoveMediaProgress.self, statusCode: 404)
+    func removeMediaProgressMapsNotFound() throws {
+        try assertMappedError(RemoveMediaProgress.self, statusCode: 404)
     }
 
     @Test(arguments: [400, 404])
-    func patchMediaProgressMapsValidationAndNotFound(statusCode: Int) {
-        assertMappedError(PatchMediaProgress.self, statusCode: statusCode)
+    func patchMediaProgressMapsValidationAndNotFound(statusCode: Int) throws {
+        try assertMappedError(PatchMediaProgress.self, statusCode: statusCode)
     }
 
     @Test
@@ -71,8 +71,8 @@ struct MeInterfaces233ComplianceTests {
         _ interface: T.Type,
         statusCode: Int,
         body: Data = Data()
-    ) {
-        let error = captureResponseError(for: interface, statusCode: statusCode, body: body)
+    ) throws {
+        let error = try captureResponseError(for: interface, statusCode: statusCode, body: body)
         #expect(error?.statusCode == statusCode)
     }
 
@@ -80,22 +80,24 @@ struct MeInterfaces233ComplianceTests {
         for interface: T.Type,
         statusCode: Int,
         body: Data = Data()
-    ) -> ResponseError? {
+    ) throws -> ResponseError? {
+        let response = try makeResponse(statusCode: statusCode)
         do {
-            _ = try interface.handle((data: body, response: makeResponse(statusCode: statusCode)))
+            _ = try interface.handle((data: body, response: response))
             return nil
         } catch let error {
             return error
         }
     }
 
-    private func makeResponse(statusCode: Int) -> URLResponse {
-        HTTPURLResponse(
-            url: URL(string: "https://example.com")!,
+    private func makeResponse(statusCode: Int) throws -> URLResponse {
+        let url = try #require(URL(string: "https://example.com"))
+        return try #require(HTTPURLResponse(
+            url: url,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil
-        )!
+        ))
     }
 
 }

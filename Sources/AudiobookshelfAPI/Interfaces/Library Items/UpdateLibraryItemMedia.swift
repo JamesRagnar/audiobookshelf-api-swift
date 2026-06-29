@@ -25,7 +25,7 @@ public struct UpdateLibraryItemMedia: Interface {
 
         public typealias Body = LibraryItemMediaPayload
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

@@ -1,10 +1,14 @@
 name: Test
 
+permissions:
+  contents: read
+
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
+    types: [opened, reopened, synchronize]
   push:
-    branches: [ main ]
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,33 +18,43 @@ jobs:
   swiftlint:
     name: SwiftLint
     runs-on: macos-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Run SwiftLint
-        uses: cirruslabs/swiftlint-action@v1
+      - uses: actions/checkout@v4
+      - uses: cirruslabs/swiftlint-action@v1
         with:
           version: latest
 
-  test:
-    name: Test - macOS (Swift ${{ matrix.swift }})
+  unit-tests:
+    name: Unit tests (Swift ${{ matrix.swift }})
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - xcode: Xcode_16.2
+            swift: "6.0"
+          - xcode: Xcode_16.4
+            swift: "6.1"
+          - xcode: Xcode_26.3
+            swift: "6.2"
+    env:
+      DEVELOPER_DIR: /Applications/${{ matrix.xcode }}.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: swift test -Xswiftc -warnings-as-errors --explicit-target-dependency-import-check error
+
+  platform-build:
+    name: Build (${{ matrix.platform }})
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        swift: ["6.0", "6.1", "6.2"]
-
+        platform: [ios, tvos, watchos, visionos, macos]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Swift
-        uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: "${{ matrix.swift }}"
-
-      - name: Run Tests
+      - uses: actions/checkout@v4
+      - name: Build
         run: |
-          swift test --enable-code-coverage
+          xcodebuild -scheme AudiobookshelfAPI \
+            -destination "generic/platform=${{ matrix.platform }}" \
+            build

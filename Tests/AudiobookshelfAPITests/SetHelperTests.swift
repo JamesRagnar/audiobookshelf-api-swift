@@ -23,21 +23,19 @@ struct SetHelperTests {
     }
 
     @Test
-    func joinedDefaultSeparatorIncludesAllValues() {
+    func joinedDefaultSeparatorIncludesAllValues() throws {
         let set: Set<TestToken> = [.alpha, .beta, .gamma]
-        let joined = set.joined()
-        #expect(joined != nil)
-        let parts = Set(joined!.split(separator: ",").map(String.init))
+        let joined = try #require(set.joined())
+        let parts = Set(joined.split(separator: ",").map(String.init))
         #expect(parts == ["alpha", "beta", "gamma"])
     }
 
     @Test
-    func joinedCustomSeparatorUsesProvidedSeparator() {
+    func joinedCustomSeparatorUsesProvidedSeparator() throws {
         let set: Set<TestToken> = [.alpha, .beta]
-        let joined = set.joined(separator: "|")
-        #expect(joined != nil)
-        #expect(joined!.contains("|"))
-        let parts = Set(joined!.split(separator: "|").map(String.init))
+        let joined = try #require(set.joined(separator: "|"))
+        #expect(joined.contains("|"))
+        let parts = Set(joined.split(separator: "|").map(String.init))
         #expect(parts == ["alpha", "beta"])
     }
 

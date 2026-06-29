@@ -27,7 +27,7 @@ public struct UpdateAuthSettings: Interface {
 
         public typealias Body = AuthSettingsUpdate
 
-        public let body: Body?
+        public let body: Body
 
         public let authentication: AuthenticationType = .bearer
 

@@ -224,6 +224,7 @@ extension LibraryItem: Decodable {
         switch mediaType {
         case .book:
             self.media = .book(try container.decode(Book.self, forKey: .media))
+
         case .podcast:
             self.media = .podcast(try container.decode(Podcast.self, forKey: .media))
         }

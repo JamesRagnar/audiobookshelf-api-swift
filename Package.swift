@@ -1,13 +1,15 @@
-// swift-tools-version: 6.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 5.10
 
 import PackageDescription
 
 let package = Package(
     name: "AudiobookshelfAPI",
     platforms: [
-        .iOS(.v17),
-        .macOS(.v14),
+        .iOS(.v16),
+        .macOS(.v13),
+        .tvOS(.v16),
+        .watchOS(.v9),
+        .visionOS(.v1),
     ],
     products: [
         .library(
@@ -19,7 +21,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/JamesRagnar/RagnarNetworking.git",
+            url: "https://github.com/JamesRagnar/RagnarNetworking",
             branch: "main"
         )
     ],
