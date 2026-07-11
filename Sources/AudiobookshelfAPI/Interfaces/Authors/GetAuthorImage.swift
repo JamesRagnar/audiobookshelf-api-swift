@@ -15,27 +15,7 @@ public struct GetAuthorImage: Interface {
 
     public struct Parameters: RequestParameters {
 
-        public enum Format: String {
-
-            case webp
-
-            case jpeg
-
-        }
-
-        struct Auth {
-            let id: String
-            let name: String
-
-            var imageResource: ImageResource {
-                .author(id)
-            }
-        }
-
-        enum ImageResource {
-            case libraryItem(String)
-            case author(String)
-        }
+        public typealias Format = ArtworkFormat
 
         public let method: RequestMethod = .get
 
@@ -47,7 +27,20 @@ public struct GetAuthorImage: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationType = .none
+
+        /// Get Author Image Parameters
+        ///
+        /// - Parameters:
+        ///   - authorID: The ID of the author.
+        ///   - options: Scaling and cache-busting options for the requested image.
+        public init(
+            authorID: String,
+            options: ArtworkRequestOptions = .init()
+        ) {
+            self.path = "/api/authors/\(authorID)/image"
+            self.queryItems = options.queryItems
+        }
 
         /// Get Author Image Parameters
         ///
@@ -62,19 +55,20 @@ public struct GetAuthorImage: Interface {
             authorID: String,
             width: Int? = nil,
             height: Int? = nil,
-            format: Format? = nil,
+            format: ArtworkFormat? = nil,
             raw: Bool? = nil,
             timestamp: Int? = nil
         ) {
-            self.path = "/api/authors/\(authorID)/image"
-
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("width", width?.description)
-            queryItems.setIfPresent("height", height?.description)
-            queryItems.setIfPresent("format", format?.rawValue)
-            queryItems.setIfPresent("raw", raw?.binaryString)
-            queryItems.setIfPresent("ts", timestamp?.description)
-            self.queryItems = queryItems
+            self.init(
+                authorID: authorID,
+                options: ArtworkRequestOptions(
+                    width: width,
+                    height: height,
+                    format: format,
+                    timestamp: timestamp,
+                    raw: raw
+                )
+            )
         }
 
     }
