@@ -15,13 +15,7 @@ public struct GetLibraryItemCover: Interface {
 
     public struct Parameters: RequestParameters {
 
-        public enum Format: String {
-
-            case webp
-
-            case jpeg
-
-        }
+        public typealias Format = ArtworkFormat
 
         public let method: RequestMethod = .get
 
@@ -33,7 +27,20 @@ public struct GetLibraryItemCover: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationType = .none
+
+        /// Get Library Item Cover Parameters
+        ///
+        /// - Parameters:
+        ///   - itemID: The ID of the library item.
+        ///   - options: Scaling and cache-busting options for the requested image.
+        public init(
+            itemID: String,
+            options: ArtworkRequestOptions = .init()
+        ) {
+            self.path = "/api/items/\(itemID)/cover"
+            self.queryItems = options.queryItems
+        }
 
         /// Get Library Item Cover Parameters
         ///
@@ -48,19 +55,20 @@ public struct GetLibraryItemCover: Interface {
             itemID: String,
             width: Int? = nil,
             height: Int? = nil,
-            format: Format? = nil,
+            format: ArtworkFormat? = nil,
             raw: Bool? = nil,
             timestamp: Int? = nil
         ) {
-            self.path = "/api/items/\(itemID)/cover"
-
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("width", width?.description)
-            queryItems.setIfPresent("height", height?.description)
-            queryItems.setIfPresent("format", format?.rawValue)
-            queryItems.setIfPresent("raw", raw?.binaryString)
-            queryItems.setIfPresent("ts", timestamp?.description)
-            self.queryItems = queryItems
+            self.init(
+                itemID: itemID,
+                options: ArtworkRequestOptions(
+                    width: width,
+                    height: height,
+                    format: format,
+                    timestamp: timestamp,
+                    raw: raw
+                )
+            )
         }
 
     }
