@@ -19,7 +19,7 @@ public struct GetAllTags: Interface {
 
         public let path: String = "/api/tags"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

@@ -27,7 +27,7 @@ public struct GetAuthor: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -49,9 +49,9 @@ public struct GetAuthor: Interface {
         ) {
             self.path = "/api/authors/\(authorID)"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("include", include?.joined())
-            queryItems.setIfPresent("library", libraryID)
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("include", include?.joined())
+            queryItems.appendIfPresent("library", libraryID)
             self.queryItems = queryItems
         }
 

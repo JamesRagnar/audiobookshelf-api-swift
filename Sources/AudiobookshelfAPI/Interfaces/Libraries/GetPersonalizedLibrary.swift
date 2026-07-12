@@ -25,7 +25,7 @@ public struct GetPersonalizedLibrary: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -46,9 +46,9 @@ public struct GetPersonalizedLibrary: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)/personalized"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("limit", limit?.description)
-            queryItems.setIfPresent("include", include?.joined())
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("limit", limit?.description)
+            queryItems.appendIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }
 

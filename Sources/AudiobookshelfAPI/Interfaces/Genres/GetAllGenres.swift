@@ -19,7 +19,7 @@ public struct GetAllGenres: Interface {
 
         public let path: String = "/api/genres"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

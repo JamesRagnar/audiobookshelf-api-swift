@@ -42,14 +42,14 @@ public struct ArtworkRequestOptions: Sendable {
     }
 
     /// Serializes these options to query items, omitting `raw` entirely unless it is `true`.
-    var queryItems: [String: String?] {
-        var queryItems: [String: String?] = [:]
-        queryItems.setIfPresent("width", width?.description)
-        queryItems.setIfPresent("height", height?.description)
-        queryItems.setIfPresent("format", format?.rawValue)
-        queryItems.setIfPresent("ts", timestamp?.description)
+    var queryItems: [URLQueryItem] {
+        var queryItems: [URLQueryItem] = []
+        queryItems.appendIfPresent("width", width?.description)
+        queryItems.appendIfPresent("height", height?.description)
+        queryItems.appendIfPresent("format", format?.rawValue)
+        queryItems.appendIfPresent("ts", timestamp?.description)
         if raw == true {
-            queryItems["raw"] = "1"
+            queryItems.append(URLQueryItem(name: "raw", value: "1"))
         }
         return queryItems
     }

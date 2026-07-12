@@ -19,7 +19,7 @@ public struct GetUserListeningSessions: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -33,13 +33,9 @@ public struct GetUserListeningSessions: Interface {
             itemsPerPage: Int? = nil
         ) {
             self.path = "/api/users/\(userId)/listening-sessions"
-            var items: [String: String?] = [:]
-            if let page = page {
-                items["page"] = String(page)
-            }
-            if let itemsPerPage = itemsPerPage {
-                items["itemsPerPage"] = String(itemsPerPage)
-            }
+            var items: [URLQueryItem] = []
+            items.appendIfPresent("page", page?.description)
+            items.appendIfPresent("itemsPerPage", itemsPerPage?.description)
             self.queryItems = items.isEmpty ? nil : items
         }
 

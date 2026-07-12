@@ -19,7 +19,7 @@ public struct SearchExternalAuthors: Interface {
 
         public let path: String = "/api/search/authors"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -31,7 +31,7 @@ public struct SearchExternalAuthors: Interface {
         ///
         /// - Parameter query: The author name to search for.
         public init(query: String) {
-            self.queryItems = ["q": query]
+            self.queryItems = [URLQueryItem(name: "q", value: query)]
         }
 
     }

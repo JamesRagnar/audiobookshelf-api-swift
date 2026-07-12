@@ -25,7 +25,7 @@ public struct GetLibraryItems: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -58,15 +58,15 @@ public struct GetLibraryItems: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)/items"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("limit", limit?.description)
-            queryItems.setIfPresent("page", page?.description)
-            queryItems.setIfPresent("sort", sort)
-            queryItems.setIfPresent("desc", descending?.binaryString)
-            queryItems.setIfPresent("filter", filter)
-            queryItems.setIfPresent("minified", minified?.binaryString)
-            queryItems.setIfPresent("collapseseries", collapseSeries?.binaryString)
-            queryItems.setIfPresent("include", include?.joined())
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("limit", limit?.description)
+            queryItems.appendIfPresent("page", page?.description)
+            queryItems.appendIfPresent("sort", sort)
+            queryItems.appendIfPresent("desc", descending?.binaryString)
+            queryItems.appendIfPresent("filter", filter)
+            queryItems.appendIfPresent("minified", minified?.binaryString)
+            queryItems.appendIfPresent("collapseseries", collapseSeries?.binaryString)
+            queryItems.appendIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }
 

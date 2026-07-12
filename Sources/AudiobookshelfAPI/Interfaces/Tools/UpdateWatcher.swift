@@ -19,7 +19,7 @@ public struct UpdateWatcher: Interface {
 
         public let path: String = "/api/watcher/update"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

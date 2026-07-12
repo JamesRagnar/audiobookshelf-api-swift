@@ -19,7 +19,7 @@ public struct UploadFile: Interface {
 
         public let path: String = "/api/upload"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

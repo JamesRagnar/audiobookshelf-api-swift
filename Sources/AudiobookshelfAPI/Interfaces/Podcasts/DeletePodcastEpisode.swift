@@ -19,7 +19,7 @@ public struct DeletePodcastEpisode: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -40,11 +40,9 @@ public struct DeletePodcastEpisode: Interface {
         ) {
             self.path = "/api/podcasts/\(podcastId)/episode/\(episodeId)"
 
-            if let hardDelete = hardDelete {
-                self.queryItems = ["hard": hardDelete ? "1" : "0"]
-            } else {
-                self.queryItems = nil
-            }
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("hard", hardDelete.map { $0 ? "1" : "0" })
+            self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
 
     }

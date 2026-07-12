@@ -19,7 +19,7 @@ public struct Logout: Interface {
 
         public let path: String = "/logout"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]?
 

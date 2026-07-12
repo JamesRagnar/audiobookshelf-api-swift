@@ -19,7 +19,7 @@ public struct SearchPodcastEpisode: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -34,7 +34,7 @@ public struct SearchPodcastEpisode: Interface {
         ///   - title: The episode title to search for.
         public init(podcastId: String, title: String) {
             self.path = "/api/podcasts/\(podcastId)/search-episode"
-            self.queryItems = ["title": title]
+            self.queryItems = [URLQueryItem(name: "title", value: title)]
         }
     }
 

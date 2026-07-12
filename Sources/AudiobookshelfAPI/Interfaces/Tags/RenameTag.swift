@@ -19,7 +19,7 @@ public struct RenameTag: Interface {
 
         public let path: String = "/api/tags/rename"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

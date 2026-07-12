@@ -19,7 +19,7 @@ public struct GetMediaShare: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -38,10 +38,8 @@ public struct GetMediaShare: Interface {
         ) {
             self.path = "/public/share/\(slug)"
 
-            var queryItems: [String: String?] = [:]
-            if let startTime = startTime {
-                queryItems["t"] = String(startTime)
-            }
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("t", startTime?.description)
             self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
 

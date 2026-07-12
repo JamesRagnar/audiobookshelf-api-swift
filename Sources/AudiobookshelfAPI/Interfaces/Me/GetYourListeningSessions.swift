@@ -19,7 +19,7 @@ public struct GetYourListeningSessions: Interface {
 
         public let path: String = "/api/me/listening-sessions"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -37,8 +37,8 @@ public struct GetYourListeningSessions: Interface {
             page: Int
         ) {
             self.queryItems = [
-                "itemsPerPage": itemsPerPage.description,
-                "page": page.description
+                URLQueryItem(name: "itemsPerPage", value: itemsPerPage.description),
+                URLQueryItem(name: "page", value: page.description)
             ]
         }
 

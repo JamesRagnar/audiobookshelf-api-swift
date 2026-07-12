@@ -25,7 +25,7 @@ public struct GetCollection: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -44,8 +44,8 @@ public struct GetCollection: Interface {
         ) {
             self.path = "/api/collections/\(collectionID)"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("include", include?.joined())
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }
 

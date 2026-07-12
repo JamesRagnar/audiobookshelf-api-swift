@@ -19,7 +19,7 @@ public struct GetRecentEpisodes: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -39,9 +39,9 @@ public struct GetRecentEpisodes: Interface {
         ) {
             self.path = "/api/libraries/\(libraryId)/recent-episodes"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("limit", limit?.description)
-            queryItems.setIfPresent("page", page?.description)
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("limit", limit?.description)
+            queryItems.appendIfPresent("page", page?.description)
             self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
 

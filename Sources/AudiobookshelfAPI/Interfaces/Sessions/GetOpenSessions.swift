@@ -19,7 +19,7 @@ public struct GetOpenSessions: Interface {
 
         public let path: String = "/api/sessions/open"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

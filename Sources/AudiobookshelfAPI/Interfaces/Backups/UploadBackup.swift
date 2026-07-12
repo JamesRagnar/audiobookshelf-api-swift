@@ -19,7 +19,7 @@ public struct UploadBackup: Interface {
 
         public let path: String = "/api/backups/upload"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

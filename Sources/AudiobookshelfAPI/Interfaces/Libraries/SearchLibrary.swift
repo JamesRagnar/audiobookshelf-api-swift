@@ -19,7 +19,7 @@ public struct SearchLibrary: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -40,10 +40,9 @@ public struct SearchLibrary: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)/search"
 
-            self.queryItems = [
-                "q": query,
-                "limit": limit?.description
-            ]
+            var queryItems: [URLQueryItem] = [URLQueryItem(name: "q", value: query)]
+            queryItems.appendIfPresent("limit", limit?.description)
+            self.queryItems = queryItems
         }
     }
 

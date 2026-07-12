@@ -19,7 +19,7 @@ public struct ScanLibraryFolders: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -38,8 +38,8 @@ public struct ScanLibraryFolders: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)/scan"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("force", force?.binaryString)
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("force", force?.binaryString)
             self.queryItems = queryItems
         }
 

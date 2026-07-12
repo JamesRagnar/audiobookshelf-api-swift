@@ -19,7 +19,7 @@ public struct DownloadMultipleLibraryItems: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -29,7 +29,7 @@ public struct DownloadMultipleLibraryItems: Interface {
 
         public init(libraryId: String, libraryItemIds: [String]) {
             self.path = "/api/libraries/\(libraryId)/download"
-            self.queryItems = ["libraryItemIds": libraryItemIds.joined(separator: ",")]
+            self.queryItems = [URLQueryItem(name: "libraryItemIds", value: libraryItemIds.joined(separator: ","))]
         }
 
     }
