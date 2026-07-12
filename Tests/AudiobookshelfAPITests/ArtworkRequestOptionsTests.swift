@@ -17,7 +17,7 @@ struct ArtworkRequestOptionsTests {
     @Test
     func libraryItemCoverNoOptionsProducesNoQueryItems() {
         let params = GetLibraryItemCover.Parameters(itemID: "item-1")
-        let items = params.queryItems ?? [:]
+        let items = params.queryItems ?? []
         #expect(items.isEmpty)
     }
 
@@ -81,7 +81,7 @@ struct ArtworkRequestOptionsTests {
     @Test
     func authorImageNoOptionsProducesNoQueryItems() {
         let params = GetAuthorImage.Parameters(authorID: "author-1")
-        let items = params.queryItems ?? [:]
+        let items = params.queryItems ?? []
         #expect(items.isEmpty)
     }
 

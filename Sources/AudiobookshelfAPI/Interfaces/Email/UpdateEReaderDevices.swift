@@ -19,7 +19,7 @@ public struct UpdateEReaderDevices: Interface {
 
         public let path: String = "/api/emails/ereader-devices"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

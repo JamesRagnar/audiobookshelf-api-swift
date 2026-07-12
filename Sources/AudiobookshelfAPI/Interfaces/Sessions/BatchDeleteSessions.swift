@@ -19,7 +19,7 @@ public struct BatchDeleteSessions: Interface {
 
         public let path: String = "/api/sessions/batch/delete"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

@@ -19,7 +19,7 @@ public struct GetLibraryItemsInProgress: Interface {
 
         public let path: String = "/api/me/items-in-progress"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -33,8 +33,8 @@ public struct GetLibraryItemsInProgress: Interface {
         public init(
             limit: Int? = nil
         ) {
-            var queryItems = [String: String?]()
-            queryItems.setIfPresent("limit", limit?.description)
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("limit", limit?.description)
             self.queryItems = queryItems
         }
 

@@ -19,7 +19,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let path: String = "/api/session/local-all"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

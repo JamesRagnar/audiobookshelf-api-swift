@@ -19,7 +19,7 @@ public struct ValidateCronExpression: Interface {
 
         public let path: String = "/api/validate-cron"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

@@ -19,7 +19,7 @@ public struct GetAllSessions: Interface {
 
         public let path: String = "/api/sessions"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

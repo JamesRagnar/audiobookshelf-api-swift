@@ -19,7 +19,7 @@ public struct Healthcheck: Interface {
 
         public let path: String = "/healthcheck"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

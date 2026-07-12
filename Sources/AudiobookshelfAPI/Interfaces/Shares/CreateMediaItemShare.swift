@@ -19,7 +19,7 @@ public struct CreateMediaItemShare: Interface {
 
         public let path: String = "/api/share/mediaitem"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

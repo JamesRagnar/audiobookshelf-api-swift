@@ -19,7 +19,7 @@ public struct GetOnlineUsers: Interface {
 
         public let path: String = "/api/users/online"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

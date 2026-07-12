@@ -19,7 +19,7 @@ public struct GetYourUser: Interface {
 
         public let path: String = "/api/me"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

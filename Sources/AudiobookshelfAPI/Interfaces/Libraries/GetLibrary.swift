@@ -23,7 +23,7 @@ public struct GetLibrary: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -42,8 +42,8 @@ public struct GetLibrary: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)"
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("include", include?.joined())
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("include", include?.joined())
             self.queryItems = queryItems
         }
 

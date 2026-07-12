@@ -19,7 +19,7 @@ public struct SearchCovers: Interface {
 
         public let path: String = "/api/search/covers"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -38,15 +38,11 @@ public struct SearchCovers: Interface {
             provider: String,
             asin: String? = nil
         ) {
-            var items: [String: String?] = [
-                "q": query,
-                "provider": provider
+            var items: [URLQueryItem] = [
+                URLQueryItem(name: "q", value: query),
+                URLQueryItem(name: "provider", value: provider)
             ]
-
-            if let asin = asin {
-                items["asin"] = asin
-            }
-
+            items.appendIfPresent("asin", asin)
             self.queryItems = items
         }
     }

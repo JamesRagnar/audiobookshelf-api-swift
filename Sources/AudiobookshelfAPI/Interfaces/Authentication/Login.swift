@@ -19,7 +19,7 @@ public struct Login: Interface {
 
         public let path: String = "/login"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]?
 

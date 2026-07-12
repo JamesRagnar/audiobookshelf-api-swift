@@ -19,7 +19,7 @@ public struct SearchExternalPodcasts: Interface {
 
         public let path: String = "/api/search/podcast"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -31,7 +31,7 @@ public struct SearchExternalPodcasts: Interface {
         ///
         /// - Parameter term: The search term for podcast search.
         public init(term: String) {
-            self.queryItems = ["term": term]
+            self.queryItems = [URLQueryItem(name: "term", value: term)]
         }
 
     }

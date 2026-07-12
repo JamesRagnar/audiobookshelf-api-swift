@@ -18,7 +18,7 @@ struct GetLibraryItemsParametersTests {
     @Test
     func noOptionalParamsProducesNoQueryItems() {
         let params = GetLibraryItems.Parameters(libraryID: "lib-1")
-        let items = params.queryItems ?? [:]
+        let items = params.queryItems ?? []
         #expect(items["limit"] == nil)
         #expect(items["page"] == nil)
         #expect(items["sort"] == nil)

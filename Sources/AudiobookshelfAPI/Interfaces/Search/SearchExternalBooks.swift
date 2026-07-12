@@ -19,7 +19,7 @@ public struct SearchExternalBooks: Interface {
 
         public let path: String = "/api/search/books"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -38,16 +38,10 @@ public struct SearchExternalBooks: Interface {
             author: String? = nil,
             provider: String? = nil
         ) {
-            var items: [String: String?] = [:]
-            if let title = title {
-                items["title"] = title
-            }
-            if let author = author {
-                items["author"] = author
-            }
-            if let provider = provider {
-                items["provider"] = provider
-            }
+            var items: [URLQueryItem] = []
+            items.appendIfPresent("title", title)
+            items.appendIfPresent("author", author)
+            items.appendIfPresent("provider", provider)
             self.queryItems = items.isEmpty ? nil : items
         }
 

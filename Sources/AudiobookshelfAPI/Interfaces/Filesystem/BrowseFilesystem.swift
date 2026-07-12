@@ -19,7 +19,7 @@ public struct BrowseFilesystem: Interface {
 
         public let path: String = "/api/filesystem"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -28,11 +28,9 @@ public struct BrowseFilesystem: Interface {
         public let authentication: AuthenticationType = .bearer
 
         public init(path: String? = nil) {
-            if let path = path {
-                self.queryItems = ["path": path]
-            } else {
-                self.queryItems = nil
-            }
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("path", path)
+            self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
 
     }

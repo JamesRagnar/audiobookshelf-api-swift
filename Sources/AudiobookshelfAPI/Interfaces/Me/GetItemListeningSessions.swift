@@ -19,7 +19,7 @@ public struct GetItemListeningSessions: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -45,9 +45,9 @@ public struct GetItemListeningSessions: Interface {
                 self.path = "/api/me/item/listening-sessions/\(libraryItemId)"
             }
 
-            var queryItems: [String: String?] = [:]
-            queryItems.setIfPresent("itemsPerPage", itemsPerPage?.description)
-            queryItems.setIfPresent("page", page?.description)
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("itemsPerPage", itemsPerPage?.description)
+            queryItems.appendIfPresent("page", page?.description)
             self.queryItems = queryItems
         }
 

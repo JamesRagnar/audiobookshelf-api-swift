@@ -19,7 +19,7 @@ public struct GetTasks: Interface {
 
         public let path: String = "/api/tasks"
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -32,9 +32,9 @@ public struct GetTasks: Interface {
         /// - Parameters:
         ///   - includeQueue: Whether to include queued task data.
         public init(includeQueue: Bool = false) {
-            var queryItems: [String: String?] = [:]
+            var queryItems: [URLQueryItem] = []
             if includeQueue {
-                queryItems["include"] = "queue"
+                queryItems.append(URLQueryItem(name: "include", value: "queue"))
             }
             self.queryItems = queryItems.isEmpty ? nil : queryItems
         }

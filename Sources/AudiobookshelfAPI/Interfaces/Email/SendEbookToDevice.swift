@@ -19,7 +19,7 @@ public struct SendEbookToDevice: Interface {
 
         public let path: String = "/api/emails/send-ebook-to-device"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

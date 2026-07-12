@@ -19,7 +19,7 @@ public struct PingServer: Interface {
 
         public let path: String = "/ping"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

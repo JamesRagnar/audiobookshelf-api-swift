@@ -20,7 +20,7 @@ public struct GetSearchProviders: Interface {
 
         public let path: String = "/api/search/providers"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

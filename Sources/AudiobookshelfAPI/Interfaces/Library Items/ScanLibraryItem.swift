@@ -19,7 +19,7 @@ public struct ScanLibraryItem: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

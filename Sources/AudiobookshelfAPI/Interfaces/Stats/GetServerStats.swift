@@ -19,7 +19,7 @@ public struct GetServerStats: Interface {
 
         public let path: String = "/api/stats/server"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

@@ -19,7 +19,7 @@ public struct BatchEmbedMetadata: Interface {
 
         public let path: String = "/api/tools/batch/embed-metadata"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

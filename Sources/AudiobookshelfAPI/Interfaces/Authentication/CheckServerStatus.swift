@@ -19,7 +19,7 @@ public struct CheckServerStatus: Interface {
 
         public let path: String = "/status"
 
-        public let queryItems: [String: String?]? = nil
+        public let queryItems: [URLQueryItem]? = nil
 
         public let headers: [String: String]? = nil
 

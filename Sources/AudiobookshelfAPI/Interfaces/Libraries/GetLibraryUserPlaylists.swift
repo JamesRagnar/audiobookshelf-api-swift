@@ -19,7 +19,7 @@ public struct GetLibraryUserPlaylists: Interface {
 
         public let path: String
 
-        public let queryItems: [String: String?]?
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -41,8 +41,8 @@ public struct GetLibraryUserPlaylists: Interface {
         ) {
             self.path = "/api/libraries/\(libraryID)/playlists"
             self.queryItems = [
-                "limit": limit.description,
-                "page": page.description
+                URLQueryItem(name: "limit", value: limit.description),
+                URLQueryItem(name: "page", value: page.description)
             ]
         }
 
