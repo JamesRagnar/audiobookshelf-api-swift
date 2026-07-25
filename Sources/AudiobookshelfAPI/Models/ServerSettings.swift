@@ -72,12 +72,6 @@ public struct ServerSettings {
     /// OpenID Connect logout URL.
     public let authOpenIDLogoutURL: String?
 
-    /// OpenID Connect client ID.
-    public let authOpenIDClientID: String?
-
-    /// OpenID Connect client secret.
-    public let authOpenIDClientSecret: String?
-
     /// Token signing algorithm for OpenID Connect (e.g., RS256).
     public let authOpenIDTokenSigningAlgorithm: String?
 
@@ -92,15 +86,6 @@ public struct ServerSettings {
 
     /// Field to match existing users by for OpenID authentication.
     public let authOpenIDMatchExistingBy: String?
-
-    /// Mobile redirect URIs for OpenID Connect.
-    public let authOpenIDMobileRedirectURIs: [String]?
-
-    /// OpenID Connect group claim for role mapping.
-    public let authOpenIDGroupClaim: String?
-
-    /// OpenID Connect advanced permissions claim.
-    public let authOpenIDAdvancedPermsClaim: String?
 
     /// The cron expression for when to do automatic backups.
     public let backupSchedule: String?
@@ -191,16 +176,11 @@ extension ServerSettings: Decodable {
         case authOpenIDUserInfoURL
         case authOpenIDJwksURL
         case authOpenIDLogoutURL
-        case authOpenIDClientID
-        case authOpenIDClientSecret
         case authOpenIDTokenSigningAlgorithm
         case authOpenIDButtonText
         case authOpenIDAutoLaunch
         case authOpenIDAutoRegister
         case authOpenIDMatchExistingBy
-        case authOpenIDMobileRedirectURIs
-        case authOpenIDGroupClaim
-        case authOpenIDAdvancedPermsClaim
         case backupSchedule
         case backupMaxKeepDays
         case backupsToKeep
@@ -246,8 +226,6 @@ extension ServerSettings: Decodable {
         authOpenIDUserInfoURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDUserInfoURL)
         authOpenIDJwksURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDJwksURL)
         authOpenIDLogoutURL = try container.decodeIfPresent(String.self, forKey: .authOpenIDLogoutURL)
-        authOpenIDClientID = try container.decodeIfPresent(String.self, forKey: .authOpenIDClientID)
-        authOpenIDClientSecret = try container.decodeIfPresent(String.self, forKey: .authOpenIDClientSecret)
         authOpenIDTokenSigningAlgorithm = try container.decodeIfPresent(
             String.self,
             forKey: .authOpenIDTokenSigningAlgorithm
@@ -256,12 +234,6 @@ extension ServerSettings: Decodable {
         authOpenIDAutoLaunch = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDAutoLaunch)
         authOpenIDAutoRegister = try container.decodeIfPresent(Bool.self, forKey: .authOpenIDAutoRegister)
         authOpenIDMatchExistingBy = try container.decodeIfPresent(String.self, forKey: .authOpenIDMatchExistingBy)
-        authOpenIDMobileRedirectURIs = try container.decodeIfPresent(
-            [String].self,
-            forKey: .authOpenIDMobileRedirectURIs
-        )
-        authOpenIDGroupClaim = try container.decodeIfPresent(String.self, forKey: .authOpenIDGroupClaim)
-        authOpenIDAdvancedPermsClaim = try container.decodeIfPresent(String.self, forKey: .authOpenIDAdvancedPermsClaim)
 
         // backupSchedule can be either a String (cron expression) or Bool (false when disabled)
         if let schedule = try? container.decode(String.self, forKey: .backupSchedule) {
