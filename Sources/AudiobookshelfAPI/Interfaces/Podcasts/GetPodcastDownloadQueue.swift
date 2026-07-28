@@ -38,18 +38,31 @@ public struct GetPodcastDownloadQueue: Interface {
 
     // MARK: Response
 
-    public typealias Response = [PodcastEpisodeDownload]
+    public struct Response: Decodable, Sendable {
+
+        /// The queued downloads for this podcast. Does not include an in-progress download.
+        public let downloads: [PodcastEpisodeDownload]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        /// You do not have access to this library item.
+        case forbidden
+
         case notFound
+
+        /// The library item could not be loaded.
+        case internalServerError
 
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
-        .code(404, .error(AudiobookshelfError.notFound))
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

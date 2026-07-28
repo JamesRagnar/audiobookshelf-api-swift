@@ -33,11 +33,34 @@ public struct GetAllSessions: Interface {
 
     // MARK: Response
 
-    public typealias Response = [PlaybackSession]
+    public struct Response: Decodable, Sendable {
+
+        /// The total number of matching sessions.
+        public let total: Int
+
+        /// The total number of pages when using this itemsPerPage limit.
+        public let numPages: Int
+
+        /// The provided page parameter.
+        public let page: Int
+
+        /// The provided itemsPerPage parameter.
+        public let itemsPerPage: Int
+
+        /// The requested sessions.
+        public let sessions: [PlaybackSession]
+
+        /// Echoed back only when the request filtered by user.
+        public let userId: String?
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 
         case unauthorized
+
+        /// Returned instead of 403 when the user is not an admin.
+        case notFound
 
     }
 
@@ -46,7 +69,8 @@ public struct GetAllSessions: Interface {
         /// Success
         .code(200, .decode),
         /// Unauthorized
-        .code(401, .error(AudiobookshelfError.unauthorized))
+        .code(401, .error(AudiobookshelfError.unauthorized)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

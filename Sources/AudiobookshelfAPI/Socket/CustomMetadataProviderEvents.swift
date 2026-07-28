@@ -18,10 +18,12 @@ public struct CustomMetadataProviderAddedEvent: SocketEvent {
 }
 
 /// A custom metadata provider was removed.
+///
+/// The server sends the full provider object that was removed, not just its ID.
 public struct CustomMetadataProviderRemovedEvent: SocketEvent {
 
     public static let name = "custom_metadata_provider_removed"
 
-    public typealias Schema = String
+    public typealias Schema = CustomMetadataProvider
 
 }

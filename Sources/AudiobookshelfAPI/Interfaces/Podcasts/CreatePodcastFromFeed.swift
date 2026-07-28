@@ -53,7 +53,12 @@ public struct CreatePodcastFromFeed: Interface {
 
     // MARK: Response
 
-    public typealias Response = LibraryItem
+    public struct Response: Decodable, Sendable {
+
+        /// The parsed RSS feed.
+        public let podcast: PodcastFeed
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
         case badRequest

@@ -9,20 +9,24 @@ import Foundation
 import RagnarNetworking
 
 /// A user is online. (Admin Only)
+///
+/// - Note: The server sends the reduced ``PublicUser`` shape here, not the full ``User``.
 public struct UserOnlineEvent: SocketEvent {
 
     public static let name = "user_online"
 
-    public typealias Schema = User
+    public typealias Schema = PublicUser
 
 }
 
 /// A user is offline. (Admin Only)
+///
+/// - Note: The server sends the reduced ``PublicUser`` shape here, not the full ``User``.
 public struct UserOfflineEvent: SocketEvent {
 
     public static let name = "user_offline"
 
-    public typealias Schema = User
+    public typealias Schema = PublicUser
 
 }
 
@@ -69,6 +73,12 @@ extension UserItemProgressUpdated {
         /// The ID of the updated media progress.
         public let id: String
 
+        /// The ID of the playback session that drove the update.
+        public let sessionId: String?
+
+        /// A human-readable description of the device the session is playing on.
+        public let deviceDescription: String?
+
         /// The updated media progress.
         public let data: MediaProgress
 
@@ -77,11 +87,14 @@ extension UserItemProgressUpdated {
 }
 
 /// A user started or stopped a playback session. (Admin Only)
+///
+/// - Note: The server sends the reduced ``PublicUser`` shape here, not the full ``User``. Read
+///   ``PublicUser/session`` to see what they are listening to.
 public struct UserStreamUpdateEvent: SocketEvent {
 
     public static let name = "user_stream_update"
 
-    public typealias Schema = User
+    public typealias Schema = PublicUser
 
 }
 

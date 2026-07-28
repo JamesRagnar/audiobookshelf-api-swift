@@ -39,7 +39,12 @@ public struct UpdateUserEReaderDevices: Interface {
 
     // MARK: Response
 
-    public typealias Response = User
+    public struct Response: Decodable, Sendable {
+
+        /// The eReader devices now accessible to the authenticated user.
+        public let ereaderDevices: [EReaderDevice]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
         case badRequest

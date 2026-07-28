@@ -15,8 +15,9 @@ public struct AudioTrack {
     /// When in the audio file (in seconds) the track starts.
     public let startOffset: Float
 
-    /// The length (in seconds) of the audio track.
-    public let duration: Float
+    /// The length (in seconds) of the audio track. Null when ffprobe could not report one for the
+    /// source audio file.
+    public let duration: Float?
 
     /// The filename of the audio file the audio track belongs to.
     public let title: String

@@ -113,6 +113,12 @@ public struct GetLibrarySeries: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
+
+        /// You do not have access to this library.
+        case forbidden
+
         case notFound
 
     }
@@ -121,6 +127,8 @@ public struct GetLibrarySeries: Interface {
 
         /// Success
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// The user cannot access the library, or no library with the provided ID exists.
         .code(404, .error(AudiobookshelfError.notFound))
     ]

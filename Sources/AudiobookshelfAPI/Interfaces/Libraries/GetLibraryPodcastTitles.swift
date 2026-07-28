@@ -35,9 +35,33 @@ public struct GetLibraryPodcastTitles: Interface {
 
     // MARK: Response
 
-    public typealias Response = [String]
+    public struct Response: Decodable, Sendable {
+
+        /// The podcasts in the library.
+        public let podcasts: [PodcastTitle]
+
+        public struct PodcastTitle: Decodable, Sendable {
+
+            /// The title of the podcast.
+            public let title: String?
+
+            /// The iTunes ID of the podcast. Null if the podcast was not matched against iTunes.
+            public let itunesId: String?
+
+            /// The ID of the library item the podcast belongs to.
+            public let libraryItemId: String
+
+            /// The ID of the library the podcast belongs to.
+            public let libraryId: String
+
+        }
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
+
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
 
         case forbidden
 
@@ -48,6 +72,7 @@ public struct GetLibraryPodcastTitles: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]

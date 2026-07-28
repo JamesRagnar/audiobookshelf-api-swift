@@ -8,7 +8,10 @@
 import Foundation
 import RagnarNetworking
 
-/// Successfully authenticated the socket. Response to auth client event.
+/// Successfully authenticated the socket. Response to the `auth` client event.
+///
+/// ``ABSSocketSession`` consumes this event internally to drive its auth state. Subscribe to it
+/// directly only when you need `usersOnline`.
 public struct InitEvent: SocketEvent {
 
     public static let name = "init"
@@ -27,22 +30,10 @@ public extension InitEvent {
         /// The username of the authenticated user.
         public let username: String
 
-        /// The IDs of libraries currently being scanned.
-        public let librariesScanning: [String]
-
-        /// Users that are currently online. Will only exist when the authenticated user is an admin.
-        public let usersOnline: [User]?
+        /// Users that are currently online. Only sent when the authenticated user is an admin.
+        public let usersOnline: [PublicUser]?
 
     }
-}
-
-/// An invalid token was given when authenticating. Response to auth client event.
-public struct InvalidTokenEvent: SocketEvent {
-
-    public static let name = "invalid_token"
-
-    public typealias Schema = SocketEmptyBody
-
 }
 
 /// A single log event. Emitted after set_log_listener client event is sent. Cancelable with remove_log_listener client
@@ -52,15 +43,6 @@ public struct LogEvent: SocketEvent {
     public static let name = "log"
 
     public typealias Schema = LogEventObject
-
-}
-
-/// The current day's log events. Response to fetch_daily_logs client event.
-public struct DailyLogsEvent: SocketEvent {
-
-    public static let name = "daily_logs"
-
-    public typealias Schema = [LogEventObject]
 
 }
 
@@ -82,7 +64,10 @@ public struct PongEvent: SocketEvent {
 
 }
 
-/// Metadata embedding queue status update (admin only).
+/// A library item entered or left the metadata embedding queue. (Admin Only)
+///
+/// Emitted once per item: with `queued` true when the item is added to the queue, and false when it
+/// leaves the queue and starts being processed.
 public struct MetadataEmbedQueueUpdate: SocketEvent {
 
     public static let name = "metadata_embed_queue_update"
@@ -95,11 +80,11 @@ public extension MetadataEmbedQueueUpdate {
 
     struct CustomResponse: Decodable, Sendable {
 
-        /// Number of items in the embedding queue.
-        public let queueLength: Int
+        /// The ID of the library item whose queue status changed.
+        public let libraryItemId: String
 
-        /// Current item being processed.
-        public let currentItemId: String?
+        /// Whether the item is now waiting in the queue.
+        public let queued: Bool
 
     }
 

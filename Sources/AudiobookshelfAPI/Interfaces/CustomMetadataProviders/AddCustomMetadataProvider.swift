@@ -43,7 +43,36 @@ public struct AddCustomMetadataProvider: Interface {
 
     // MARK: Response
 
-    public typealias Response = CustomMetadataProvider
+    public struct Response: Decodable, Sendable {
+
+        /// The newly created custom metadata provider.
+        public let provider: CreatedProvider
+
+        /// The raw database row for a provider.
+        ///
+        /// This endpoint serializes the stored record directly rather than the client-facing shape,
+        /// so it exposes `url` and `authHeaderValue` but carries no `slug`. Use
+        /// `GetCustomMetadataProviders` for the ``CustomMetadataProvider`` shape.
+        public struct CreatedProvider: Decodable, Sendable {
+
+            /// The ID of the provider.
+            public let id: String
+
+            /// The name of the provider.
+            public let name: String
+
+            /// The media type the provider applies to.
+            public let mediaType: String
+
+            /// The provider's endpoint URL.
+            public let url: String
+
+            /// The value sent in the Authorization header, when one was configured.
+            public let authHeaderValue: String?
+
+        }
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

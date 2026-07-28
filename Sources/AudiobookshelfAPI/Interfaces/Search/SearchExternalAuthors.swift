@@ -38,11 +38,20 @@ public struct SearchExternalAuthors: Interface {
 
     // MARK: Response
 
-    public typealias Response = [ExternalAuthorSearchResult]
+    /// The single best-matching author, or null when no author matched closely enough.
+    public typealias Response = ExternalAuthorSearchResult?
+
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// The lookup against the external provider failed.
+        case internalServerError
+
+    }
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

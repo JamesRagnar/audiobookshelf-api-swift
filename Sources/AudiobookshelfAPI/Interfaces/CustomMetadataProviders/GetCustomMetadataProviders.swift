@@ -33,7 +33,12 @@ public struct GetCustomMetadataProviders: Interface {
 
     // MARK: Response
 
-    public typealias Response = [CustomMetadataProvider]
+    public struct Response: Decodable, Sendable {
+
+        /// The configured custom metadata providers.
+        public let providers: [CustomMetadataProvider]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

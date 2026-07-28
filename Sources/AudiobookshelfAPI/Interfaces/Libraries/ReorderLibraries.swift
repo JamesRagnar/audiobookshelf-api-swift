@@ -37,7 +37,12 @@ public struct ReorderLibraries: Interface {
 
     // MARK: Response
 
-    public typealias Response = [Library]
+    public struct Response: Decodable, Sendable {
+
+        /// All libraries in their new display order.
+        public let libraries: [Library]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

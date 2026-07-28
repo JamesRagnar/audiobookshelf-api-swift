@@ -55,7 +55,19 @@ public struct UpdateUser: Interface {
 
     // MARK: Response
 
-    public typealias Response = User
+    public struct Response: Decodable, Sendable {
+
+        /// Whether the update was applied.
+        public let success: Bool
+
+        /// The updated user.
+        ///
+        /// - Note: This endpoint never returns rotated tokens, even when the update invalidated the
+        ///   user's sessions. An admin changing their own password should use
+        ///   `UpdatePasswordWithTokenRotation` instead.
+        public let user: User
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

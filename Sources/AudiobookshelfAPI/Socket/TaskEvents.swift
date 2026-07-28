@@ -26,7 +26,10 @@ public struct TaskFinished: SocketEvent {
 
 }
 
-/// Background task progress update notification (admin only).
+/// Progress update for a long-running library item task. (Admin Only)
+///
+/// Emitted by the metadata embed and M4B merge tools. Unlike ``TaskStarted`` and ``TaskFinished``
+/// this does not carry a ``BackgroundTask``; correlate it to a running task by `libraryItemId`.
 public struct TaskProgress: SocketEvent {
 
     public static let name = "task_progress"
@@ -39,11 +42,11 @@ public extension TaskProgress {
 
     struct CustomResponse: Decodable, Sendable {
 
-        /// The task being updated.
-        public let task: BackgroundTask
+        /// The ID of the library item the task is working on.
+        public let libraryItemId: String
 
-        /// Progress description message.
-        public let description: String?
+        /// Overall progress percentage (0-100) across the whole task.
+        public let progress: Float
 
     }
 

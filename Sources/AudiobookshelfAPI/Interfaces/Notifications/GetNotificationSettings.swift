@@ -33,7 +33,15 @@ public struct GetNotificationSettings: Interface {
 
     // MARK: Response
 
-    public typealias Response = NotificationSettings
+    public struct Response: Decodable, Sendable {
+
+        /// The available notification events and their variables. Same payload as `GetNotificationData`.
+        public let data: GetNotificationData.Response
+
+        /// The configured notification settings.
+        public let settings: NotificationSettings
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

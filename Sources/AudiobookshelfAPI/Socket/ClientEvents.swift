@@ -9,7 +9,7 @@ import Foundation
 import RagnarNetworking
 
 /// Authenticates the socket connection.
-/// Causes the server to emit the `init` or `invalid_token` event.
+/// Causes the server to emit the `init` event on success or the `auth_failed` event on failure.
 public struct AuthEvent: SocketEvent {
 
     public static let name = "auth"
@@ -40,15 +40,6 @@ public struct SetLogListenerEvent: SocketEvent {
 public struct RemoveLogListenerEvent: SocketEvent {
 
     public static let name = "remove_log_listener"
-
-    public typealias Schema = SocketEmptyBody
-
-}
-
-/// Causes the server to emit the `daily_logs` event.
-public struct FetchDailyLogsEvent: SocketEvent {
-
-    public static let name = "fetch_daily_logs"
 
     public typealias Schema = SocketEmptyBody
 

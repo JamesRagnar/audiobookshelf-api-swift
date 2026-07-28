@@ -6,7 +6,23 @@
 
 - Supported server range: `>= 2.26.0` and `<= 2.36.x`
 - Exception: `GetSearchProviders` requires server `>= 2.31.0`
-- Legacy `/api/authorize` support is not part of the current package surface
+
+## Deliberate Gaps
+
+These server routes exist but are not wrapped:
+
+- `POST /api/authorize` — still served, but returns the same payload as `Login`. Use `Login` or
+  `RefreshToken`.
+- `GET /auth/openid`, `GET /auth/openid/callback`, `GET /auth/openid/mobile-redirect`,
+  `GET /auth/openid/config` — the OIDC flow is browser-driven and belongs in a web auth session.
+- `/api/internal-api/*` and the Next.js client routes — server-internal.
+
+Socket events that the server removed at or before 2.26.0 are not represented at all, since they can
+never fire on a supported server: `audio_metadata_started`, `audio_metadata_finished`,
+`audiofile_metadata_started`, `audiofile_metadata_finished`, `authors_added`, `daily_logs`,
+`fetch_daily_logs`, `episode_download_queue_updated`, `invalid_token`, `multiple_series_added`,
+`scan_start`, `scan_complete`, `stream_open`, `stream_closed`, `stream_progress`, `stream_ready`,
+`stream_error`.
 
 ## Version-Gated Surface
 
@@ -35,6 +51,23 @@ check the server version before using these.
 | `UpdatePodcastEpisode` `enclosure` | Field ignored by the server |
 | `AuthorsNumBooksUpdatedEvent` | Event is never emitted |
 
+## Known Gaps
+
+### Status Code Coverage
+
+`responseCases` was audited against the 2.36.0 handler chains, including controller middleware.
+Roughly 100 endpoints outside the authentication, session, library-browsing and podcast paths still
+omit status codes their handlers can return, mostly `403` and `400` raised by middleware before the
+handler runs. Those responses surface as an untyped `unknownResponseCase` rather than a typed error;
+they do not cause decode failures. The audited and corrected paths are covered by
+`ServerContractAuditTests`.
+
+### Model Nullability
+
+Field-level nullability was verified against the server for the audio, podcast-feed and user models.
+Other models are covered at the shape level only: their field sets match, but individual fields may
+be typed as non-optional where the server can emit null.
+
 ## Behavior Changes By Version
 
 These do not change any Swift type, but they change what a call does.
@@ -53,6 +86,10 @@ These do not change any Swift type, but they change what a call does.
   `item_updated` socket payloads, where they were previously null.
 - `PodcastEpisodeEnclosure.type` and `PodcastEpisodeEnclosure.length` can be null, because an
   enclosure can now be set with only a URL.
+- `AudioFile.duration`, `AudioFile.ino`, `AudioFile.timeBase`, `AudioFile.channels`,
+  `AudioFile.channelLayout` and `AudioTrack.duration` are optional. These trace back to ffprobe
+  output that the server stores as null when a stream does not report the value. This is long-standing
+  server behavior, not a 2.36.0 change; the package previously typed them as non-optional.
 - `DownloadMultipleLibraryItems` returns 403 when the user lacks access to any requested item.
 - `DeleteUser` returns 403 rather than 400 when the target is the root user.
 

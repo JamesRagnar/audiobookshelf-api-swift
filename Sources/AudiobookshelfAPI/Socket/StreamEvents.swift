@@ -8,43 +8,11 @@
 import Foundation
 import RagnarNetworking
 
-/// A stream has opened.
-public struct StreamOpenEvent: SocketEvent {
-
-    public static let name = "stream_open"
-
-    public typealias Schema = AudiobookshelfAPI.Stream
-
-}
-
-/// A stream has closed.
-public struct StreamClosedEvent: SocketEvent {
-
-    public static let name = "stream_closed"
-
-    public typealias Schema = String // Stream ID
-
-}
-
-/// A stream transcode progress update.
-public struct StreamProgressEvent: SocketEvent {
-
-    public static let name = "stream_progress"
-
-    public typealias Schema = StreamProgress
-
-}
-
-/// A stream is ready, transcoding has already been completed on the requested stream.
-public struct StreamReadyEvent: SocketEvent {
-
-    public static let name = "stream_ready"
-
-    public typealias Schema = SocketEmptyBody
-
-}
-
-/// A stream was reset.
+/// An HLS stream was reset because the requested segment fell outside the transcoded range.
+///
+/// This is the only stream event the server still emits. The older `stream_open`, `stream_closed`,
+/// `stream_progress`, `stream_ready` and `stream_error` events were removed from the server well
+/// before the package's minimum supported version and can never fire.
 public struct StreamResetEvent: SocketEvent {
 
     public static let name = "stream_reset"
@@ -62,28 +30,6 @@ extension StreamResetEvent {
 
         /// The ID of the stream being reset.
         public let streamId: String
-
-    }
-}
-
-/// A stream error occurred. Emitted when ffmpeg has an error while transcoding.
-public struct StreamErrorEvent: SocketEvent {
-
-    public static let name = "stream_error"
-
-    public typealias Schema = Body
-
-}
-
-extension StreamErrorEvent {
-
-    public struct Body: Decodable, Sendable {
-
-        /// The ID of the stream where the error occurred.
-        public let id: String
-
-        /// The error's message.
-        public let error: String
 
     }
 

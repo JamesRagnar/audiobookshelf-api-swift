@@ -43,7 +43,12 @@ public struct UpdateAPIKey: Interface {
 
     // MARK: Response
 
-    public typealias Response = APIKey
+    public struct Response: Decodable, Sendable {
+
+        /// The updated API key. The generated key itself is never returned again after creation.
+        public let apiKey: APIKey
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

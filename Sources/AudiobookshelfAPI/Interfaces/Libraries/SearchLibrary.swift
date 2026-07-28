@@ -73,6 +73,9 @@ public struct SearchLibrary: Interface {
 
         case badRequest
 
+        /// You do not have access to this library.
+        case forbidden
+
         case notFound
 
     }
@@ -83,6 +86,7 @@ public struct SearchLibrary: Interface {
         .code(200, .decode),
         /// No query string.
         .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// The user cannot access the library, or no library with the provided ID exists.
         .code(404, .error(AudiobookshelfError.notFound))
     ]

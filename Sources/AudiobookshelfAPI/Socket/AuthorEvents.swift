@@ -49,15 +49,6 @@ extension AuthorRemovedEvent {
 
 }
 
-/// Authors were created.
-public struct AuthorsAddedEvent: SocketEvent {
-
-    public static let name = "authors_added"
-
-    public typealias Schema = [Author]
-
-}
-
 /// The book count changed for one or more authors during a library scan.
 ///
 /// Emitted in a single batch once a scan finishes, so `authors` may cover many authors at once.
