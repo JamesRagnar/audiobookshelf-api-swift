@@ -28,16 +28,8 @@
 
 **Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.36.x`**
 
-- `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`
-- `POST /api/authorize` is not wrapped. The server still serves it, but it returns the same payload as
-  `Login`, so use `Login` or `RefreshToken` instead
-- OpenID Connect (`/auth/openid`, `/auth/openid/callback`, `/auth/openid/mobile-redirect`) is not
-  wrapped; drive that flow with a web auth session in your app
-- Auth session management, `/api/me/progress`, `/api/me/bookmarks`, `UpdatePassword(refreshToken:)`,
-  `Logout(allDevices:)`, `ServerSettings.timeZone`, `UpdatePodcastEpisode`'s `enclosure` field, and
-  `AuthorsNumBooksUpdatedEvent` all require server `>= 2.36.0`
-
-See `Documentation/compatibility.md` for the full per-version list.
+Some members require a newer server than the minimum. See `Documentation/compatibility.md` for the
+per-version list.
 
 Use `ServerCompatibility` to gate behavior at runtime:
 
