@@ -4,8 +4,7 @@ import RagnarNetworking
 import Testing
 
 /// `PATCH /api/me/password` answers with two different 200 bodies depending on whether the server
-/// kept the calling session alive. These cover both, and the boundary between "no rotation" and a
-/// genuinely malformed body.
+/// kept the calling session alive.
 @Suite
 struct UpdatePasswordComplianceTests {
 
@@ -58,8 +57,7 @@ struct UpdatePasswordComplianceTests {
 
     @Test(arguments: ["OK", ""])
     func updatePasswordTreatsNonJSON200AsUnrotated(body: String) throws {
-        // The server answers `sendStatus(200)` when it destroyed every session instead of rotating,
-        // which is the plain-text status message rather than JSON. Pre-2.36 servers always take this
+        // `sendStatus(200)` sends a plain-text body, not JSON. Pre-2.36 servers always take this
         // path; 2.36 takes it when the refresh token no longer matches a live session.
         let decoded = try UpdatePassword.handle(
             (data: Data(body.utf8), response: makeResponse(statusCode: 200))
@@ -71,8 +69,7 @@ struct UpdatePasswordComplianceTests {
 
     @Test
     func updatePasswordStillFailsOnMalformedJSON200() {
-        // A JSON body that does not match the contract must keep surfacing as a decoding error
-        // rather than being swallowed as "no rotation".
+        // A JSON body that does not match the contract must still surface as a decoding error.
         #expect(throws: ResponseError.self) {
             try UpdatePassword.handle(
                 (data: Data(#"{"success": true, "user": {"accessToken": 12}}"#.utf8),

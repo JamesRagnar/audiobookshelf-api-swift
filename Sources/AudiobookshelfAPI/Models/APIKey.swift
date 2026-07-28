@@ -9,8 +9,8 @@ import Foundation
 
 /// API key for authentication.
 ///
-/// The generated secret is never part of this record. It is returned exactly once, as
-/// ``CreateAPIKey/CreatedAPIKey/apiKey``, and cannot be retrieved again.
+/// The generated secret is not part of this record. It is returned once, as
+/// ``CreateAPIKey/CreatedAPIKey/apiKey``.
 public struct APIKey {
 
     /// User permissions structure for API keys.

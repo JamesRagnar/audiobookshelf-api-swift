@@ -7,11 +7,10 @@
 
 import Foundation
 
-/// The stored database row for a custom metadata provider.
+/// The stored database row for a custom metadata provider, as returned by the REST endpoints.
 ///
-/// The REST endpoints serialize the record directly rather than the client-facing shape, so this
-/// exposes `url` and `authHeaderValue` but carries no `slug`. ``CustomMetadataProvider`` is the
-/// filtered shape, and is only used by the socket events.
+/// Exposes `url` and `authHeaderValue`, and carries no `slug`. ``CustomMetadataProvider`` is the
+/// filtered shape used by the socket events.
 public struct StoredCustomMetadataProvider {
 
     /// The ID of the provider.

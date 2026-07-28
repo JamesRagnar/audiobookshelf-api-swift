@@ -10,14 +10,13 @@ import RagnarNetworking
 
 /// Update the authenticated user's password.
 ///
-/// A successful change always destroys the user's other authentication sessions. Pass `refreshToken`
-/// to ask the server to keep the calling session alive and hand back a replacement token pair; the
-/// caller must store those in place of its existing pair.
+/// A successful change destroys the user's other authentication sessions. Pass `refreshToken` to
+/// keep the calling session alive and receive a replacement token pair, which must be stored in
+/// place of the existing one.
 ///
-/// Read ``Response/user`` to find out what happened. When it is `nil` the password was still changed,
-/// but no session survived and the caller must re-authenticate with the new password. That is the
-/// only outcome on servers below 2.36.0, which ignore `refreshToken` entirely, and it can also happen
-/// on 2.36.0 and newer when the supplied refresh token no longer matches a live session.
+/// A nil ``Response/user`` means the password changed but no session survived, so the caller is
+/// logged out and must re-authenticate. That is the only outcome below 2.36.0, where `refreshToken`
+/// is ignored, and also occurs on 2.36.0 when the token no longer matches a live session.
 public struct UpdatePassword: Interface {
 
     // MARK: Request
@@ -115,11 +114,11 @@ public extension UpdatePassword.Parameters {
 
 // MARK: - Response Handling
 
-/// Resolves the two different 200 bodies `PATCH /api/me/password` can return.
+/// Resolves the two 200 bodies `PATCH /api/me/password` can return.
 ///
-/// The server answers with a JSON object carrying rotated tokens when it kept the calling session
-/// alive, and with a bare `200 OK` whose body is the plain-text status message when it did not. Both
-/// are status 200, so the difference cannot be expressed in `responseCases`.
+/// The server sends rotated tokens as JSON when it kept the calling session alive, and a bare
+/// `200 OK` with a plain-text body when it did not. Both are status 200, so the difference cannot be
+/// expressed in `responseCases`.
 public enum UpdatePasswordResponseHandler: ResponseHandler {
 
     public static func handle<T: Interface>(
@@ -129,8 +128,8 @@ public enum UpdatePasswordResponseHandler: ResponseHandler {
         do {
             return try DefaultResponseHandler.handle(response, for: interface)
         } catch {
-            // Only substitute for a body that is not JSON at all. A JSON body that failed to decode
-            // is a real contract mismatch and must keep surfacing as one.
+            // Only substitute for a body that is not JSON. A JSON body that failed to decode is a
+            // contract mismatch and must keep surfacing as one.
             guard
                 case .decoding(let data, let snapshot, _) = error,
                 snapshot.statusCode == 200,

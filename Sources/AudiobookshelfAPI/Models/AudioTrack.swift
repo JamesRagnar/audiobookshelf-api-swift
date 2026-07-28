@@ -14,27 +14,17 @@ public struct AudioTrack {
 
     /// When in the audio file (in seconds) the track starts.
     ///
-    /// - Warning: This value is unreliable for every track that follows one with a null
-    ///   ``duration``. The server accumulates offsets with `startOffset += track.duration`, and a
-    ///   null contributes zero, so the null track and the one after it report the same offset. See
-    ///   ``duration`` for how to handle it.
+    /// - Warning: Unreliable for every track following one with a null ``duration``. The server
+    ///   accumulates offsets with `startOffset += track.duration`, where a null adds zero.
     public let startOffset: Float
 
     /// The length (in seconds) of the audio track. Null when ffprobe could not report one for the
     /// source audio file.
     ///
-    /// A null here is a server-side data defect, not a transient condition. The scanner accepts any
-    /// file with a readable audio stream, and does not require a duration, so the value persists
-    /// until the file is re-scanned or re-encoded.
-    ///
-    /// It also corrupts the surrounding item: the containing media's total duration silently
-    /// excludes this track, and every later track's ``startOffset`` is shifted earlier by this
-    /// track's real length.
-    ///
-    /// Treating a null as zero reproduces that corruption in the client and hides it. Prefer to
-    /// refuse playback when a null-duration track is followed by another track, since no correct
-    /// timeline can be built. When the null is on the only track or the last one, the offsets that
-    /// matter are intact and the real duration can be read from the decoded asset instead.
+    /// A null also shifts the ``startOffset`` of every later track and shortens the media's total
+    /// duration. Refuse playback when a null-duration track is followed by another; no correct
+    /// timeline can be built. On a single or final track the offsets are intact and the real
+    /// duration can be read from the decoded asset.
     public let duration: Float?
 
     /// The filename of the audio file the audio track belongs to.

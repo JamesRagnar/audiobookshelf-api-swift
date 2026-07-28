@@ -61,8 +61,8 @@ struct StatusCodeMappingAuditTests {
 
     @Test(arguments: [404, 500])
     func getLibraryItemCoverMapsNotFoundAndInternalError(statusCode: Int) throws {
-        // `CacheManager.handleCoverCache` returns 500 when the cached cover cannot be streamed or
-        // the source cannot be resized. The route has no reachable 400.
+        // 500 when the cached cover cannot be streamed or the source cannot be resized. The route
+        // has no reachable 400.
         try assertMappedError(GetLibraryItemCover.self, statusCode: statusCode)
     }
 

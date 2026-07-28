@@ -7,14 +7,11 @@
 
 import Foundation
 
-/// A custom metadata provider for fetching book/podcast metadata.
+/// A custom metadata provider for fetching book/podcast metadata, as sent over the socket.
 ///
-/// This is the filtered shape the server builds with `toClientJson()`, which drops `url` and
-/// `authHeaderValue` and adds `slug`. Only the socket events use it.
+/// The filtered shape: no `url` or `authHeaderValue`, and a `slug`.
 ///
-/// - Important: The REST endpoints do not send this shape. They serialize the database row, so
-///   `GetCustomMetadataProviders` and `AddCustomMetadataProvider` decode
-///   ``StoredCustomMetadataProvider`` instead.
+/// - Important: The REST endpoints send ``StoredCustomMetadataProvider`` instead.
 public struct CustomMetadataProvider {
 
     /// The ID of the custom metadata provider.

@@ -102,9 +102,8 @@ struct SocketContractAuditTests {
         #expect(payload.usersOnline == nil)
     }
 
-    // The stream events are emitted by `objects/Stream.js` through a `clientEmit` wrapper rather
-    // than a direct `SocketAuthority` call. They are live on every server in the supported range;
-    // these cases exist so a grep that misses the wrapper cannot get them dropped again.
+    // The stream events are emitted through a `clientEmit` wrapper rather than a direct
+    // `SocketAuthority` call, which makes them easy to miss when grepping the server source.
 
     @Test
     func streamErrorCarriesIdAndMessage() throws {

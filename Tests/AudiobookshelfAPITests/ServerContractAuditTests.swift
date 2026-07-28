@@ -60,9 +60,8 @@ struct ServerContractAuditTests {
 
     @Test
     func customMetadataProviderResponsesDecodeStoredRows() throws {
-        // Both REST endpoints serialize the database row, not `toClientJson()`, so there is no
-        // `slug` and the sensitive `url` / `authHeaderValue` are present. An empty fixture here
-        // cannot catch that, so keep these populated.
+        // Both REST endpoints serialize the database row, not `toClientJson()`: no `slug`, and
+        // `url` / `authHeaderValue` present. Keep the fixture populated so the shape is covered.
         let row = #"""
         {"id": "p-1", "name": "Custom", "mediaType": "book",
          "url": "https://example.com/meta", "authHeaderValue": "Bearer abc",
@@ -191,7 +190,7 @@ struct ServerContractAuditTests {
 
     @Test
     func searchExternalAuthorsDecodesSingleResultAndNull() throws {
-        // `image`, not `imageUrl`. A null fixture cannot tell the two apart, so populate it.
+        // `image`, not `imageUrl`. A null fixture cannot tell the two apart.
         let found = Data(
             #"{"asin": "B001", "name": "Someone", "description": "Bio", "image": "https://example.com/a.jpg"}"#.utf8
         )

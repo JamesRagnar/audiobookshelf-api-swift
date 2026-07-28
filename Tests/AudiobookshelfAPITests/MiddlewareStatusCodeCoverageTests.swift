@@ -3,15 +3,11 @@ import Foundation
 import RagnarNetworking
 import Testing
 
-/// Pins the status codes each interface's route middleware can raise.
+/// Pins the status codes each interface's route middleware can raise, as of 2.36.0.
 ///
-/// Derived by matching every interface to its 2.36.0 route and reading the middleware in that
-/// route's chain. The codes are conditional, so they were resolved per route rather than per
-/// controller: several controllers raise `403` only on write methods, several guard their `404`
-/// behind `req.params.id`, and `EmailController.adminMiddleware` answers `404` rather than `403`.
-///
-/// These were all missing before the 2.36.0 audit follow-up. Without them the client gets an untyped
-/// `unknownResponseCase` instead of a typed error.
+/// The codes are conditional and resolved per route, not per controller: several controllers raise
+/// `403` only on write methods, several guard their `404` behind `req.params.id`, and
+/// `EmailController.adminMiddleware` answers `404` rather than `403`.
 @Suite
 struct MiddlewareStatusCodeCoverageTests {
 
