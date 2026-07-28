@@ -84,14 +84,34 @@ These do not change any Swift type, but they change what a call does.
   `Book.numTracks`, `Book.numAudioFiles`, `Book.numChapters`, `Book.ebookFormat`,
   `Podcast.numEpisodes` and `Podcast.size` are now populated on expanded responses and on
   `item_updated` socket payloads, where they were previously null.
-- `PodcastEpisodeEnclosure.type` and `PodcastEpisodeEnclosure.length` can be null, because an
-  enclosure can now be set with only a URL.
-- `AudioFile.duration`, `AudioFile.ino`, `AudioFile.timeBase`, `AudioFile.channels`,
-  `AudioFile.channelLayout` and `AudioTrack.duration` are optional. These trace back to ffprobe
-  output that the server stores as null when a stream does not report the value. This is long-standing
-  server behavior, not a 2.36.0 change; the package previously typed them as non-optional.
+- `PodcastEpisodeEnclosure.type` and `PodcastEpisodeEnclosure.length` became easy to encounter as
+  null. The emitted shape did not change; see "Corrected Package Bugs" below.
 - `DownloadMultipleLibraryItems` returns 403 when the user lacks access to any requested item.
 - `DeleteUser` returns 403 rather than 400 when the target is the root user.
+
+## Corrected Package Bugs
+
+These fields were typed as non-optional but the server has always been able to emit null for them.
+They were package bugs, not server changes, and every one predates the minimum supported server
+version of 2.26.0. They are listed here so the optionality is not mistaken for a 2.36.0 change.
+
+| Field | Server has emitted null since |
+| --- | --- |
+| `AudioFile.channels`, `AudioFile.channelLayout` | 0.9.61-beta |
+| `AudioFile.ino` | 2.0.1 |
+| every `PodcastFeedMetadata` field except `categories` | 2.0.1 |
+| `AudioFile.duration`, `AudioTrack.duration` | 2.1.0 |
+| `AudioFile.timeBase` | 2.2.12 |
+| `PodcastEpisodeEnclosure.type`, `PodcastEpisodeEnclosure.length` | 2.18.0 |
+
+The audio fields trace back to ffprobe output that the server stores as null when a stream does not
+report the value, so any library containing a file ffprobe could not fully measure would have failed
+to decode.
+
+`PodcastEpisodeEnclosure` is the one with a 2.36.0 angle, and only for how easily the null is
+reached. Before 2.36.0 an enclosure could only be populated by RSS ingest, where feeds almost always
+carry a type and length. 2.36.0 added the `enclosure` field on `UpdatePodcastEpisode`, which accepts
+a URL with neither, so nulls can now be written deliberately.
 
 ## Runtime Evaluation
 
