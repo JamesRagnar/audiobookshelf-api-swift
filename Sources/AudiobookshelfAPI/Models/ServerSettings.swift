@@ -152,6 +152,14 @@ public struct ServerSettings {
     /// Subfolder for OpenID redirect URLs (empty string or path). Undefined when not configured.
     public let authOpenIDSubfolderForRedirectURLs: String?
 
+    /// The IANA time zone name of the server host, for example `America/New_York`.
+    ///
+    /// The server derives this from its host environment rather than from stored settings, so it is
+    /// read-only and cannot be updated through `UpdateServerSettings`. Cron schedules such as
+    /// `backupSchedule` and `podcastEpisodeSchedule` are evaluated in this zone.
+    /// - Note: Requires server `>= 2.36.0`. Null on older servers.
+    public let timeZone: String?
+
 }
 
 extension ServerSettings: Decodable {
@@ -202,6 +210,7 @@ extension ServerSettings: Decodable {
         case buildNumber
         case allowIframe
         case authOpenIDSubfolderForRedirectURLs
+        case timeZone
     }
 
     public init(from decoder: Decoder) throws {
@@ -281,6 +290,7 @@ extension ServerSettings: Decodable {
             String.self,
             forKey: .authOpenIDSubfolderForRedirectURLs
         )
+        timeZone = try container.decodeIfPresent(String.self, forKey: .timeZone)
     }
 }
 

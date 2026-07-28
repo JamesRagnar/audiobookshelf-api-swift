@@ -9,6 +9,11 @@ import Foundation
 import RagnarNetworking
 
 /// Update the authenticated user's password.
+///
+/// - Note: On server `>= 2.36.0` a successful password change destroys every authentication session
+///   for the user, including the calling one, so the caller's tokens stop working. Use
+///   `UpdatePasswordWithTokenRotation` on those servers to keep the current session alive and receive
+///   replacement tokens.
 public struct UpdatePassword: Interface {
 
     // MARK: Request

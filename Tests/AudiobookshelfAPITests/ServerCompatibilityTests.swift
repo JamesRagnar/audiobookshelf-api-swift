@@ -7,12 +7,12 @@ struct ServerCompatibilityTests {
     // MARK: Supported
 
     @Test(arguments: ["2.26.0", "2.26.9", "2.30.0", "2.33.0", "2.33.2", "2.34.0", "2.34.99", "2.35.0", "2.35.1",
-                      "2.35.99"])
+                      "2.35.99", "2.36.0", "2.36.99"])
     func supportedVersionsReturnSupported(version: String) {
         #expect(ServerCompatibility.evaluate(serverVersion: version) == .supported)
     }
 
-    @Test(arguments: ["2.26.0", "2.35.1"])
+    @Test(arguments: ["2.26.0", "2.35.1", "2.36.0"])
     func isSupportedReturnsTrueForSupportedVersions(version: String) {
         #expect(ServerCompatibility.isSupported(serverVersion: version) == true)
     }
@@ -31,12 +31,12 @@ struct ServerCompatibilityTests {
 
     // MARK: Above tested range
 
-    @Test(arguments: ["2.36.0", "3.0.0", "10.0.0"])
+    @Test(arguments: ["2.37.0", "3.0.0", "10.0.0"])
     func aboveTestedRangeVersionsReturnAboveTestedRange(version: String) {
         #expect(ServerCompatibility.evaluate(serverVersion: version) == .aboveTestedRange)
     }
 
-    @Test(arguments: ["2.36.0", "3.0.0"])
+    @Test(arguments: ["2.37.0", "3.0.0"])
     func isSupportedReturnsFalseForAboveTestedRange(version: String) {
         #expect(ServerCompatibility.isSupported(serverVersion: version) == false)
     }

@@ -26,10 +26,15 @@
 
 ## Supported Server Range
 
-**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.35.x`**
+**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.36.x`**
 
 - `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`
 - Legacy `AuthorizeUser` (`/api/authorize`) was removed from the package for server `>= 2.33.0`
+- Auth session management, `/api/me/progress`, `/api/me/bookmarks`, `UpdatePasswordWithTokenRotation`,
+  `Logout(allDevices:)`, `ServerSettings.timeZone`, `UpdatePodcastEpisode`'s `enclosure` field, and
+  `AuthorsNumBooksUpdatedEvent` all require server `>= 2.36.0`
+
+See `Documentation/compatibility.md` for the full per-version list.
 
 Use `ServerCompatibility` to gate behavior at runtime:
 

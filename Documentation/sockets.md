@@ -63,6 +63,9 @@ await session.updateToken(newAccessToken)
 
 The session re-emits the auth event when appropriate.
 
+Socket auth requires an access token. Server `>= 2.36.0` rejects refresh tokens for socket
+authentication, so pass the value you would use for bearer requests, not the refresh token.
+
 ## Disconnect Behavior
 
 ```swift
