@@ -71,13 +71,17 @@ public struct UpdateEmailSettings: Interface {
 
         case forbidden
 
+        /// Returned instead of 403 when the user is not an admin.
+        case notFound
+
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

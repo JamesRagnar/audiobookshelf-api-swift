@@ -48,12 +48,16 @@ public struct GetEbookFile: Interface {
     public enum AudiobookshelfError: Error, Sendable {
         case badRequest
         case notFound
+        /// You do not have access to this library item, or you lack the required permission.
+        case forbidden
+
     }
 
     public static let responseCases: ResponseMap = [
         .code(200, .decode),
         .code(204, .noContent),
         .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]
 }

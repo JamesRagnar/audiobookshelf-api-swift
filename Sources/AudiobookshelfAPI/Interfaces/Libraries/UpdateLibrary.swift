@@ -65,11 +65,15 @@ public struct UpdateLibrary: Interface {
 
         case notFound
 
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
+
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]

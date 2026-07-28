@@ -50,6 +50,9 @@ public struct AudioFile {
     public let format: String
 
     /// The total length (in seconds) of the audio file. Null when ffprobe could not report one.
+    ///
+    /// See ``AudioTrack/duration`` for why a null here compromises the whole item's timeline, and
+    /// why substituting zero is the wrong response.
     public let duration: Float?
 
     /// The bit rate (in bit/s) of the audio file.
