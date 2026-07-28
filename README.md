@@ -33,7 +33,7 @@
   `Login`, so use `Login` or `RefreshToken` instead
 - OpenID Connect (`/auth/openid`, `/auth/openid/callback`, `/auth/openid/mobile-redirect`) is not
   wrapped; drive that flow with a web auth session in your app
-- Auth session management, `/api/me/progress`, `/api/me/bookmarks`, `UpdatePasswordWithTokenRotation`,
+- Auth session management, `/api/me/progress`, `/api/me/bookmarks`, `UpdatePassword(refreshToken:)`,
   `Logout(allDevices:)`, `ServerSettings.timeZone`, `UpdatePodcastEpisode`'s `enclosure` field, and
   `AuthorsNumBooksUpdatedEvent` all require server `>= 2.36.0`
 

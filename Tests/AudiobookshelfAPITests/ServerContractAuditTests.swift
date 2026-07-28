@@ -59,10 +59,28 @@ struct ServerContractAuditTests {
     }
 
     @Test
-    func customMetadataProviderResponsesDecodeTheirWrappers() throws {
-        let listBody = Data(#"{"providers": []}"#.utf8)
-        let list = try GetCustomMetadataProviders.handle((data: listBody, response: try makeResponse()))
-        #expect(list.providers.isEmpty)
+    func customMetadataProviderResponsesDecodeStoredRows() throws {
+        // Both REST endpoints serialize the database row, not `toClientJson()`, so there is no
+        // `slug` and the sensitive `url` / `authHeaderValue` are present. An empty fixture here
+        // cannot catch that, so keep these populated.
+        let row = #"""
+        {"id": "p-1", "name": "Custom", "mediaType": "book",
+         "url": "https://example.com/meta", "authHeaderValue": "Bearer abc",
+         "createdAt": "2026-01-01T00:00:00.000Z", "updatedAt": "2026-01-01T00:00:00.000Z"}
+        """#
+
+        let list = try GetCustomMetadataProviders.handle(
+            (data: Data("{\"providers\": [\(row)]}".utf8), response: try makeResponse())
+        )
+        #expect(list.providers.count == 1)
+        #expect(list.providers.first?.url == "https://example.com/meta")
+        #expect(list.providers.first?.authHeaderValue == "Bearer abc")
+
+        let created = try AddCustomMetadataProvider.handle(
+            (data: Data("{\"provider\": \(row)}".utf8), response: try makeResponse())
+        )
+        #expect(created.provider.id == "p-1")
+        #expect(created.provider.url == "https://example.com/meta")
     }
 
     @Test
@@ -107,7 +125,7 @@ struct ServerContractAuditTests {
               "link": null }, "numEpisodes": 12 } }
             """.utf8
         )
-        let decoded = try CreatePodcastFromFeed.handle((data: body, response: try makeResponse()))
+        let decoded = try GetPodcastFeed.handle((data: body, response: try makeResponse()))
         #expect(decoded.podcast.metadata.title == "Example")
         #expect(decoded.podcast.numEpisodes == 12)
     }
@@ -173,9 +191,13 @@ struct ServerContractAuditTests {
 
     @Test
     func searchExternalAuthorsDecodesSingleResultAndNull() throws {
-        let found = Data(#"{"asin": "B001", "name": "Someone", "description": null, "image": null}"#.utf8)
+        // `image`, not `imageUrl`. A null fixture cannot tell the two apart, so populate it.
+        let found = Data(
+            #"{"asin": "B001", "name": "Someone", "description": "Bio", "image": "https://example.com/a.jpg"}"#.utf8
+        )
         let author = try SearchExternalAuthors.handle((data: found, response: try makeResponse()))
         #expect(author?.name == "Someone")
+        #expect(author?.image == "https://example.com/a.jpg")
 
         // The server responds with a bare `null` when no author matched closely enough
         let missing = Data("null".utf8)

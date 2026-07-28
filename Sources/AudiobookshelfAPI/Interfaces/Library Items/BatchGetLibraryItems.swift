@@ -57,7 +57,8 @@ public struct BatchGetLibraryItems: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
-        /// You do not have access to one of the requested library items.
+        /// You do not have access to one of the requested library items, or `libraryItemIDs` was
+        /// empty. The server uses this code for both.
         case forbidden
 
     }

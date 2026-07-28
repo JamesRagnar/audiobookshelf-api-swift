@@ -44,6 +44,9 @@ public struct SearchExternalAuthors: Interface {
     public enum AudiobookshelfError: Error, Sendable {
 
         /// The lookup against the external provider failed.
+        /// The `q` query parameter was missing or empty.
+        case badRequest
+
         case internalServerError
 
     }
@@ -51,6 +54,7 @@ public struct SearchExternalAuthors: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
         .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 

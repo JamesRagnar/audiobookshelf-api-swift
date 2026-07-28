@@ -53,7 +53,10 @@ public struct TrackStartedEventObject: Decodable, Sendable {
     public let libraryItemId: String
 
     /// The inode of the audio file being processed.
-    public let ino: String
+    ///
+    /// Null when the scanner could not read an inode for the file, matching ``AudioFile/ino``. The
+    /// M4B merge tool can also omit the key entirely when the index it looks up is out of range.
+    public let ino: String?
 
 }
 
@@ -64,7 +67,10 @@ public struct TrackProgressEventObject: Decodable, Sendable {
     public let libraryItemId: String
 
     /// The inode of the audio file being processed.
-    public let ino: String
+    ///
+    /// Null when the scanner could not read an inode for the file, matching ``AudioFile/ino``. The
+    /// M4B merge tool can also omit the key entirely when the index it looks up is out of range.
+    public let ino: String?
 
     /// Progress percentage (0-100) through this audio file.
     public let progress: Float
@@ -78,6 +84,9 @@ public struct TrackFinishedEventObject: Decodable, Sendable {
     public let libraryItemId: String
 
     /// The inode of the audio file that finished processing.
-    public let ino: String
+    ///
+    /// Null when the scanner could not read an inode for the file, matching ``AudioFile/ino``. The
+    /// M4B merge tool can also omit the key entirely when the index it looks up is out of range.
+    public let ino: String?
 
 }

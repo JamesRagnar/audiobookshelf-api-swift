@@ -1,5 +1,5 @@
 //
-//  CreatePodcastFromFeed.swift
+//  GetPodcastFeed.swift
 //  AudiobookshelfAPI
 //
 //  Created by James Harquail on 2025-01-27.
@@ -8,8 +8,11 @@
 import Foundation
 import RagnarNetworking
 
-/// Create a podcast from an RSS feed URL.
-public struct CreatePodcastFromFeed: Interface {
+/// Fetch and parse a podcast's RSS feed.
+///
+/// This does not create anything. It returns the parsed feed so a client can preview it before
+/// calling `CreatePodcast`.
+public struct GetPodcastFeed: Interface {
 
     // MARK: Request
 
@@ -74,7 +77,7 @@ public struct CreatePodcastFromFeed: Interface {
     ]
 }
 
-public extension CreatePodcastFromFeed.Parameters {
+public extension GetPodcastFeed.Parameters {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let rssFeed: String
@@ -84,3 +87,7 @@ public extension CreatePodcastFromFeed.Parameters {
     }
 
 }
+
+/// The previous name for ``GetPodcastFeed``, which described the endpoint incorrectly.
+@available(*, deprecated, renamed: "GetPodcastFeed")
+public typealias CreatePodcastFromFeed = GetPodcastFeed

@@ -77,10 +77,11 @@ public struct GetLibraryItemCover: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
-        /// The requested cover format, width or height was invalid.
-        case badRequest
-
         case notFound
+
+        /// The cover could not be read from disk, or could not be resized to the requested
+        /// dimensions.
+        case internalServerError
 
     }
 
@@ -91,9 +92,9 @@ public struct GetLibraryItemCover: Interface {
         /// Success
         .code(200, .decode),
         .code(204, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
         /// Either no library item exists with the given ID, or the item does not have a cover.
-        .code(404, .error(AudiobookshelfError.notFound))
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

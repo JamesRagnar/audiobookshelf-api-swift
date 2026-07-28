@@ -102,6 +102,46 @@ struct SocketContractAuditTests {
         #expect(payload.usersOnline == nil)
     }
 
+    // The stream events are emitted by `objects/Stream.js` through a `clientEmit` wrapper rather
+    // than a direct `SocketAuthority` call. They are live on every server in the supported range;
+    // these cases exist so a grep that misses the wrapper cannot get them dropped again.
+
+    @Test
+    func streamErrorCarriesIdAndMessage() throws {
+        let data = Data(#"{"id": "stream-1", "error": "ffmpeg exited with code 1"}"#.utf8)
+        let payload = try JSONDecoder().decode(StreamErrorEvent.Schema.self, from: data)
+        #expect(payload.id == "stream-1")
+        #expect(payload.error == "ffmpeg exited with code 1")
+    }
+
+    @Test
+    func streamClosedIsABareIdString() throws {
+        let payload = try JSONDecoder().decode(
+            StreamClosedEvent.Schema.self,
+            from: Data(#""stream-1""#.utf8)
+        )
+        #expect(payload == "stream-1")
+    }
+
+    @Test
+    func streamProgressDecodesTranscodeProgress() throws {
+        let data = Data(
+            #"{"stream": "stream-1", "percent": "42%", "chunks": ["0-5"], "numSegments": 12}"#.utf8
+        )
+        let payload = try JSONDecoder().decode(StreamProgressEvent.Schema.self, from: data)
+        #expect(payload.stream == "stream-1")
+        #expect(payload.percent == "42%")
+        #expect(payload.numSegments == 12)
+    }
+
+    @Test
+    func streamResetCarriesStreamIdNotId() throws {
+        let data = Data(#"{"startTime": 120.5, "streamId": "stream-1"}"#.utf8)
+        let payload = try JSONDecoder().decode(StreamResetEvent.Schema.self, from: data)
+        #expect(payload.streamId == "stream-1")
+        #expect(payload.startTime == 120.5)
+    }
+
     private let publicUserJSON = """
     { "id": "user-1", "username": "listener", "type": "user", "session": null,
       "lastSeen": 1737600000000, "createdAt": 1737000000000, "connections": 2 }

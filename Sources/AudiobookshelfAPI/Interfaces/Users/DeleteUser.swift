@@ -46,6 +46,10 @@ public struct DeleteUser: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        /// You cannot delete your own user.
+        case badRequest
+
+        /// The target is the root user, which cannot be deleted.
         case forbidden
 
         case notFound
@@ -55,6 +59,7 @@ public struct DeleteUser: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]

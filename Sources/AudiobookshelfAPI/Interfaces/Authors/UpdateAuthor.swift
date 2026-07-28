@@ -75,7 +75,7 @@ public struct UpdateAuthor: Interface {
         /// The request body contained no updatable keys.
         case badRequest
 
-        /// Only admins may update authors.
+        /// You do not have the update permission.
         case forbidden
 
         case notFound

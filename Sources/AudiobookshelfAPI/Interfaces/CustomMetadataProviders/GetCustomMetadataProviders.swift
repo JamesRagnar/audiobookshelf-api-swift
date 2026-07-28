@@ -35,8 +35,11 @@ public struct GetCustomMetadataProviders: Interface {
 
     public struct Response: Decodable, Sendable {
 
-        /// The configured custom metadata providers.
-        public let providers: [CustomMetadataProvider]
+        /// The configured custom metadata providers, as stored database rows.
+        ///
+        /// The server returns the records directly rather than the filtered client shape, so these
+        /// carry `url` and `authHeaderValue` and have no `slug`.
+        public let providers: [StoredCustomMetadataProvider]
 
     }
 

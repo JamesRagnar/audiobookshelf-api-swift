@@ -21,8 +21,11 @@ Socket events that the server removed at or before 2.26.0 are not represented at
 never fire on a supported server: `audio_metadata_started`, `audio_metadata_finished`,
 `audiofile_metadata_started`, `audiofile_metadata_finished`, `authors_added`, `daily_logs`,
 `fetch_daily_logs`, `episode_download_queue_updated`, `invalid_token`, `multiple_series_added`,
-`scan_start`, `scan_complete`, `stream_open`, `stream_closed`, `stream_progress`, `stream_ready`,
-`stream_error`.
+`scan_start`, `scan_complete`.
+
+Each name above was verified absent from `server/` at every tag in the supported range. Absence was
+checked by looking for the event name at the tag itself, not by reading `git log -S` history, which
+reports where an occurrence count last changed rather than where something was removed.
 
 ## Version-Gated Surface
 
@@ -45,7 +48,7 @@ check the server version before using these.
 | `GetAllMediaProgress` | Endpoint does not exist; read `GetYourUser` instead |
 | `GetYourBookmarks` | Endpoint does not exist; read `GetYourUser` instead |
 | `GetYourBookmarksForLibraryItem` | Endpoint does not exist |
-| `UpdatePasswordWithTokenRotation` | Empty response body, which fails to decode; use `UpdatePassword` |
+| `UpdatePassword(refreshToken:)` | Header ignored; `Response.user` is always nil and the caller is logged out |
 | `Logout(allDevices:)` | Parameter ignored, only the current session is logged out |
 | `ServerSettings.timeZone` | Null |
 | `UpdatePodcastEpisode` `enclosure` | Field ignored by the server |
@@ -74,8 +77,11 @@ These do not change any Swift type, but they change what a call does.
 
 ### 2.36.0
 
-- A successful `UpdatePassword` destroys every authentication session for the user, including the
-  calling one. Use `UpdatePasswordWithTokenRotation` to keep the current session alive.
+- A successful `UpdatePassword` destroys every other authentication session for the user. Pass
+  `refreshToken` to keep the calling session alive and receive rotated tokens; without it, or when
+  the token no longer matches a live session, the caller is logged out too. `Response.user` is nil in
+  that case, and the endpoint answers with a non-JSON body that the interface's response handler
+  resolves rather than surfacing as a decode failure.
 - Refresh tokens are rejected as bearer credentials on both REST and socket authentication. Only
   access tokens authenticate requests.
 - The refresh token grace period after rotation is 10 minutes, up from 1 minute. Retrying a refresh
@@ -87,7 +93,8 @@ These do not change any Swift type, but they change what a call does.
 - `PodcastEpisodeEnclosure.type` and `PodcastEpisodeEnclosure.length` became easy to encounter as
   null. The emitted shape did not change; see "Corrected Package Bugs" below.
 - `DownloadMultipleLibraryItems` returns 403 when the user lacks access to any requested item.
-- `DeleteUser` returns 403 rather than 400 when the target is the root user.
+- `DeleteUser` returns 403 rather than 400 when the target is the root user. It still returns 400
+  when you attempt to delete yourself.
 
 ## Corrected Package Bugs
 
@@ -107,6 +114,15 @@ version of 2.26.0. They are listed here so the optionality is not mistaken for a
 The audio fields trace back to ffprobe output that the server stores as null when a stream does not
 report the value, so any library containing a file ffprobe could not fully measure would have failed
 to decode.
+
+These were wrong in ways optionality does not describe, and are also corrected here:
+
+| Member | Was | Now |
+| --- | --- | --- |
+| `ExternalAuthorSearchResult.imageUrl` | never populated; the server sends `image` | renamed to `image` |
+| `GetCustomMetadataProviders.providers` | `[CustomMetadataProvider]`, which requires `slug` and always failed to decode | `[StoredCustomMetadataProvider]`, the row the server actually sends |
+| `UpdateAPIKey` body | sent `expiresAt`, which the server ignores | sends `isActive` and `userId` |
+| `CreatePodcastFromFeed` | named as if it created a podcast; it only parses a feed | renamed to `GetPodcastFeed`, old name deprecated |
 
 `PodcastEpisodeEnclosure` is the one with a 2.36.0 angle, and only for how easily the null is
 reached. Before 2.36.0 an enclosure could only be populated by RSS ingest, where feeds almost always

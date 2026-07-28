@@ -171,57 +171,6 @@ struct MeInterfaces236ComplianceTests {
         try assertMappedError(GetYourBookmarksForLibraryItem.self, statusCode: statusCode)
     }
 
-    // MARK: Password
-
-    @Test
-    func updatePasswordWithTokenRotationDecodesRotatedTokens() throws {
-        let body = Data(
-            """
-            {
-              "success": true,
-              "user": {
-                "accessToken": "new-access-token",
-                "refreshToken": "new-refresh-token"
-              }
-            }
-            """.utf8
-        )
-
-        let decoded = try UpdatePasswordWithTokenRotation.handle(
-            (data: body, response: makeResponse(statusCode: 200))
-        )
-
-        #expect(decoded.success == true)
-        #expect(decoded.user.accessToken == "new-access-token")
-        #expect(decoded.user.refreshToken == "new-refresh-token")
-    }
-
-    @Test
-    func updatePasswordWithTokenRotationSendsRefreshTokenHeader() {
-        let parameters = UpdatePasswordWithTokenRotation.Parameters(
-            currentPassword: "old",
-            newPassword: "new",
-            refreshToken: "refresh-token-value"
-        )
-
-        #expect(parameters.path == "/api/me/password")
-        #expect(parameters.headers?["x-refresh-token"] == "refresh-token-value")
-    }
-
-    @Test(arguments: [400, 403])
-    func updatePasswordWithTokenRotationMapsErrorStatusCodes(statusCode: Int) throws {
-        try assertMappedError(UpdatePasswordWithTokenRotation.self, statusCode: statusCode)
-    }
-
-    @Test
-    func updatePasswordStillTreats200AsNoContent() throws {
-        // Without the x-refresh-token header the server responds with an empty body on every
-        // supported version, so the pre-2.36 interface stays usable.
-        _ = try UpdatePassword.handle(
-            (data: Data(), response: makeResponse(statusCode: 200))
-        )
-    }
-
     // MARK: Logout
 
     @Test

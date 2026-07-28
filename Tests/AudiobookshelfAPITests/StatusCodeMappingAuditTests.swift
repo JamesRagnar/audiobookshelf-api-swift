@@ -59,9 +59,21 @@ struct StatusCodeMappingAuditTests {
         try assertMappedError(SearchExternalAuthors.self, statusCode: 500)
     }
 
+    @Test(arguments: [404, 500])
+    func getLibraryItemCoverMapsNotFoundAndInternalError(statusCode: Int) throws {
+        // `CacheManager.handleCoverCache` returns 500 when the cached cover cannot be streamed or
+        // the source cannot be resized. The route has no reachable 400.
+        try assertMappedError(GetLibraryItemCover.self, statusCode: statusCode)
+    }
+
     @Test
-    func getLibraryItemCoverMapsBadRequestNotInternalError() throws {
-        try assertMappedError(GetLibraryItemCover.self, statusCode: 400)
+    func searchExternalAuthorsMapsMissingQuery() throws {
+        try assertMappedError(SearchExternalAuthors.self, statusCode: 400)
+    }
+
+    @Test(arguments: [400, 403, 404])
+    func deleteUserMapsSelfRootAndNotFound(statusCode: Int) throws {
+        try assertMappedError(DeleteUser.self, statusCode: statusCode)
     }
 
     private func assertMappedError<T: Interface>(

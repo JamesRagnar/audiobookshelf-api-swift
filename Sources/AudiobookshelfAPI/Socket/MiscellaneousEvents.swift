@@ -64,10 +64,13 @@ public struct PongEvent: SocketEvent {
 
 }
 
-/// A library item entered or left the metadata embedding queue. (Admin Only)
+/// A library item entered or left the metadata embedding queue.
 ///
 /// Emitted once per item: with `queued` true when the item is added to the queue, and false when it
 /// leaves the queue and starts being processed.
+///
+/// - Note: The two emissions have different audiences on the server. The `queued` true case goes to
+///   admins only; the `queued` false case is broadcast to every connected client.
 public struct MetadataEmbedQueueUpdate: SocketEvent {
 
     public static let name = "metadata_embed_queue_update"

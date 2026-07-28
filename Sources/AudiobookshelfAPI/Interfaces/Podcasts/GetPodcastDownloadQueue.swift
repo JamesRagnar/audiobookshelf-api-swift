@@ -52,7 +52,7 @@ public struct GetPodcastDownloadQueue: Interface {
 
         case notFound
 
-        /// The library item could not be loaded.
+        /// The library item exists but is not a podcast.
         case internalServerError
 
     }
