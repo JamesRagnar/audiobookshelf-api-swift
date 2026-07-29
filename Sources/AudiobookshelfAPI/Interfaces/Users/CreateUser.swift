@@ -51,7 +51,12 @@ public struct CreateUser: Interface {
 
     // MARK: Response
 
-    public typealias Response = User
+    public struct Response: Decodable, Sendable {
+
+        /// The newly created user.
+        public let user: User
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 
@@ -59,13 +64,17 @@ public struct CreateUser: Interface {
 
         case forbidden
 
+        /// The user could not be saved.
+        case internalServerError
+
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

@@ -7,10 +7,11 @@
 
 import Foundation
 
-/// A custom metadata provider for fetching book/podcast metadata.
+/// A custom metadata provider for fetching book/podcast metadata, as sent over the socket.
 ///
-/// Note: The server filters sensitive fields in `toClientJson()`.
-/// The `url` and `authHeaderValue` properties are NOT sent to clients for security.
+/// The filtered shape: no `url` or `authHeaderValue`, and a `slug`.
+///
+/// - Important: The REST endpoints send ``StoredCustomMetadataProvider`` instead.
 public struct CustomMetadataProvider {
 
     /// The ID of the custom metadata provider.

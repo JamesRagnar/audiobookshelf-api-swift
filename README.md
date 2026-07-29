@@ -26,10 +26,10 @@
 
 ## Supported Server Range
 
-**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.35.x`**
+**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.36.x`**
 
-- `GetSearchProviders` (`/api/search/providers`) requires server `>= 2.31.0`
-- Legacy `AuthorizeUser` (`/api/authorize`) was removed from the package for server `>= 2.33.0`
+Some members require a newer server than the minimum. See `Documentation/compatibility.md` for the
+per-version list.
 
 Use `ServerCompatibility` to gate behavior at runtime:
 

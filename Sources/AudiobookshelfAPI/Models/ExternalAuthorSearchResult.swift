@@ -16,7 +16,9 @@ public struct ExternalAuthorSearchResult {
     public let description: String?
 
     /// The author's image URL.
-    public let imageUrl: String?
+    ///
+    /// - Note: The server sends this as `image`, not `imageUrl`.
+    public let image: String?
 
     /// The ASIN of the author.
     public let asin: String?

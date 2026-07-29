@@ -49,11 +49,40 @@ extension AuthorRemovedEvent {
 
 }
 
-/// Authors were created.
-public struct AuthorsAddedEvent: SocketEvent {
+/// The book count changed for one or more authors during a library scan.
+///
+/// Emitted in a single batch once a scan finishes, so `authors` may cover many authors at once.
+/// Authors left with no books are omitted here and reported through `AuthorRemovedEvent` instead.
+///
+/// - Note: Requires server `>= 2.36.0`.
+public struct AuthorsNumBooksUpdatedEvent: SocketEvent {
 
-    public static let name = "authors_added"
+    public static let name = "authors_num_books_updated"
 
-    public typealias Schema = [Author]
+    public typealias Schema = Payload
+
+}
+
+extension AuthorsNumBooksUpdatedEvent {
+
+    public struct Payload: Decodable, Sendable {
+
+        /// The ID of the library that was scanned.
+        public let libraryId: String
+
+        /// The authors whose book counts changed.
+        public let authors: [AuthorNumBooks]
+
+        public struct AuthorNumBooks: Decodable, Sendable {
+
+            /// The ID of the author.
+            public let id: String
+
+            /// The new number of books associated with the author.
+            public let numBooks: Int
+
+        }
+
+    }
 
 }

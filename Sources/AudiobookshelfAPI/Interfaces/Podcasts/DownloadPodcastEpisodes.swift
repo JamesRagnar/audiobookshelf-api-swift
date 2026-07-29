@@ -54,13 +54,17 @@ public struct DownloadPodcastEpisodes: Interface {
 
         case notFound
 
+        /// The library item exists but is not a podcast.
+        case internalServerError
+
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
         .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

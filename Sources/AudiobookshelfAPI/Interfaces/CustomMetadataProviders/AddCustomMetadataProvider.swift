@@ -43,7 +43,12 @@ public struct AddCustomMetadataProvider: Interface {
 
     // MARK: Response
 
-    public typealias Response = CustomMetadataProvider
+    public struct Response: Decodable, Sendable {
+
+        /// The newly created custom metadata provider, as the stored database row.
+        public let provider: StoredCustomMetadataProvider
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

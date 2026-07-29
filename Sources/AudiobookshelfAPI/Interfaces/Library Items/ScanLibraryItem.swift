@@ -48,11 +48,14 @@ public struct ScanLibraryItem: Interface {
 
         case notFound
 
+        /// You do not have access to this library item, or you lack the required permission.
+        case forbidden
+
     }
 
     public static let responseCases: ResponseMap = [
-
         .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]
 

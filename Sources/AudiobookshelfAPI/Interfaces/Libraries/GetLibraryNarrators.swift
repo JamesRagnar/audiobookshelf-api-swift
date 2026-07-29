@@ -40,10 +40,26 @@ public struct GetLibraryNarrators: Interface {
 
     // MARK: Response
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
+
+        /// You do not have access to this library.
+        case forbidden
+
+        /// No library exists with the given ID.
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
         /// The requested narrators.
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

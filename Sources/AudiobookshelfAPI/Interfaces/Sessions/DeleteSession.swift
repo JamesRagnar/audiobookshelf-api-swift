@@ -44,12 +44,16 @@ public struct DeleteSession: Interface {
 
         case notFound
 
+        /// You do not have the required permission.
+        case forbidden
+
     }
 
     public static let responseCases: ResponseMap = [
 
         /// Success
         .code(200, .noContent),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         /// Session with the provided ID does not exist or user cannot access it.
         .code(404, .error(AudiobookshelfError.notFound))
     ]

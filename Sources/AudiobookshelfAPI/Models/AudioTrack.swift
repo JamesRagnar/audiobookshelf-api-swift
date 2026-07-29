@@ -13,10 +13,19 @@ public struct AudioTrack {
     public let index: Int
 
     /// When in the audio file (in seconds) the track starts.
+    ///
+    /// - Warning: Unreliable for every track following one with a null ``duration``. The server
+    ///   accumulates offsets with `startOffset += track.duration`, where a null adds zero.
     public let startOffset: Float
 
-    /// The length (in seconds) of the audio track.
-    public let duration: Float
+    /// The length (in seconds) of the audio track. Null when ffprobe could not report one for the
+    /// source audio file.
+    ///
+    /// A null also shifts the ``startOffset`` of every later track and shortens the media's total
+    /// duration. Refuse playback when a null-duration track is followed by another; no correct
+    /// timeline can be built. On a single or final track the offsets are intact and the real
+    /// duration can be read from the decoded asset.
+    public let duration: Float?
 
     /// The filename of the audio file the audio track belongs to.
     public let title: String

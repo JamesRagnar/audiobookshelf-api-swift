@@ -8,7 +8,16 @@
 import Foundation
 import RagnarNetworking
 
-/// A stream has opened.
+// MARK: - Stream Events
+
+// A stream exists only for transcoded playback sessions. None of these fire for direct play.
+//
+// All are emitted to the user that owns the stream, except `stream_reset`, which is broadcast.
+
+/// The stream has produced enough segments for playback to begin.
+///
+/// Emitted once per stream, after the first several segments are written or, for short items, when
+/// transcoding finishes first.
 public struct StreamOpenEvent: SocketEvent {
 
     public static let name = "stream_open"
@@ -17,16 +26,21 @@ public struct StreamOpenEvent: SocketEvent {
 
 }
 
-/// A stream has closed.
+/// The stream was closed without an error.
+///
+/// The payload is the stream ID on its own, not an object.
 public struct StreamClosedEvent: SocketEvent {
 
     public static let name = "stream_closed"
 
-    public typealias Schema = String // Stream ID
+    public typealias Schema = String
 
 }
 
-/// A stream transcode progress update.
+/// A transcode progress update.
+///
+/// Emitted with zeroed values when the transcode loop starts, then every two seconds until
+/// transcoding completes.
 public struct StreamProgressEvent: SocketEvent {
 
     public static let name = "stream_progress"
@@ -35,7 +49,7 @@ public struct StreamProgressEvent: SocketEvent {
 
 }
 
-/// A stream is ready, transcoding has already been completed on the requested stream.
+/// Transcoding finished and the whole stream is available.
 public struct StreamReadyEvent: SocketEvent {
 
     public static let name = "stream_ready"
@@ -44,7 +58,10 @@ public struct StreamReadyEvent: SocketEvent {
 
 }
 
-/// A stream was reset.
+/// An HLS stream was reset because the requested segment fell outside the transcoded range.
+///
+/// - Note: Broadcast to every client rather than only the stream's owner. Match ``Body/streamId``
+///   against the active stream before acting on it.
 public struct StreamResetEvent: SocketEvent {
 
     public static let name = "stream_reset"
@@ -64,9 +81,15 @@ extension StreamResetEvent {
         public let streamId: String
 
     }
+
 }
 
-/// A stream error occurred. Emitted when ffmpeg has an error while transcoding.
+/// The stream was closed because transcoding failed.
+///
+/// Closing the stream does not close the playback session, so no session event follows.
+///
+/// - Note: An intentional `SIGKILL` of the ffmpeg process emits neither this nor
+///   ``StreamClosedEvent``. That case surfaces as subsequent segment requests returning 404.
 public struct StreamErrorEvent: SocketEvent {
 
     public static let name = "stream_error"

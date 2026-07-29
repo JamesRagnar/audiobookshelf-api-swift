@@ -45,9 +45,17 @@ public struct FireTestEvent: Interface {
 
     public typealias Response = EmptyResponse
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// Only admins may manage notifications.
+        case forbidden
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .noContent)
+        .code(200, .noContent),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

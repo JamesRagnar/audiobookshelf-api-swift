@@ -26,15 +26,6 @@ public struct SeriesUpdatedEvent: SocketEvent {
 
 }
 
-/// Multiple series were created.
-public struct MultipleSeriesAddedEvent: SocketEvent {
-
-    public static let name = "multiple_series_added"
-
-    public typealias Schema = [Series]
-
-}
-
 /// A series was deleted.
 public struct SeriesRemovedEvent: SocketEvent {
 

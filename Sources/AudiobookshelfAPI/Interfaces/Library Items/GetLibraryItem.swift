@@ -68,10 +68,22 @@ public struct GetLibraryItem: Interface {
 
     public typealias Response = LibraryItem
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// You do not have access to this library item.
+        case forbidden
+
+        /// No library item exists with the given ID.
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
         /// Library Item or, if expanded was requested, Library Item Expanded with optional extra attributes.
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

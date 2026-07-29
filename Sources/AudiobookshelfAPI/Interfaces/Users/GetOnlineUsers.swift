@@ -33,7 +33,15 @@ public struct GetOnlineUsers: Interface {
 
     // MARK: Response
 
-    public typealias Response = [User]
+    public struct Response: Decodable, Sendable {
+
+        /// The users with at least one open socket connection.
+        public let usersOnline: [PublicUser]
+
+        /// Every open playback session on the server.
+        public let openSessions: [PlaybackSession]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

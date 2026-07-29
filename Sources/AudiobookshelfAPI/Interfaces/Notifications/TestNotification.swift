@@ -47,12 +47,20 @@ public struct TestNotification: Interface {
 
         case internalError
 
+        /// Only admins may manage notifications.
+        case forbidden
+
+        /// No notification exists with the given ID.
+        case notFound
+
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .noContent),
         .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound)),
         .code(500, .error(AudiobookshelfError.internalError))
     ]
 

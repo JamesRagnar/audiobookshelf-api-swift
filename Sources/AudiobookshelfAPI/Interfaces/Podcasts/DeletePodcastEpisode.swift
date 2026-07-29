@@ -55,13 +55,17 @@ public struct DeletePodcastEpisode: Interface {
         case badRequest
         case forbidden
         case notFound
+        /// The library item exists but is not a podcast.
+        case internalServerError
+
     }
 
     public static let responseCases: ResponseMap = [
         .code(200, .decode),
         .code(400, .error(AudiobookshelfError.badRequest)),
         .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
+        .code(404, .error(AudiobookshelfError.notFound)),
+        .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 
 }

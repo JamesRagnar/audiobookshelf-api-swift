@@ -55,12 +55,16 @@ public struct ScanLibraryFolders: Interface {
 
         case notFound
 
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
+
     }
 
     public static let responseCases: ResponseMap = [
 
         /// Success
         .code(200, .noContent),
+        .code(400, .error(AudiobookshelfError.badRequest)),
         /// An admin user is required to start a scan.
         .code(403, .error(AudiobookshelfError.forbidden)),
         /// The user cannot access the library, or no library with the provided ID exists.

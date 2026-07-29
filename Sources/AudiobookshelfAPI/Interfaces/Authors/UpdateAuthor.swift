@@ -57,9 +57,26 @@ public struct UpdateAuthor: Interface {
 
     // MARK: Response
 
-    public typealias Response = Author
+    public struct Response: Decodable, Sendable {
+
+        /// The updated author. When `merged` is true this is the author that was merged into.
+        public let author: Author
+
+        /// Whether renaming the author caused it to be merged into an existing author of that name.
+        public let merged: Bool?
+
+        /// Whether any field actually changed. Absent when the author was merged.
+        public let updated: Bool?
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
+
+        /// The request body contained no updatable keys.
+        case badRequest
+
+        /// You do not have the update permission.
+        case forbidden
 
         case notFound
 
@@ -68,6 +85,8 @@ public struct UpdateAuthor: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]
 

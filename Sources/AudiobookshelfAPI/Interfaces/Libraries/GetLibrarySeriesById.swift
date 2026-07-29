@@ -60,11 +60,19 @@ public struct GetLibrarySeriesById: Interface {
 
         case notFound
 
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
+
+        /// You do not have access to this library.
+        case forbidden
+
     }
 
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]
 

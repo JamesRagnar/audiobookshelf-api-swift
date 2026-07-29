@@ -48,11 +48,25 @@ public struct BatchGetLibraryItems: Interface {
 
     // MARK: Response
 
-    public typealias Response = [LibraryItem]
+    public struct Response: Decodable, Sendable {
+
+        /// The requested library items, always expanded regardless of the `expanded` parameter.
+        public let libraryItems: [LibraryItem]
+
+    }
+
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// You do not have access to one of the requested library items, or `libraryItemIDs` was
+        /// empty. The server uses this code for both.
+        case forbidden
+
+    }
 
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

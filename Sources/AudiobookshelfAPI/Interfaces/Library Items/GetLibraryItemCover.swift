@@ -79,6 +79,8 @@ public struct GetLibraryItemCover: Interface {
 
         case notFound
 
+        /// The cover could not be read from disk, or could not be resized to the requested
+        /// dimensions.
         case internalServerError
 
     }
@@ -92,7 +94,6 @@ public struct GetLibraryItemCover: Interface {
         .code(204, .noContent),
         /// Either no library item exists with the given ID, or the item does not have a cover.
         .code(404, .error(AudiobookshelfError.notFound)),
-        /// There was an error when attempting to read the cover file.
         .code(500, .error(AudiobookshelfError.internalServerError))
     ]
 

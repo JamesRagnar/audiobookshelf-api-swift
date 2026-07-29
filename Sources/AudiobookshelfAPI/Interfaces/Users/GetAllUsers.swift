@@ -33,7 +33,12 @@ public struct GetAllUsers: Interface {
 
     // MARK: Response
 
-    public typealias Response = [User]
+    public struct Response: Decodable, Sendable {
+
+        /// All users on the server.
+        public let users: [User]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 

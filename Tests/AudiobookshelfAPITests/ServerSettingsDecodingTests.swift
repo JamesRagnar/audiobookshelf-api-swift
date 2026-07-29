@@ -91,6 +91,29 @@ struct ServerSettingsDecodingTests {
         #expect(settings.version == "2.33.0")
     }
 
+    @Test
+    func decodesTimeZoneFrom236Servers() throws {
+        let settings = try decode(serverSettingsJSON(
+            backupSchedule: "false",
+            podcastEpisodeSchedule: "false",
+            buildNumber: "null",
+            timeZone: "America/New_York"
+        ))
+
+        #expect(settings.timeZone == "America/New_York")
+    }
+
+    @Test
+    func timeZoneRemainsNilOnPre236Servers() throws {
+        let settings = try decode(serverSettingsJSON(
+            backupSchedule: "false",
+            podcastEpisodeSchedule: "false",
+            buildNumber: "null"
+        ))
+
+        #expect(settings.timeZone == nil)
+    }
+
     private func decode(_ json: String) throws -> ServerSettings {
         try JSONDecoder().decode(ServerSettings.self, from: Data(json.utf8))
     }
@@ -98,9 +121,12 @@ struct ServerSettingsDecodingTests {
     private func serverSettingsJSON(
         backupSchedule: String,
         podcastEpisodeSchedule: String,
-        buildNumber: String
+        buildNumber: String,
+        timeZone: String? = nil
     ) -> String {
-        """
+        let timeZoneEntry = timeZone.map { ",\n          \"timeZone\": \"\($0)\"" } ?? ""
+
+        return """
         {
           "id": "settings-1",
           "scannerFindCovers": true,
@@ -129,7 +155,7 @@ struct ServerSettingsDecodingTests {
           "version": "2.33.0",
           "backupSchedule": \(backupSchedule),
           "podcastEpisodeSchedule": \(podcastEpisodeSchedule),
-          "buildNumber": \(buildNumber)
+          "buildNumber": \(buildNumber)\(timeZoneEntry)
         }
         """
     }

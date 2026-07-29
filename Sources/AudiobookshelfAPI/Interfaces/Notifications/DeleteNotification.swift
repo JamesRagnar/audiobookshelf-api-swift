@@ -41,9 +41,21 @@ public struct DeleteNotification: Interface {
 
     public typealias Response = NotificationSettings
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// Only admins may manage notifications.
+        case forbidden
+
+        /// No notification exists with the given ID.
+        case notFound
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden)),
+        .code(404, .error(AudiobookshelfError.notFound))
     ]
 
 }

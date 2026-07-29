@@ -40,9 +40,17 @@ public struct GetAdminYearStats: Interface {
 
     public typealias Response = YearStats
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// Only admins may read server statistics.
+        case forbidden
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

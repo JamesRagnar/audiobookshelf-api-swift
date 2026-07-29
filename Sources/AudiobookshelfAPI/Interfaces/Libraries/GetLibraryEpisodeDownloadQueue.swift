@@ -38,9 +38,23 @@ public struct GetLibraryEpisodeDownloadQueue: Interface {
 
     // MARK: Response
 
-    public typealias Response = [PodcastEpisodeDownload]
+    public struct Response: Decodable, Sendable {
+
+        /// The episode currently downloading. Null when nothing in this library is downloading.
+        public let currentDownload: PodcastEpisodeDownload?
+
+        /// The episodes queued behind the current download.
+        public let queue: [PodcastEpisodeDownload]
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
+
+        /// The `limit` or `page` query parameter was not a non-negative integer.
+        case badRequest
+
+        /// You do not have access to this library.
+        case forbidden
 
         case notFound
 
@@ -49,6 +63,8 @@ public struct GetLibraryEpisodeDownloadQueue: Interface {
     public static let responseCases: ResponseMap = [
 
         .code(200, .decode),
+        .code(400, .error(AudiobookshelfError.badRequest)),
+        .code(403, .error(AudiobookshelfError.forbidden)),
         .code(404, .error(AudiobookshelfError.notFound))
     ]
 

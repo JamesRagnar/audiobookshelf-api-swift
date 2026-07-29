@@ -19,7 +19,7 @@ public struct Logout: Interface {
 
         public let path: String = "/logout"
 
-        public let queryItems: [URLQueryItem]? = nil
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]?
 
@@ -29,13 +29,19 @@ public struct Logout: Interface {
 
         /// Logout Parameters
         ///
-        /// - Parameter refreshToken: The JWT refresh token.
+        /// - Parameters:
+        ///   - refreshToken: The JWT refresh token.
+        ///   - allDevices: Whether to destroy every authentication session belonging to the user rather
+        ///     than only the one this refresh token identifies. Requires server `>= 2.36.0`; older
+        ///     servers ignore the parameter and log out the current session only.
         public init(
-            refreshToken: String
+            refreshToken: String,
+            allDevices: Bool = false
         ) {
             self.headers = [
                 "x-refresh-token": refreshToken
             ]
+            self.queryItems = allDevices ? [URLQueryItem(name: "allDevices", value: "1")] : nil
         }
 
     }

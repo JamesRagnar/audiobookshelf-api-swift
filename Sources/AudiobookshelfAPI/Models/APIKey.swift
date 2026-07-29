@@ -7,7 +7,10 @@
 
 import Foundation
 
-/// API key for authentication
+/// API key for authentication.
+///
+/// The generated secret is not part of this record. It is returned once, as
+/// ``CreateAPIKey/CreatedAPIKey/apiKey``.
 public struct APIKey {
 
     /// User permissions structure for API keys.
@@ -38,9 +41,6 @@ public struct APIKey {
 
     /// Whether the API key is currently active
     public let isActive: Bool
-
-    /// The actual API key string (only returned on creation)
-    public let key: String?
 
     /// Permissions granted to this API key
     public let permissions: Permissions

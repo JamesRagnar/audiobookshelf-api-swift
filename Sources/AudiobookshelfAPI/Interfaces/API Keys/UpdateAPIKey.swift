@@ -8,7 +8,7 @@
 import Foundation
 import RagnarNetworking
 
-/// Update an API key's expiration time.
+/// Update an API key's active state or owning user.
 public struct UpdateAPIKey: Interface {
 
     // MARK: Request
@@ -31,19 +31,32 @@ public struct UpdateAPIKey: Interface {
 
         /// Update API Key Parameters
         ///
+        /// Only `isActive` and `userId` can be changed. The key's name and expiry are baked into the
+        /// JWT at creation and the server ignores any attempt to update them.
+        ///
         /// - Parameters:
         ///   - keyId: The ID of the API key to update.
-        ///   - expiresAt: Optional Unix timestamp for when the key expires (null to remove expiration).
-        public init(keyId: String, expiresAt: Int?) {
+        ///   - isActive: Whether the key can be used to authenticate. Omit to leave unchanged.
+        ///   - userId: The ID of the user the key acts as. Omit to leave unchanged.
+        public init(
+            keyId: String,
+            isActive: Bool? = nil,
+            userId: String? = nil
+        ) {
             self.path = "/api/api-keys/\(keyId)"
-            self.body = Payload(expiresAt: expiresAt)
+            self.body = Payload(isActive: isActive, userId: userId)
         }
 
     }
 
     // MARK: Response
 
-    public typealias Response = APIKey
+    public struct Response: Decodable, Sendable {
+
+        /// The updated API key. The generated key itself is never returned again after creation.
+        public let apiKey: APIKey
+
+    }
 
     public enum AudiobookshelfError: Error, Sendable {
 
@@ -69,7 +82,9 @@ public extension UpdateAPIKey.Parameters {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
-        let expiresAt: Int?
+        let isActive: Bool?
+
+        let userId: String?
 
     }
 

@@ -17,29 +17,6 @@ public struct EpisodeDownloadQueuedEvent: SocketEvent {
 
 }
 
-/// The podcast episode download queue has updated.
-public struct EpisodeDownloadQueueUpdatedEvent: SocketEvent {
-
-    public static let name = "episode_download_queue_updated"
-
-    public typealias Schema = Body
-
-}
-
-extension EpisodeDownloadQueueUpdatedEvent {
-
-    public struct Body: Decodable, Sendable {
-
-        /// The podcast episode currently being downloaded. Will only exist if an episode download is in progress.
-        public let currentDownload: PodcastEpisodeDownload?
-
-        /// The podcast episodes in the queue to be downloaded.
-        public let queue: [PodcastEpisodeDownload]
-
-    }
-
-}
-
 /// A podcast episode has started downloading.
 public struct EpisodeDownloadStartedEvent: SocketEvent {
 

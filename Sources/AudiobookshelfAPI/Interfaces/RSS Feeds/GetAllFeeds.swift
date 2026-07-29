@@ -35,9 +35,16 @@ public struct GetAllFeeds: Interface {
 
     public typealias Response = RSSFeedListResponse
 
-    public static let responseCases: ResponseMap = [
+    public enum AudiobookshelfError: Error, Sendable {
 
-        .code(200, .decode)
+        /// Only admins may manage RSS feeds.
+        case forbidden
+
+    }
+
+    public static let responseCases: ResponseMap = [
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

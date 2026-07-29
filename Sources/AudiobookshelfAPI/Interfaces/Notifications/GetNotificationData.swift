@@ -39,9 +39,17 @@ public struct GetNotificationData: Interface {
 
     }
 
+    public enum AudiobookshelfError: Error, Sendable {
+
+        /// Only admins may manage notifications.
+        case forbidden
+
+    }
+
     public static let responseCases: ResponseMap = [
 
-        .code(200, .decode)
+        .code(200, .decode),
+        .code(403, .error(AudiobookshelfError.forbidden))
     ]
 
 }

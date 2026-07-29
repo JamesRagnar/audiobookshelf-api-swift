@@ -13,7 +13,8 @@ public struct AudioFile {
     public let index: Int
 
     /// The inode of the audio file.
-    public let ino: String
+    /// Null when the scanner could not read an inode for the file.
+    public let ino: String?
 
     /// The audio file's metadata.
     public let metadata: FileMetadata
@@ -48,8 +49,10 @@ public struct AudioFile {
     /// The format of the audio file.
     public let format: String
 
-    /// The total length (in seconds) of the audio file.
-    public let duration: Float
+    /// The total length (in seconds) of the audio file. Null when ffprobe could not report one.
+    ///
+    /// See ``AudioTrack/duration`` for the effect of a null on the item's timeline.
+    public let duration: Float?
 
     /// The bit rate (in bit/s) of the audio file.
     public let bitRate: Int?
@@ -61,13 +64,16 @@ public struct AudioFile {
     public let codec: String?
 
     /// The time base of the audio file.
-    public let timeBase: String
+    /// Null when the audio stream did not report a time base.
+    public let timeBase: String?
 
     /// The number of channels the audio file has.
-    public let channels: Int
+    /// Null when the audio stream did not report a channel count.
+    public let channels: Int?
 
     /// The layout of the audio file's channels.
-    public let channelLayout: String
+    /// Null when the audio stream did not report a channel layout.
+    public let channelLayout: String?
 
     /// If the audio file is part of an audiobook, the chapters the file contains.
     public let chapters: [BookChapter]
