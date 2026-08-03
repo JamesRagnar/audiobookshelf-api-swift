@@ -13,7 +13,7 @@ public struct BatchDeleteLibraryItems: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct BatchDeleteLibraryItems: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Batch Delete Library Items Parameters
+        /// Batch Delete Library Items Request
         ///
         /// - Parameter libraryItemIds: Array of library item IDs to delete.
         public init(libraryItemIds: [String]) {
@@ -42,14 +42,13 @@ public struct BatchDeleteLibraryItems: Interface {
 
     public typealias Response = EmptyResponse
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }
 
-public extension BatchDeleteLibraryItems.Parameters {
+public extension BatchDeleteLibraryItems.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

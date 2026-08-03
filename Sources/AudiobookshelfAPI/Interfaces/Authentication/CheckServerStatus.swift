@@ -13,7 +13,7 @@ public struct CheckServerStatus: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,16 +25,16 @@ public struct CheckServerStatus: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Check Server Status Parameters
+        /// Check Server Status Request
         public init() {}
 
     }
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The application name (always "audiobookshelf").
         public let app: String
@@ -89,9 +89,8 @@ public struct CheckServerStatus: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

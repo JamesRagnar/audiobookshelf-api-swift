@@ -13,7 +13,7 @@ public struct GetLibraryItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public enum IncludeOption: String {
 
@@ -37,9 +37,9 @@ public struct GetLibraryItem: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Item Parameters
+        /// Get Library Item Request
         ///
         /// - Parameters:
         ///   - itemID: The ID of the library item to retrieve.
@@ -78,12 +78,13 @@ public struct GetLibraryItem: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
+    public static let responses = ResponseContract<Response>(
         /// Library Item or, if expanded was requested, Library Item Expanded with optional extra attributes.
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

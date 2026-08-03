@@ -9,7 +9,7 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func pathIncludesLibraryID() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-abc")
+        let params = GetLibraryItems.Request(libraryID: "lib-abc")
         #expect(params.path == "/api/libraries/lib-abc/items")
     }
 
@@ -17,7 +17,7 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func noOptionalParamsProducesNoQueryItems() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1")
+        let params = GetLibraryItems.Request(libraryID: "lib-1")
         let items = params.queryItems ?? []
         #expect(items["limit"] == nil)
         #expect(items["page"] == nil)
@@ -33,7 +33,7 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func limitAndPageEncode() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", limit: 25, page: 3)
+        let params = GetLibraryItems.Request(libraryID: "lib-1", limit: 25, page: 3)
         #expect(params.queryItems?["limit"] == "25")
         #expect(params.queryItems?["page"] == "3")
     }
@@ -42,19 +42,19 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func sortEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", sort: "media.metadata.title")
+        let params = GetLibraryItems.Request(libraryID: "lib-1", sort: "media.metadata.title")
         #expect(params.queryItems?["sort"] == "media.metadata.title")
     }
 
     @Test
     func descendingTrueEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", descending: true)
+        let params = GetLibraryItems.Request(libraryID: "lib-1", descending: true)
         #expect(params.queryItems?["desc"] == "1")
     }
 
     @Test
     func descendingFalseEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", descending: false)
+        let params = GetLibraryItems.Request(libraryID: "lib-1", descending: false)
         #expect(params.queryItems?["desc"] == "0")
     }
 
@@ -62,7 +62,7 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func filterEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", filter: "genres.Fantasy")
+        let params = GetLibraryItems.Request(libraryID: "lib-1", filter: "genres.Fantasy")
         #expect(params.queryItems?["filter"] == "genres.Fantasy")
     }
 
@@ -70,13 +70,13 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func minifiedTrueEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", minified: true)
+        let params = GetLibraryItems.Request(libraryID: "lib-1", minified: true)
         #expect(params.queryItems?["minified"] == "1")
     }
 
     @Test
     func collapseSeriesTrueEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", collapseSeries: true)
+        let params = GetLibraryItems.Request(libraryID: "lib-1", collapseSeries: true)
         #expect(params.queryItems?["collapseseries"] == "1")
     }
 
@@ -84,7 +84,7 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func singleIncludeEncodes() {
-        let params = GetLibraryItems.Parameters(libraryID: "lib-1", include: [.rssfeed])
+        let params = GetLibraryItems.Request(libraryID: "lib-1", include: [.rssfeed])
         #expect(params.queryItems?["include"] == "rssfeed")
     }
 
@@ -92,7 +92,7 @@ struct GetLibraryItemsParametersTests {
 
     @Test
     func allParamsEncode() {
-        let params = GetLibraryItems.Parameters(
+        let params = GetLibraryItems.Request(
             libraryID: "lib-1",
             limit: 10,
             page: 1,

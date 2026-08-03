@@ -13,7 +13,7 @@ public struct RenameGenre: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct RenameGenre: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Rename Genre Parameters
+        /// Rename Genre Request
         ///
         /// - Parameters:
         ///   - genre: The current genre name.
@@ -45,7 +45,7 @@ public struct RenameGenre: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let genreMerged: Bool
 
@@ -61,16 +61,17 @@ public struct RenameGenre: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension RenameGenre.Parameters {
+public extension RenameGenre.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

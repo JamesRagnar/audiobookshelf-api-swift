@@ -13,7 +13,7 @@ public struct AddCustomMetadataProvider: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,7 +27,7 @@ public struct AddCustomMetadataProvider: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(
             name: String,
@@ -43,7 +43,7 @@ public struct AddCustomMetadataProvider: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The newly created custom metadata provider, as the stored database row.
         public let provider: StoredCustomMetadataProvider
@@ -58,16 +58,17 @@ public struct AddCustomMetadataProvider: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension AddCustomMetadataProvider.Parameters {
+public extension AddCustomMetadataProvider.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

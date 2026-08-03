@@ -13,7 +13,7 @@ public struct ReorderLibraries: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,7 +27,7 @@ public struct ReorderLibraries: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(libraries: [LibraryOrder]) {
             self.body = Payload(libraries: libraries)
@@ -37,7 +37,7 @@ public struct ReorderLibraries: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// All libraries in their new display order.
         public let libraries: [Library]
@@ -52,12 +52,13 @@ public struct ReorderLibraries: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
@@ -78,7 +79,7 @@ public extension ReorderLibraries {
 
 }
 
-public extension ReorderLibraries.Parameters {
+public extension ReorderLibraries.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

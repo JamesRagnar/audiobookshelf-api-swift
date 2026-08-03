@@ -13,7 +13,7 @@ public struct CheckNewPodcastEpisodes: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct CheckNewPodcastEpisodes: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Check New Podcast Episodes Parameters
+        /// Check New Podcast Episodes Request
         ///
         /// - Parameter podcastId: The ID of the podcast library item to check for new episodes.
         public init(podcastId: String) {
@@ -38,7 +38,7 @@ public struct CheckNewPodcastEpisodes: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The new episodes found in the RSS feed.
         public let episodes: [RssPodcastEpisode]
@@ -56,13 +56,14 @@ public struct CheckNewPodcastEpisodes: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 

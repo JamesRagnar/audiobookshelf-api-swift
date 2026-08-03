@@ -13,7 +13,7 @@ public struct ScanLibraryItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,9 +25,9 @@ public struct ScanLibraryItem: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Scan Library Item Parameters
+        /// Scan Library Item Request
         ///
         /// - Parameter itemId: The ID of the library item to scan.
         public init(itemId: String) {
@@ -38,7 +38,7 @@ public struct ScanLibraryItem: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let result: String
 
@@ -53,10 +53,12 @@ public struct ScanLibraryItem: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

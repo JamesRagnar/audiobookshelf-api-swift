@@ -13,7 +13,7 @@ public struct CreatePlaylistFromCollection: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,9 +25,9 @@ public struct CreatePlaylistFromCollection: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Playlist from Collection Parameters
+        /// Create Playlist from Collection Request
         ///
         /// - Parameter collectionID: The ID of the collection.
         public init(collectionID: String) {
@@ -48,14 +48,14 @@ public struct CreatePlaylistFromCollection: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// The user cannot access any books contained in the collection.
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        /// No collection with the given ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The user cannot access any books contained in the collection.
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            /// No collection with the given ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

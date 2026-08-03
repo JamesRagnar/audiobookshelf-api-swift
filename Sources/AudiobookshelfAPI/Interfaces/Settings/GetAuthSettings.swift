@@ -13,7 +13,7 @@ public struct GetAuthSettings: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,7 +25,7 @@ public struct GetAuthSettings: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init() {}
 
@@ -33,16 +33,15 @@ public struct GetAuthSettings: Interface {
 
     // MARK: Response
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }
 
 public extension GetAuthSettings {
 
-    struct Response: Decodable, Sendable {
+    struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let authLoginCustomMessage: String?
 

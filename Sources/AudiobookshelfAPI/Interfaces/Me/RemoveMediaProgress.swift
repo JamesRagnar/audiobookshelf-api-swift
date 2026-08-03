@@ -13,7 +13,7 @@ public struct RemoveMediaProgress: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .delete
 
@@ -25,9 +25,9 @@ public struct RemoveMediaProgress: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Remove Media Progress Parameters
+        /// Remove Media Progress Request
         ///
         /// - Parameter mediaProgressID: The ID of the media progress to remove.
         public init(
@@ -48,10 +48,11 @@ public struct RemoveMediaProgress: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

@@ -13,7 +13,7 @@ public struct GetCollection: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public enum Include: String {
 
@@ -31,9 +31,9 @@ public struct GetCollection: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Collection Parameters
+        /// Get Collection Request
         ///
         /// - Parameters:
         ///   - collectionID: The ID of the collection.
@@ -61,12 +61,12 @@ public struct GetCollection: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// No collection with the specified ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

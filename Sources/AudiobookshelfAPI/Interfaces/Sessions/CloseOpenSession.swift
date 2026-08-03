@@ -14,7 +14,7 @@ public struct CloseOpenSession: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
         public let method: RequestMethod = .post
 
         public let path: String
@@ -27,9 +27,9 @@ public struct CloseOpenSession: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Close Open Session Parameters
+        /// Close Open Session Request
         ///
         /// - Parameters:
         ///   - sessionID: The ID of the listening session.
@@ -65,19 +65,19 @@ public struct CloseOpenSession: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// User is not allowed to access another user's open session.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No listening session with the provided ID is open, or the session belongs to another user.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// User is not allowed to access another user's open session.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No listening session with the provided ID is open, or the session belongs to another user.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension CloseOpenSession.Parameters {
+public extension CloseOpenSession.Request {
 
     struct CloseBody: RequestBody, Encodable, Sendable {
 

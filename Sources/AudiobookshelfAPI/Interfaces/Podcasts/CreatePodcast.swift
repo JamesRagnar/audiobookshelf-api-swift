@@ -13,7 +13,7 @@ public struct CreatePodcast: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreatePodcast: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Podcast Parameters
+        /// Create Podcast Request
         ///
         /// - Parameters:
         ///   - libraryId: The ID of the library.
@@ -61,15 +61,17 @@ public struct CreatePodcast: Interface {
         case notFound
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 }
 
-public extension CreatePodcast.Parameters {
+public extension CreatePodcast.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let libraryId: String

@@ -13,7 +13,7 @@ public struct Healthcheck: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct Healthcheck: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Healthcheck Parameters
+        /// Healthcheck Request
         public init() {}
 
     }
@@ -36,9 +36,8 @@ public struct Healthcheck: Interface {
 
     public typealias Response = String
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

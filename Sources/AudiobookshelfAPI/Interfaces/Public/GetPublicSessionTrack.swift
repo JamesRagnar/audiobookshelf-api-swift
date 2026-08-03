@@ -13,7 +13,7 @@ public struct GetPublicSessionTrack: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetPublicSessionTrack: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Get Public Session Track Parameters
+        /// Get Public Session Track Request
         ///
         /// - Parameters:
         ///   - sessionId: The playback session ID (UUID).
@@ -47,11 +47,13 @@ public struct GetPublicSessionTrack: Interface {
         case internalError
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(204, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        additionalSuccesses: [.exact(204)],
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 }

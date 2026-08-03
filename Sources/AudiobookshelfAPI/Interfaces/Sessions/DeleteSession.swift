@@ -13,7 +13,7 @@ public struct DeleteSession: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .delete
 
@@ -25,9 +25,9 @@ public struct DeleteSession: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Delete Session Parameters
+        /// Delete Session Request
         ///
         /// - Parameter sessionID: The ID of the playback session to delete.
         public init(sessionID: String) {
@@ -49,13 +49,13 @@ public struct DeleteSession: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .noContent),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// Session with the provided ID does not exist or user cannot access it.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// Session with the provided ID does not exist or user cannot access it.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

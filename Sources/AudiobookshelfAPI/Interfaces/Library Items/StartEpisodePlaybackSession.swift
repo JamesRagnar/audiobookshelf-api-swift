@@ -13,7 +13,7 @@ public struct StartEpisodePlaybackSession: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct StartEpisodePlaybackSession: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Start Episode Playback Session Parameters
+        /// Start Episode Playback Session Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item (podcast).
@@ -42,7 +42,7 @@ public struct StartEpisodePlaybackSession: Interface {
         public init(
             libraryItemId: String,
             episodeId: String,
-            deviceInfo: StartPlaybackSession.Parameters.DeviceInfo? = nil,
+            deviceInfo: StartPlaybackSession.Request.DeviceInfo? = nil,
             forceDirectPlay: Bool? = nil,
             forceTranscode: Bool? = nil,
             mediaPlayer: String? = nil,
@@ -69,18 +69,20 @@ public struct StartEpisodePlaybackSession: Interface {
         case notFound
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 }
 
-public extension StartEpisodePlaybackSession.Parameters {
+public extension StartEpisodePlaybackSession.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
-        let deviceInfo: StartPlaybackSession.Parameters.DeviceInfo?
+        let deviceInfo: StartPlaybackSession.Request.DeviceInfo?
         let forceDirectPlay: Bool?
         let forceTranscode: Bool?
         let mediaPlayer: String?

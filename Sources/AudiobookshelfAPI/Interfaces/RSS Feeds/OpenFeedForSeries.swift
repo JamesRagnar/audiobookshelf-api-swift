@@ -13,7 +13,7 @@ public struct OpenFeedForSeries: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct OpenFeedForSeries: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Open Feed For Series Parameters
+        /// Open Feed For Series Request
         ///
         /// - Parameters:
         ///   - seriesId: The ID of the series.
@@ -62,7 +62,7 @@ public struct OpenFeedForSeries: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let feed: RSSFeed
 
@@ -81,17 +81,19 @@ public struct OpenFeedForSeries: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension OpenFeedForSeries.Parameters {
+public extension OpenFeedForSeries.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

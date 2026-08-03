@@ -13,7 +13,7 @@ public struct BatchDeleteSessions: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct BatchDeleteSessions: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Batch Delete Sessions Parameters
+        /// Batch Delete Sessions Request
         ///
         /// - Parameters:
         ///   - sessionIds: Array of session IDs to delete.
@@ -53,17 +53,18 @@ public struct BatchDeleteSessions: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension BatchDeleteSessions.Parameters {
+public extension BatchDeleteSessions.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

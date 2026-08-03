@@ -208,8 +208,8 @@ struct ServerContractAuditTests {
 
     @Test
     func applyBackupUsesGet() {
-        #expect(ApplyBackup.Parameters(backupId: "b-1").method == .get)
-        #expect(ApplyBackup.Parameters(backupId: "b-1").path == "/api/backups/b-1/apply")
+        #expect(ApplyBackup.Request(backupId: "b-1").method == .get)
+        #expect(ApplyBackup.Request(backupId: "b-1").path == "/api/backups/b-1/apply")
     }
 
     // MARK: Fixtures

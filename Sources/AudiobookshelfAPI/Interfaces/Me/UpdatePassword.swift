@@ -21,7 +21,7 @@ public struct UpdatePassword: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -35,9 +35,9 @@ public struct UpdatePassword: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Password Parameters
+        /// Update Password Request
         ///
         /// - Parameters:
         ///   - currentPassword: The user's current password.
@@ -95,16 +95,16 @@ public struct UpdatePassword: Interface {
 
     }
 
-    public static let responseHandler: ResponseHandler.Type = UpdatePasswordResponseHandler.self
-
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 }
 
-public extension UpdatePassword.Parameters {
+public extension UpdatePassword.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let password: String?
@@ -112,38 +112,25 @@ public extension UpdatePassword.Parameters {
     }
 }
 
-// MARK: - Response Handling
+// MARK: - Response Decoding
 
 /// Resolves the two 200 bodies `PATCH /api/me/password` can return.
 ///
 /// The server sends rotated tokens as JSON when it kept the calling session alive, and a bare
-/// `200 OK` with a plain-text body when it did not. Both are status 200, so the difference cannot be
-/// expressed in `responseCases`.
-public enum UpdatePasswordResponseHandler: ResponseHandler {
+/// `200 OK` with a plain-text body when it did not. Both are status 200, so the difference cannot
+/// be expressed in `responses`.
+extension UpdatePassword.Response: InterfaceResponse {
 
-    public static func handle<T: Interface>(
-        _ response: (data: Data, response: URLResponse),
-        for interface: T.Type
-    ) throws(ResponseError) -> T.Response {
-        do {
-            return try DefaultResponseHandler.handle(response, for: interface)
-        } catch {
-            // Only substitute for a body that is not JSON. A JSON body that failed to decode is a
-            // contract mismatch and must keep surfacing as one.
-            guard
-                case .decoding(let data, let snapshot, _) = error,
-                snapshot.statusCode == 200,
-                (try? JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])) == nil,
-                let unrotated = UpdatePassword.Response(
-                    success: true,
-                    user: nil
-                ) as? T.Response
-            else {
-                throw error
-            }
-
-            return unrotated
+    public static func decode(
+        from data: Data,
+        metadata: HTTPResponseSnapshot,
+        using decoder: ResponseDecoder
+    ) throws -> UpdatePassword.Response {
+        guard (try? JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])) != nil else {
+            return UpdatePassword.Response(success: true, user: nil)
         }
+
+        return try decoder.decode(UpdatePassword.Response.self, from: data)
     }
 
 }

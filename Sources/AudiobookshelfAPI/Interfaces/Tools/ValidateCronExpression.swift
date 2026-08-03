@@ -13,7 +13,7 @@ public struct ValidateCronExpression: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct ValidateCronExpression: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Validate Cron Expression Parameters
+        /// Validate Cron Expression Request
         ///
         /// - Parameters:
         ///   - expression: The cron expression to validate.
@@ -49,15 +49,16 @@ public struct ValidateCronExpression: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest))
+        ]
+    )
 
 }
 
-public extension ValidateCronExpression.Parameters {
+public extension ValidateCronExpression.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

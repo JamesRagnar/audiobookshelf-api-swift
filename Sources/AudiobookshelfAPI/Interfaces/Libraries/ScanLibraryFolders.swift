@@ -13,7 +13,7 @@ public struct ScanLibraryFolders: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,9 +25,9 @@ public struct ScanLibraryFolders: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Scan Library Folders Parameters
+        /// Scan Library Folders Request
         ///
         /// - Parameters:
         ///   - libraryID: The ID of the library.
@@ -60,15 +60,15 @@ public struct ScanLibraryFolders: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        /// An admin user is required to start a scan.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            /// An admin user is required to start a scan.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// The user cannot access the library, or no library with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

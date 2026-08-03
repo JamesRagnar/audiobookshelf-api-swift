@@ -13,7 +13,7 @@ public struct GetLibraryCollections: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public enum Include: String {
 
@@ -31,9 +31,9 @@ public struct GetLibraryCollections: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Collection Parameters
+        /// Get Library Collection Request
         ///
         /// - Note: Sorting and filtering are not yet implemented.
         ///
@@ -74,7 +74,7 @@ public struct GetLibraryCollections: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The requested collections.
         /// If minified is true, the library items contained in the collections will be Library Item Minified.
@@ -120,14 +120,14 @@ public struct GetLibraryCollections: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// The user cannot access the library, or no library with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

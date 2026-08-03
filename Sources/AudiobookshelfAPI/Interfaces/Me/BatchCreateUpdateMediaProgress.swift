@@ -13,7 +13,7 @@ public struct BatchCreateUpdateMediaProgress: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public struct ProgressItem: Encodable, Sendable {
 
@@ -88,9 +88,9 @@ public struct BatchCreateUpdateMediaProgress: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Batch Create/Update Media Progress Parameters
+        /// Batch Create/Update Media Progress Request
         ///
         /// - Parameter progressItems: The Progress items to update
         public init(progressItems: [ProgressItem]) {
@@ -109,12 +109,12 @@ public struct BatchCreateUpdateMediaProgress: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .noContent),
-        /// The provided array must have a non-zero length.
-        .code(400, .error(AudiobookshelfError.badRequest))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The provided array must have a non-zero length.
+            .code(400, .error(AudiobookshelfError.badRequest))
+        ]
+    )
 
 }

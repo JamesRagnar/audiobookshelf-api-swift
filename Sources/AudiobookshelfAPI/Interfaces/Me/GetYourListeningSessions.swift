@@ -13,7 +13,7 @@ public struct GetYourListeningSessions: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetYourListeningSessions: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Your Listening Sessions Parameters
+        /// Get Your Listening Sessions Request
         /// 
         /// - Parameters:
         ///   - itemsPerPage: The number of listening sessions to retrieve per page.
@@ -46,7 +46,7 @@ public struct GetYourListeningSessions: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The total number of listening sessions.
         public let total: Int
@@ -62,9 +62,8 @@ public struct GetYourListeningSessions: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

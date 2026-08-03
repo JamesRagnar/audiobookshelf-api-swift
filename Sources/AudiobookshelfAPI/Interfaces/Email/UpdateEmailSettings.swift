@@ -13,7 +13,7 @@ public struct UpdateEmailSettings: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdateEmailSettings: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Email Settings Parameters
+        /// Update Email Settings Request
         ///
         /// - Parameters:
         ///   - host: SMTP server host.
@@ -76,17 +76,18 @@ public struct UpdateEmailSettings: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateEmailSettings.Parameters {
+public extension UpdateEmailSettings.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
@@ -110,7 +111,7 @@ public extension UpdateEmailSettings.Parameters {
 
 public extension UpdateEmailSettings {
 
-    struct EmailSettingsResponse: Decodable, Sendable {
+    struct EmailSettingsResponse: Decodable, Sendable, InterfaceResponse {
 
         public let settings: EmailSettings
 

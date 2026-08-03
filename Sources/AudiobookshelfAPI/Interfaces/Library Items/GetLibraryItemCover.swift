@@ -13,7 +13,7 @@ public struct GetLibraryItemCover: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public typealias Format = ArtworkFormat
 
@@ -27,9 +27,9 @@ public struct GetLibraryItemCover: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Get Library Item Cover Parameters
+        /// Get Library Item Cover Request
         ///
         /// - Parameters:
         ///   - itemID: The ID of the library item.
@@ -42,7 +42,7 @@ public struct GetLibraryItemCover: Interface {
             self.queryItems = options.queryItems
         }
 
-        /// Get Library Item Cover Parameters
+        /// Get Library Item Cover Request
         ///
         /// - Parameters:
         ///   - itemID: The ID of the library item.
@@ -87,14 +87,14 @@ public struct GetLibraryItemCover: Interface {
 
     public typealias Response = Data
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        .code(204, .noContent),
-        /// Either no library item exists with the given ID, or the item does not have a cover.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        additionalSuccesses: [.exact(204)],
+        failures: [
+            /// Either no library item exists with the given ID, or the item does not have a cover.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }

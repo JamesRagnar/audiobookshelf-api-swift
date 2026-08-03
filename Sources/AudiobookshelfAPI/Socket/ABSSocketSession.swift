@@ -75,17 +75,21 @@ public actor ABSSocketSession {
     /// - Same URL: re-emits auth with the new token if already connected; does not reconnect.
     /// - New URL: switches the underlying WebSocket connection, preserving all existing event streams.
     ///
-    /// This method is a no-op if `serverURL` cannot be converted to a WebSocket URL.
+    /// If `serverURL` cannot be resolved to a Socket.IO endpoint, auth state transitions to
+    /// `.failed` and neither the server URL nor the token is committed, so a corrected retry is
+    /// not mistaken for "already connected to this URL."
     public func connect(to serverURL: URL, token: String) async {
         if serverURL == currentServerURL {
             await updateToken(token)
-        } else {
-            guard let wsURL = SocketIOURL.webSocketURL(for: serverURL) else {
-                return
-            }
+            return
+        }
+
+        do {
+            try await client.reconnect(to: .server(serverURL))
             currentServerURL = serverURL
             currentToken = token
-            await client.reconnect(to: wsURL)
+        } catch {
+            setAuthState(.failed(message: error.localizedDescription))
         }
     }
 
@@ -178,13 +182,24 @@ public actor ABSSocketSession {
 
     private func handleStatusChange(_ status: SocketConnectionStatus) async {
         isConnected = (status == .connected)
-        if status == .connected, let token = currentToken {
+
+        switch status {
+        case .connected:
+            guard let token = currentToken else { return }
             do {
                 try await client.emit(AuthEvent.self, token)
                 setAuthState(.authenticating)
             } catch {
                 setAuthState(.failed(message: error.localizedDescription))
             }
+
+        case .failed(let reason):
+            // Terminal for this connection attempt: the transport does not auto-reconnect, so
+            // this state must reach the caller rather than leaving a stale `.authenticating`.
+            setAuthState(.failed(message: reason))
+
+        case .disconnected, .connecting:
+            break
         }
     }
 

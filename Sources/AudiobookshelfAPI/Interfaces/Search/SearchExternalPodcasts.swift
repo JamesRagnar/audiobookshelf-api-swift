@@ -13,7 +13,7 @@ public struct SearchExternalPodcasts: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct SearchExternalPodcasts: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Search External Podcasts Parameters
+        /// Search External Podcasts Request
         ///
         /// - Parameter term: The search term for podcast search.
         public init(term: String) {
@@ -40,9 +40,8 @@ public struct SearchExternalPodcasts: Interface {
 
     public typealias Response = [ExternalPodcastSearchResult]
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

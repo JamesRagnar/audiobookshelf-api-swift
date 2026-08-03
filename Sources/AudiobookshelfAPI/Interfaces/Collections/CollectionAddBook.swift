@@ -13,7 +13,7 @@ public struct CollectionAddBook: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CollectionAddBook: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Collection Add Book Parameters
+        /// Collection Add Book Request
         ///
         /// - Parameters:
         ///   - collectionID: The ID of the collection.
@@ -59,21 +59,21 @@ public struct CollectionAddBook: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// A user with update permissions is required to update collections.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        /// The provided library item ID could not be found, is in a different library, or is already in the collection.
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// A user with update permissions is required to update collections.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No collection with the specified ID exists.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            /// The provided library item ID could not be found, is in a different library, or is already in the collection.
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension CollectionAddBook.Parameters {
+public extension CollectionAddBook.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

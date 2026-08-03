@@ -15,7 +15,7 @@ public struct GetYourBookmarksForLibraryItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -27,9 +27,9 @@ public struct GetYourBookmarksForLibraryItem: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Your Bookmarks For Library Item Parameters
+        /// Get Your Bookmarks For Library Item Request
         ///
         /// - Parameter libraryItemID: The ID of the library item to retrieve bookmarks for.
         public init(
@@ -42,7 +42,7 @@ public struct GetYourBookmarksForLibraryItem: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// Your bookmarks for the requested library item. Empty if there are none.
         public let bookmarks: [AudioBookmark]
@@ -59,12 +59,12 @@ public struct GetYourBookmarksForLibraryItem: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

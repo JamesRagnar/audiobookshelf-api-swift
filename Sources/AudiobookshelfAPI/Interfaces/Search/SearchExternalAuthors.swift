@@ -13,7 +13,7 @@ public struct SearchExternalAuthors: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct SearchExternalAuthors: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Search External Authors Parameters
+        /// Search External Authors Request
         ///
         /// - Parameter query: The author name to search for.
         public init(query: String) {
@@ -51,11 +51,12 @@ public struct SearchExternalAuthors: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }

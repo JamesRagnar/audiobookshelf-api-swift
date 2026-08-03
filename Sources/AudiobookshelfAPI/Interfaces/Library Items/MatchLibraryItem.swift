@@ -13,7 +13,7 @@ public struct MatchLibraryItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,7 +27,7 @@ public struct MatchLibraryItem: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(
             itemId: String,
@@ -63,19 +63,20 @@ public struct MatchLibraryItem: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
 public extension MatchLibraryItem {
 
-    struct MatchResult: Decodable, Sendable {
+    struct MatchResult: Decodable, Sendable, InterfaceResponse {
 
         public let updated: Bool?
 
@@ -87,7 +88,7 @@ public extension MatchLibraryItem {
 
 }
 
-public extension MatchLibraryItem.Parameters {
+public extension MatchLibraryItem.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

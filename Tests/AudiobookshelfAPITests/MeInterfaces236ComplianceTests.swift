@@ -76,7 +76,7 @@ struct MeInterfaces236ComplianceTests {
 
     @Test
     func getYourAuthSessionsSendsRefreshTokenHeaderOnlyWhenProvided() {
-        let withToken = GetYourAuthSessions.Parameters(
+        let withToken = GetYourAuthSessions.Request(
             itemsPerPage: 25,
             page: 2,
             refreshToken: "refresh-token-value"
@@ -87,7 +87,7 @@ struct MeInterfaces236ComplianceTests {
         #expect(withToken.queryItems?["page"] == "2")
         #expect(withToken.headers?["x-refresh-token"] == "refresh-token-value")
 
-        let withoutToken = GetYourAuthSessions.Parameters(itemsPerPage: 10, page: 0)
+        let withoutToken = GetYourAuthSessions.Request(itemsPerPage: 10, page: 0)
 
         #expect(withoutToken.headers == nil)
     }
@@ -99,7 +99,7 @@ struct MeInterfaces236ComplianceTests {
 
     @Test
     func deleteYourAuthSessionBuildsPathAndTreats200AsNoContent() throws {
-        let parameters = DeleteYourAuthSession.Parameters(sessionID: "session-1")
+        let parameters = DeleteYourAuthSession.Request(sessionID: "session-1")
         #expect(parameters.path == "/api/me/sessions/session-1")
 
         _ = try DeleteYourAuthSession.handle(
@@ -140,7 +140,7 @@ struct MeInterfaces236ComplianceTests {
 
         #expect(decoded.mediaProgress.count == 1)
         #expect(decoded.mediaProgress.first?.libraryItemId == "library-item-1")
-        #expect(GetAllMediaProgress.Parameters().path == "/api/me/progress")
+        #expect(GetAllMediaProgress.Request().path == "/api/me/progress")
     }
 
     @Test
@@ -151,12 +151,12 @@ struct MeInterfaces236ComplianceTests {
 
         #expect(decoded.bookmarks.count == 1)
         #expect(decoded.bookmarks.first?.title == "Chapter 3")
-        #expect(GetYourBookmarks.Parameters().path == "/api/me/bookmarks")
+        #expect(GetYourBookmarks.Request().path == "/api/me/bookmarks")
     }
 
     @Test
     func getYourBookmarksForLibraryItemBuildsPathAndDecodes() throws {
-        let parameters = GetYourBookmarksForLibraryItem.Parameters(libraryItemID: "library-item-1")
+        let parameters = GetYourBookmarksForLibraryItem.Request(libraryItemID: "library-item-1")
         #expect(parameters.path == "/api/me/bookmarks/library-item-1")
 
         let decoded = try GetYourBookmarksForLibraryItem.handle(
@@ -175,7 +175,7 @@ struct MeInterfaces236ComplianceTests {
 
     @Test
     func logoutOmitsAllDevicesQueryItemByDefault() {
-        let parameters = Logout.Parameters(refreshToken: "refresh-token-value")
+        let parameters = Logout.Request(refreshToken: "refresh-token-value")
 
         #expect(parameters.queryItems == nil)
         #expect(parameters.headers?["x-refresh-token"] == "refresh-token-value")
@@ -183,7 +183,7 @@ struct MeInterfaces236ComplianceTests {
 
     @Test
     func logoutSendsAllDevicesQueryItemWhenRequested() {
-        let parameters = Logout.Parameters(refreshToken: "refresh-token-value", allDevices: true)
+        let parameters = Logout.Request(refreshToken: "refresh-token-value", allDevices: true)
 
         #expect(parameters.queryItems?["allDevices"] == "1")
     }

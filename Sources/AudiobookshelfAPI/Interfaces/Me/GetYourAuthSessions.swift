@@ -17,7 +17,7 @@ public struct GetYourAuthSessions: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -29,9 +29,9 @@ public struct GetYourAuthSessions: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Your Auth Sessions Parameters
+        /// Get Your Auth Sessions Request
         ///
         /// - Parameters:
         ///   - itemsPerPage: The number of sessions to retrieve per page.
@@ -60,7 +60,7 @@ public struct GetYourAuthSessions: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The total number of active sessions.
         public let total: Int
@@ -79,10 +79,8 @@ public struct GetYourAuthSessions: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

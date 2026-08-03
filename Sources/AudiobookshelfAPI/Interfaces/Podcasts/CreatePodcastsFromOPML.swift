@@ -13,7 +13,7 @@ public struct CreatePodcastsFromOPML: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreatePodcastsFromOPML: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Podcasts From OPML Parameters
+        /// Create Podcasts From OPML Request
         ///
         /// - Parameters:
         ///   - feeds: Array of RSS feed URLs.
@@ -66,17 +66,18 @@ public struct CreatePodcastsFromOPML: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension CreatePodcastsFromOPML.Parameters {
+public extension CreatePodcastsFromOPML.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

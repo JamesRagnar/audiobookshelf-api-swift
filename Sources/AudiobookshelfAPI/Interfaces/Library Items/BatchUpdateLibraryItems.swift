@@ -13,7 +13,7 @@ public struct BatchUpdateLibraryItems: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
         public let method: RequestMethod = .post
 
         public let path: String = "/api/items/batch/update"
@@ -26,7 +26,7 @@ public struct BatchUpdateLibraryItems: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(updates: [Body.UpdateItem]) {
             self.body = BatchBody(updates: updates)
@@ -36,7 +36,7 @@ public struct BatchUpdateLibraryItems: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let success: Bool
 
@@ -54,17 +54,18 @@ public struct BatchUpdateLibraryItems: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension BatchUpdateLibraryItems.Parameters {
+public extension BatchUpdateLibraryItems.Request {
 
     struct BatchBody: RequestBody {
 
@@ -74,7 +75,7 @@ public extension BatchUpdateLibraryItems.Parameters {
             self.updates = updates
         }
 
-        public func encodeBody(using encoder: JSONEncoder) throws -> EncodedBody {
+        public func encodeBody(using encoder: RequestEncoder) throws -> EncodedBody {
             let data = try encoder.encode(updates)
             return EncodedBody(data: data, contentType: "application/json")
         }
@@ -83,9 +84,9 @@ public extension BatchUpdateLibraryItems.Parameters {
 
             public let id: String
 
-            public let mediaPayload: UpdateLibraryItemMedia.Parameters.LibraryItemMediaPayload
+            public let mediaPayload: UpdateLibraryItemMedia.Request.LibraryItemMediaPayload
 
-            public init(id: String, mediaPayload: UpdateLibraryItemMedia.Parameters.LibraryItemMediaPayload) {
+            public init(id: String, mediaPayload: UpdateLibraryItemMedia.Request.LibraryItemMediaPayload) {
                 self.id = id
                 self.mediaPayload = mediaPayload
             }

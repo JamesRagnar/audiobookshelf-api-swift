@@ -20,10 +20,11 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/JamesRagnar/RagnarNetworking",
-            branch: "main"
-        )
+//        .package(
+//            url: "https://github.com/JamesRagnar/RagnarNetworking",
+//            branch: "main"
+//        )
+        .package(path: "../RagnarNetworking")
     ],
     targets: [
         .target(

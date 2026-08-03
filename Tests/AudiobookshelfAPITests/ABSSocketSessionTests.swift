@@ -23,8 +23,19 @@ private actor MockSocketClient: SocketClient {
         let payload: Data?
     }
 
-    enum MockError: Error {
+    enum MockError: LocalizedError {
         case emitFailed
+        case reconnectFailed
+
+        var errorDescription: String? {
+            switch self {
+            case .emitFailed:
+                return "emitFailed"
+
+            case .reconnectFailed:
+                return "reconnectFailed"
+            }
+        }
     }
 
     private var status: SocketConnectionStatus = .disconnected
@@ -32,16 +43,20 @@ private actor MockSocketClient: SocketClient {
     private var eventContinuations: [String: [UUID: AsyncStream<Data>.Continuation]] = [:]
     private var pipeTasks: [UUID: Task<Void, Never>] = [:]
 
-    private(set) var reconnectURLs: [URL] = []
+    private(set) var reconnectEndpoints: [SocketEndpoint] = []
     private(set) var emittedEvents: [EmittedEvent] = []
     private var emitError: MockError?
+    private var reconnectError: MockError?
 
     func connect() async {}
 
     func disconnect() {}
 
-    func reconnect(to newURL: URL) async {
-        reconnectURLs.append(newURL)
+    func reconnect(to endpoint: SocketEndpoint) async throws {
+        if let reconnectError {
+            throw reconnectError
+        }
+        reconnectEndpoints.append(endpoint)
     }
 
     func invalidate() {
@@ -144,6 +159,10 @@ private actor MockSocketClient: SocketClient {
         emitError = error
     }
 
+    func setReconnectError(_ error: MockError?) {
+        reconnectError = error
+    }
+
     func emittedAuthTokens() throws -> [String] {
         try emittedEvents
             .filter { $0.name == AuthEvent.name }
@@ -183,8 +202,7 @@ struct ABSSocketSessionTests {
         let serverURL = try #require(URL(string: "https://example.com"))
         await session.connect(to: serverURL, token: "token-1")
 
-        let expectedSocketURL = try #require(SocketIOURL.webSocketURL(for: serverURL))
-        #expect(await client.reconnectURLs == [expectedSocketURL])
+        #expect(await client.reconnectEndpoints == [.server(serverURL)])
 
         await client.pushStatus(.connected)
 
@@ -206,9 +224,53 @@ struct ABSSocketSessionTests {
 
         await session.connect(to: serverURL, token: "token-2")
 
-        let expectedSocketURL = try #require(SocketIOURL.webSocketURL(for: serverURL))
-        #expect(await client.reconnectURLs == [expectedSocketURL])
+        #expect(await client.reconnectEndpoints == [.server(serverURL)])
         #expect(try await client.emittedAuthTokens() == ["token-1", "token-2"])
+    }
+
+    @Test("reconnect failure surfaces as failed auth state without committing the URL")
+    func reconnectFailureUpdatesAuthStateAndDoesNotCommitURL() async throws {
+        let client = MockSocketClient()
+        let session = ABSSocketSession(client: client)
+        await Task.yield()
+        let authStates = await session.authStateUpdates()
+        var authIterator = authStates.makeAsyncIterator()
+
+        _ = await authIterator.next()
+
+        await client.setReconnectError(.reconnectFailed)
+        let serverURL = try #require(URL(string: "https://example.com"))
+        await session.connect(to: serverURL, token: "token-1")
+
+        let failed = await authIterator.next()
+        #expect(failed == .failed(message: MockSocketClient.MockError.reconnectFailed.localizedDescription))
+        #expect(await client.reconnectEndpoints.isEmpty)
+
+        // The failed attempt did not commit serverURL as current, so a retry with the same
+        // URL is still treated as new rather than a same-URL token refresh.
+        await client.setReconnectError(nil)
+        await session.connect(to: serverURL, token: "token-2")
+        #expect(await client.reconnectEndpoints == [.server(serverURL)])
+    }
+
+    @Test("a failed connection status surfaces as failed auth state")
+    func failedStatusUpdatesAuthState() async throws {
+        let client = MockSocketClient()
+        let session = ABSSocketSession(client: client)
+        await Task.yield()
+        let authStates = await session.authStateUpdates()
+        var authIterator = authStates.makeAsyncIterator()
+
+        _ = await authIterator.next()
+
+        await session.connect(to: try #require(URL(string: "http://example.com")), token: "token-1")
+        await client.pushStatus(.connected)
+        _ = await authIterator.next()
+
+        await client.pushStatus(.failed(reason: "invalid credentials"))
+
+        let failed = await authIterator.next()
+        #expect(failed == .failed(message: "invalid credentials"))
     }
 
     @Test("auth success and failure events update auth state")

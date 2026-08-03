@@ -13,7 +13,7 @@ public struct GetEbookFile: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetEbookFile: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Ebook File Parameters
+        /// Get Ebook File Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item.
@@ -53,11 +53,13 @@ public struct GetEbookFile: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(204, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        additionalSuccesses: [.exact(204)],
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 }

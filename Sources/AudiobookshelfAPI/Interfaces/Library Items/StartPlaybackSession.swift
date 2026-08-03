@@ -13,7 +13,7 @@ public struct StartPlaybackSession: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct StartPlaybackSession: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Start Playback Session Parameters
+        /// Start Playback Session Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item.
@@ -66,14 +66,16 @@ public struct StartPlaybackSession: Interface {
         case notFound
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 }
 
-public extension StartPlaybackSession.Parameters {
+public extension StartPlaybackSession.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let deviceInfo: DeviceInfo?

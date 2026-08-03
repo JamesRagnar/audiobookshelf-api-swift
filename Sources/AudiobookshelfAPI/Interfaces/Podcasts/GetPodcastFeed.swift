@@ -16,7 +16,7 @@ public struct GetPodcastFeed: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -30,9 +30,9 @@ public struct GetPodcastFeed: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Podcast from Feed Parameters
+        /// Create Podcast from Feed Request
         ///
         /// - Parameters:
         ///   - rssFeed: The RSS feed URL.
@@ -56,7 +56,7 @@ public struct GetPodcastFeed: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The parsed RSS feed.
         public let podcast: PodcastFeed
@@ -69,15 +69,17 @@ public struct GetPodcastFeed: Interface {
         case notFound
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 }
 
-public extension GetPodcastFeed.Parameters {
+public extension GetPodcastFeed.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let rssFeed: String

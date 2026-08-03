@@ -13,7 +13,7 @@ public struct SyncLocalSession: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct SyncLocalSession: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Sync Local Session Parameters
+        /// Sync Local Session Request
         ///
         /// - Parameter session: The local playback session data to sync with the server.
         public init(session: LocalPlaybackSession) {
@@ -50,19 +50,19 @@ public struct SyncLocalSession: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .noContent),
-        /// Invalid request data.
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        /// Syncing failed.
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// Invalid request data.
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            /// Syncing failed.
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 
-public extension SyncLocalSession.Parameters {
+public extension SyncLocalSession.Request {
 
     /// A local playback session to be synced with the server.
     /// This represents the client-side data sent when syncing local session state.

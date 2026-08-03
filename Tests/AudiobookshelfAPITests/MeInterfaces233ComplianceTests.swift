@@ -55,7 +55,7 @@ struct MeInterfaces233ComplianceTests {
 
     @Test
     func getItemListeningSessionsParametersEncodePaginationQueryItems() {
-        let parameters = GetItemListeningSessions.Parameters(
+        let parameters = GetItemListeningSessions.Request(
             libraryItemId: "library-item-id",
             episodeId: nil,
             itemsPerPage: 25,

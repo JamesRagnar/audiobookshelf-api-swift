@@ -13,7 +13,7 @@ public struct PurgeCacheAll: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,9 +25,9 @@ public struct PurgeCacheAll: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Purge All Cache Parameters
+        /// Purge All Cache Request
         public init() {}
 
     }
@@ -36,9 +36,8 @@ public struct PurgeCacheAll: Interface {
 
     public typealias Response = EmptyResponse
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

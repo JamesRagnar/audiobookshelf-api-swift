@@ -13,7 +13,7 @@ public struct UpdatePlaylist: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdatePlaylist: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Playlist Parameters
+        /// Update Playlist Request
         ///
         /// - Parameters:
         ///   - playlistID: The ID of the playlist.
@@ -70,19 +70,19 @@ public struct UpdatePlaylist: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// The playlist does not belong to the authenticated user.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No playlist with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The playlist does not belong to the authenticated user.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No playlist with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdatePlaylist.Parameters {
+public extension UpdatePlaylist.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

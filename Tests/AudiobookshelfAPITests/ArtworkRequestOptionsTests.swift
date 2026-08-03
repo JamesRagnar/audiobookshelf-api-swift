@@ -10,32 +10,32 @@ struct ArtworkRequestOptionsTests {
 
     @Test
     func libraryItemCoverPathIncludesItemID() {
-        let params = GetLibraryItemCover.Parameters(itemID: "item-1")
+        let params = GetLibraryItemCover.Request(itemID: "item-1")
         #expect(params.path == "/api/items/item-1/cover")
     }
 
     @Test
     func libraryItemCoverNoOptionsProducesNoQueryItems() {
-        let params = GetLibraryItemCover.Parameters(itemID: "item-1")
+        let params = GetLibraryItemCover.Request(itemID: "item-1")
         let items = params.queryItems ?? []
         #expect(items.isEmpty)
     }
 
     @Test
     func libraryItemCoverRawFalseOmitsRawQueryItem() {
-        let params = GetLibraryItemCover.Parameters(itemID: "item-1", raw: false)
+        let params = GetLibraryItemCover.Request(itemID: "item-1", raw: false)
         #expect(params.queryItems?["raw"] == nil)
     }
 
     @Test
     func libraryItemCoverRawTrueEncodesAsOne() {
-        let params = GetLibraryItemCover.Parameters(itemID: "item-1", raw: true)
+        let params = GetLibraryItemCover.Request(itemID: "item-1", raw: true)
         #expect(params.queryItems?["raw"] == "1")
     }
 
     @Test
     func libraryItemCoverEncodesAllOptions() {
-        let params = GetLibraryItemCover.Parameters(
+        let params = GetLibraryItemCover.Request(
             itemID: "item-1",
             width: 200,
             height: 300,
@@ -52,7 +52,7 @@ struct ArtworkRequestOptionsTests {
 
     @Test
     func libraryItemCoverIsUnauthenticated() {
-        let params = GetLibraryItemCover.Parameters(itemID: "item-1")
+        let params = GetLibraryItemCover.Request(itemID: "item-1")
         guard case .none = params.authentication else {
             Issue.record("Expected unauthenticated request")
             return
@@ -62,7 +62,7 @@ struct ArtworkRequestOptionsTests {
     @Test
     func libraryItemCoverOptionsInitMatchesFlatInit() {
         let options = ArtworkRequestOptions(width: 100, height: 150, format: .jpeg, timestamp: 42, raw: true)
-        let params = GetLibraryItemCover.Parameters(itemID: "item-1", options: options)
+        let params = GetLibraryItemCover.Request(itemID: "item-1", options: options)
         #expect(params.queryItems?["width"] == "100")
         #expect(params.queryItems?["height"] == "150")
         #expect(params.queryItems?["format"] == "jpeg")
@@ -74,32 +74,32 @@ struct ArtworkRequestOptionsTests {
 
     @Test
     func authorImagePathIncludesAuthorID() {
-        let params = GetAuthorImage.Parameters(authorID: "author-1")
+        let params = GetAuthorImage.Request(authorID: "author-1")
         #expect(params.path == "/api/authors/author-1/image")
     }
 
     @Test
     func authorImageNoOptionsProducesNoQueryItems() {
-        let params = GetAuthorImage.Parameters(authorID: "author-1")
+        let params = GetAuthorImage.Request(authorID: "author-1")
         let items = params.queryItems ?? []
         #expect(items.isEmpty)
     }
 
     @Test
     func authorImageRawFalseOmitsRawQueryItem() {
-        let params = GetAuthorImage.Parameters(authorID: "author-1", raw: false)
+        let params = GetAuthorImage.Request(authorID: "author-1", raw: false)
         #expect(params.queryItems?["raw"] == nil)
     }
 
     @Test
     func authorImageRawTrueEncodesAsOne() {
-        let params = GetAuthorImage.Parameters(authorID: "author-1", raw: true)
+        let params = GetAuthorImage.Request(authorID: "author-1", raw: true)
         #expect(params.queryItems?["raw"] == "1")
     }
 
     @Test
     func authorImageEncodesAllOptions() {
-        let params = GetAuthorImage.Parameters(
+        let params = GetAuthorImage.Request(
             authorID: "author-1",
             width: 200,
             height: 300,
@@ -116,7 +116,7 @@ struct ArtworkRequestOptionsTests {
 
     @Test
     func authorImageIsUnauthenticated() {
-        let params = GetAuthorImage.Parameters(authorID: "author-1")
+        let params = GetAuthorImage.Request(authorID: "author-1")
         guard case .none = params.authentication else {
             Issue.record("Expected unauthenticated request")
             return

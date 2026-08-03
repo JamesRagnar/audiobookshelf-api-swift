@@ -13,7 +13,7 @@ public struct BatchEmbedMetadata: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct BatchEmbedMetadata: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Batch Embed Metadata Parameters
+        /// Batch Embed Metadata Request
         ///
         /// - Parameters:
         ///   - libraryItemIds: Array of library item IDs to embed metadata for.
@@ -51,16 +51,17 @@ public struct BatchEmbedMetadata: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension BatchEmbedMetadata.Parameters {
+public extension BatchEmbedMetadata.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

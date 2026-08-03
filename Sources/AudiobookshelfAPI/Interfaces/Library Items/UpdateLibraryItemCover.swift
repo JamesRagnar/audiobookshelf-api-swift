@@ -13,7 +13,7 @@ public struct UpdateLibraryItemCover: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,7 +27,7 @@ public struct UpdateLibraryItemCover: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(itemId: String, url: String? = nil, cover: String? = nil) {
             self.path = "/api/items/\(itemId)/cover"
@@ -38,7 +38,7 @@ public struct UpdateLibraryItemCover: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let success: Bool
 
@@ -56,17 +56,18 @@ public struct UpdateLibraryItemCover: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateLibraryItemCover.Parameters {
+public extension UpdateLibraryItemCover.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

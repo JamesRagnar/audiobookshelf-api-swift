@@ -16,7 +16,7 @@ public struct UpdatePodcastEpisode: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -30,9 +30,9 @@ public struct UpdatePodcastEpisode: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Podcast Episode Parameters
+        /// Update Podcast Episode Request
         ///
         /// - Parameters:
         ///   - podcastId: The ID of the podcast library item.
@@ -92,16 +92,18 @@ public struct UpdatePodcastEpisode: Interface {
         case internalServerError
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 
-public extension UpdatePodcastEpisode.Parameters {
+public extension UpdatePodcastEpisode.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let title: String?

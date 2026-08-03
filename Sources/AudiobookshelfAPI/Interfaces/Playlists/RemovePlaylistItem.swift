@@ -14,7 +14,7 @@ public struct RemovePlaylistItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .delete
 
@@ -26,9 +26,9 @@ public struct RemovePlaylistItem: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Remove Playlist Item Parameters
+        /// Remove Playlist Item Request
         ///
         /// - Parameters:
         ///   - playlistID: The ID of the playlist.
@@ -60,14 +60,14 @@ public struct RemovePlaylistItem: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// The playlist does not belong to the authenticated user.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No playlist with the provided ID exists, or the playlist does not contain the provided item.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The playlist does not belong to the authenticated user.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No playlist with the provided ID exists, or the playlist does not contain the provided item.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

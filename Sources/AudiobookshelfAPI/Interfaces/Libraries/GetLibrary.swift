@@ -13,7 +13,7 @@ public struct GetLibrary: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public enum Include: String {
             case filterData = "filterdata"
@@ -29,9 +29,9 @@ public struct GetLibrary: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Parameters
+        /// Get Library Request
         ///
         /// - Parameters:
         ///   - libraryID: The ID of the library to retrieve.
@@ -80,13 +80,14 @@ public struct GetLibrary: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
@@ -119,3 +120,5 @@ extension GetLibrary.Response: Decodable {
     }
 
 }
+
+extension GetLibrary.Response: InterfaceResponse {}
