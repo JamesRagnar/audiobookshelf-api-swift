@@ -186,16 +186,28 @@ public actor ABSSocketSession {
         let initStream = await client.events(for: InitEvent.self)
         let authFailedStream = await client.events(for: AuthFailedEvent.self)
 
-        statusObserverTask = Task {
-            for await status in statusStream {
+        statusObserverTask = observeStatus(statusStream)
+        initObserverTask = observeInit(initStream)
+        authFailedObserverTask = observeAuthFailure(authFailedStream)
+    }
+
+    private func observeStatus(
+        _ stream: AsyncStream<SocketConnectionStatus>
+    ) -> Task<Void, Never> {
+        Task {
+            for await status in stream {
                 guard !Task.isCancelled else { return }
                 await handleStatusChange(status)
             }
         }
+    }
 
-        initObserverTask = Task {
+    private func observeInit(
+        _ stream: SocketEventStream<InitEvent>
+    ) -> Task<Void, Never> {
+        Task {
             do {
-                for try await payload in initStream {
+                for try await payload in stream {
                     guard !Task.isCancelled else { return }
                     handleInit(payload)
                 }
@@ -204,10 +216,14 @@ public actor ABSSocketSession {
                 setAuthState(.failed(message: error.localizedDescription))
             }
         }
+    }
 
-        authFailedObserverTask = Task {
+    private func observeAuthFailure(
+        _ stream: SocketEventStream<AuthFailedEvent>
+    ) -> Task<Void, Never> {
+        Task {
             do {
-                for try await payload in authFailedStream {
+                for try await payload in stream {
                     guard !Task.isCancelled else { return }
                     handleAuthFailure(payload)
                 }
@@ -221,13 +237,7 @@ public actor ABSSocketSession {
     private func handleStatusChange(_ status: SocketConnectionStatus) async {
         switch status {
         case .connected:
-            isConnected = true
-            transportConnectionID &+= 1
-            do {
-                try await authenticate()
-            } catch {
-                setAuthState(.unauthenticated)
-            }
+            await handleConnected()
 
         case .disconnected, .connecting, .reconnecting, .failed:
             isConnected = false
@@ -237,6 +247,16 @@ public actor ABSSocketSession {
         case .invalidated:
             isConnected = false
             authenticatedTransportConnectionID = nil
+        }
+    }
+
+    private func handleConnected() async {
+        isConnected = true
+        transportConnectionID &+= 1
+        do {
+            try await authenticate()
+        } catch {
+            setAuthState(.unauthenticated)
         }
     }
 

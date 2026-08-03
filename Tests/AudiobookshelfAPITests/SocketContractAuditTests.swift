@@ -144,11 +144,16 @@ struct SocketContractAuditTests {
             UserRemovedEvent.name,
             UserSessionClosedEvent.name,
             UserStreamUpdateEvent.name,
-            UserUpdatedEvent.name,
+            UserUpdatedEvent.name
         ]
 
         #expect(Set(names).count == names.count)
     }
+
+    private func requireEmittable<Event: EmittableSocketEvent>(_ event: Event.Type) {}
+}
+
+extension SocketContractAuditTests {
 
     @Test
     func publicUserDecodesUserOnlinePayload() throws {
@@ -284,11 +289,11 @@ struct SocketContractAuditTests {
         #expect(payload.startTime == 120.5)
     }
 
-    private let publicUserJSON = """
-    { "id": "user-1", "username": "listener", "type": "user", "session": null,
-      "lastSeen": 1737600000000, "createdAt": 1737000000000, "connections": 2 }
-    """
-
-    private func requireEmittable<Event: EmittableSocketEvent>(_ event: Event.Type) {}
+    private var publicUserJSON: String {
+        """
+        { "id": "user-1", "username": "listener", "type": "user", "session": null,
+          "lastSeen": 1737600000000, "createdAt": 1737000000000, "connections": 2 }
+        """
+    }
 
 }
