@@ -1,5 +1,5 @@
 {
-  "originHash" : "7d5d992d5d9b0ace9901f79dec94eb13daef9ee1471cf3e7c16b4d644123f9e9",
+  "originHash" : "22d1ea9c0a5404b1ba41f2dfdeccd263d7379cd88bc525eb023208682e515a8e",
   "pins" : [
     {
       "identity" : "ragnarnetworking",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/JamesRagnar/RagnarNetworking",
       "state" : {
         "branch" : "main",
-        "revision" : "d4c693e0d2aec7cc75d7060d77a2c30ec38220dd"
+        "revision" : "29b465a89dfa190b29f45680fb8b7e4ac7863035"
       }
     }
   ],

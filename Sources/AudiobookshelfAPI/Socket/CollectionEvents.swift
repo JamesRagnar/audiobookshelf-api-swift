@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A collection was created.
 public struct CollectionAddedEvent: SocketEvent {

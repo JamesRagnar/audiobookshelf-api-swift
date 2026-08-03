@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A share link was opened.
 public struct ShareOpenEvent: SocketEvent {

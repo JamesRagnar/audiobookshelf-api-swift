@@ -33,6 +33,10 @@ let package = Package(
                     name: "RagnarNetworking",
                     package: "RagnarNetworking"
                 ),
+                .product(
+                    name: "RagnarSocketIO",
+                    package: "RagnarNetworking"
+                ),
             ]
         ),
         .testTarget(

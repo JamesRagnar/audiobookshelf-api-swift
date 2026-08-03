@@ -6,40 +6,30 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
-/// Wraps a socket transport with the ABS-specific auth handshake.
-///
-/// Auth protocol: on every socket `.connected` transition, emits `AuthEvent` with the
-/// current JWT. Server responds with the private `InitEvent` (success) or `AuthFailedEvent`.
-///
-/// All event streams and status streams are delegated to the underlying socket transport,
-/// which keeps them alive across disconnect/reconnect cycles without re-subscription.
+/// Owns the Audiobookshelf-specific endpoint and authentication lifecycle for a Socket.IO client.
 public actor ABSSocketSession {
 
     // MARK: - Public Types
 
+    /// The current Audiobookshelf application-authentication state.
     public enum AuthState: Sendable, Equatable {
         case unauthenticated
         case authenticating
-        case authenticated(userID: String, username: String)
+        case authenticated(
+            connectionID: UInt64,
+            userID: String,
+            username: String
+        )
         case failed(message: String)
     }
 
     // MARK: - Private ABS Server Events
 
-    // These event shapes are internal to the auth handshake — no public surface.
-
-    private struct InitEvent: SocketEvent {
-        static let name = "init"
-        struct Schema: Decodable, Sendable {
-            let userId: String
-            let username: String
-        }
-    }
-
     private struct AuthFailedEvent: SocketEvent {
         static let name = "auth_failed"
+
         struct Schema: Decodable, Sendable {
             let message: String
         }
@@ -51,6 +41,10 @@ public actor ABSSocketSession {
     private var currentToken: String?
     private var currentServerURL: URL?
     private var isConnected = false
+    private var isInvalidated = false
+    private var transportConnectionID: UInt64 = 0
+    private var authenticatedTransportConnectionID: UInt64?
+    private var authenticatedConnectionID: UInt64 = 0
     private var authState: AuthState = .unauthenticated
 
     private var statusObserverTask: Task<Void, Never>?
@@ -60,155 +54,254 @@ public actor ABSSocketSession {
 
     // MARK: - Init
 
-    /// Create a session backed by the given client. The client need not be connected yet;
-    /// call `connect(to:token:)` when ready.
+    /// Creates a session backed by an unconnected Socket.IO client.
     public init(client: any SocketClient) {
         self.client = client
-        // Actor init is nonisolated in Swift 6 — schedule observation on the actor executor.
-        Task { await self.startObservation() }
     }
 
     // MARK: - Public API
 
-    /// Connect (or reconnect) to the given server URL with the provided JWT.
+    /// Connects to an Audiobookshelf server and authenticates with an access token.
     ///
-    /// - Same URL: re-emits auth with the new token if already connected; does not reconnect.
-    /// - New URL: switches the underlying WebSocket connection, preserving all existing event streams.
-    ///
-    /// If `serverURL` cannot be resolved to a Socket.IO endpoint, auth state transitions to
-    /// `.failed` and neither the server URL nor the token is committed, so a corrected retry is
-    /// not mistaken for "already connected to this URL."
-    public func connect(to serverURL: URL, token: String) async {
-        if serverURL == currentServerURL {
-            await updateToken(token)
-            return
-        }
+    /// The server URL may include a RouterBasePath. Endpoint resolution is delegated to
+    /// `RagnarSocketIO`. Repeating the URL lets the client preserve its active transport while a
+    /// changed token is re-emitted for application authentication.
+    public func connect(to serverURL: URL, token: String) async throws {
+        await startObservationIfNeeded()
+
+        let previousServerURL = currentServerURL
+        let previousToken = currentToken
+        let tokenChanged = token != previousToken
+
+        currentServerURL = serverURL
+        currentToken = token
 
         do {
-            try await client.reconnect(to: .server(serverURL))
-            currentServerURL = serverURL
-            currentToken = token
+            try await client.connect(to: .server(serverURL))
         } catch {
-            setAuthState(.failed(message: error.localizedDescription))
+            currentServerURL = previousServerURL
+            currentToken = previousToken
+            throw error
+        }
+
+        if serverURL == previousServerURL, tokenChanged, isConnected {
+            try await authenticate()
         }
     }
 
-    /// Update the auth token without reconnecting. Re-emits `AuthEvent` if currently connected.
-    public func updateToken(_ token: String) async {
+    /// Updates the access token and retries authentication on an active connection.
+    public func updateToken(_ token: String) async throws {
         currentToken = token
         guard isConnected else { return }
-        do {
-            try await client.emit(AuthEvent.self, token)
-            setAuthState(.authenticating)
-        } catch {
-            setAuthState(.failed(message: error.localizedDescription))
-        }
+        try await authenticate()
     }
 
-    /// Close the connection and reset auth state. Existing event streams are preserved for reconnect.
+    /// Disconnects and resets authentication while preserving event subscriptions for later reuse.
     public func disconnect() async {
         currentToken = nil
         currentServerURL = nil
         isConnected = false
+        authenticatedTransportConnectionID = nil
         await client.disconnect()
         setAuthState(.unauthenticated)
     }
 
-    /// Returns a typed `AsyncStream` for the given event type. Delegates directly to the
-    /// underlying socket transport, so the stream survives reconnects without re-subscription.
-    public func events<E: SocketEvent>(for type: E.Type) async -> AsyncStream<E.Schema> {
-        await client.events(for: type)
-    }
+    /// Permanently invalidates the session and finishes session-owned streams.
+    public func invalidate() async {
+        guard !isInvalidated else { return }
+        isInvalidated = true
+        currentToken = nil
+        currentServerURL = nil
+        isConnected = false
+        authenticatedTransportConnectionID = nil
 
-    /// Emit a typed client event.
-    public func emit<E: SocketEvent>(_ type: E.Type, _ payload: E.Schema) async throws
-        where E.Schema: Encodable & Sendable {
-        try await client.emit(type, payload)
-    }
+        statusObserverTask?.cancel()
+        initObserverTask?.cancel()
+        authFailedObserverTask?.cancel()
+        statusObserverTask = nil
+        initObserverTask = nil
+        authFailedObserverTask = nil
 
-    /// Emit a typed client event with no payload.
-    public func emit<E: SocketEvent>(_ type: E.Type) async throws
-        where E.Schema == SocketEmptyBody {
-        try await client.emit(type)
-    }
-
-    /// Stream of auth state changes. Emits the current state immediately on subscribe.
-    public func authStateUpdates() -> AsyncStream<AuthState> {
-        let id = UUID()
-        let (stream, continuation) = AsyncStream<AuthState>.makeStream()
-        authStateContinuations[id] = continuation
-        continuation.yield(authState)
-        continuation.onTermination = { [weak self] _ in
-            Task { [weak self] in await self?.removeAuthStateContinuation(id) }
+        for continuation in authStateContinuations.values {
+            continuation.finish()
         }
-        return stream
+        authStateContinuations.removeAll()
+        await client.invalidate()
     }
 
-    /// Stream of connection status changes. Delegates to the underlying socket transport.
+    /// Returns a throwing typed stream using the event's declared delivery policy by default.
+    public func events<Event: SocketEvent>(
+        for event: Event.Type,
+        policy: SocketStreamPolicy? = nil
+    ) async -> SocketEventStream<Event> {
+        await client.events(for: event, policy: policy)
+    }
+
+    /// Emits a client-originated event with a payload.
+    public func emit<Event: EmittableSocketEvent>(
+        _ event: Event.Type,
+        _ payload: Event.Schema
+    ) async throws {
+        try await client.emit(event, payload)
+    }
+
+    /// Emits a zero-argument client-originated event.
+    public func emit<Event: EmittableSocketEvent>(
+        _ event: Event.Type
+    ) async throws where Event.Schema == SocketEmptyBody {
+        try await client.emit(event)
+    }
+
+    /// Returns transport status independently from Audiobookshelf authentication state.
     public func statusUpdates() async -> AsyncStream<SocketConnectionStatus> {
         await client.statusUpdates()
     }
 
-    // MARK: - Private: Observation
+    /// Returns the current authentication state and subsequent newest-state updates.
+    public func authStateUpdates() -> AsyncStream<AuthState> {
+        let subscriptionID = UUID()
+        let (stream, continuation) = AsyncStream<AuthState>.makeStream(
+            bufferingPolicy: .bufferingNewest(1)
+        )
+        continuation.yield(authState)
 
-    // Started once in init. These tasks run for the lifetime of the session actor.
-    // Transport continuations persist across reconnects, so these tasks naturally
-    // resume receiving events after a disconnect/reconnect cycle.
-    private func startObservation() {
-        statusObserverTask = Task {
-            let stream = await client.statusUpdates()
+        guard !isInvalidated else {
+            continuation.finish()
+            return stream
+        }
+
+        authStateContinuations[subscriptionID] = continuation
+        continuation.onTermination = { [weak self] _ in
+            Task { await self?.removeAuthStateContinuation(subscriptionID) }
+        }
+        return stream
+    }
+
+    // MARK: - Private Observation
+
+    private func startObservationIfNeeded() async {
+        guard statusObserverTask == nil, !isInvalidated else { return }
+
+        let statusStream = await client.statusUpdates()
+        let initStream = await client.events(for: InitEvent.self)
+        let authFailedStream = await client.events(for: AuthFailedEvent.self)
+
+        statusObserverTask = observeStatus(statusStream)
+        initObserverTask = observeInit(initStream)
+        authFailedObserverTask = observeAuthFailure(authFailedStream)
+    }
+
+    private func observeStatus(
+        _ stream: AsyncStream<SocketConnectionStatus>
+    ) -> Task<Void, Never> {
+        Task {
             for await status in stream {
                 guard !Task.isCancelled else { return }
-                await self.handleStatusChange(status)
+                await handleStatusChange(status)
             }
         }
+    }
 
-        initObserverTask = Task {
-            let stream = await client.events(for: InitEvent.self)
-            for await body in stream {
+    private func observeInit(
+        _ stream: SocketEventStream<InitEvent>
+    ) -> Task<Void, Never> {
+        Task {
+            do {
+                for try await payload in stream {
+                    guard !Task.isCancelled else { return }
+                    handleInit(payload)
+                }
+            } catch {
                 guard !Task.isCancelled else { return }
-                self.setAuthState(.authenticated(userID: body.userId, username: body.username))
+                setAuthState(.failed(message: error.localizedDescription))
             }
         }
+    }
 
-        authFailedObserverTask = Task {
-            let stream = await client.events(for: AuthFailedEvent.self)
-            for await body in stream {
+    private func observeAuthFailure(
+        _ stream: SocketEventStream<AuthFailedEvent>
+    ) -> Task<Void, Never> {
+        Task {
+            do {
+                for try await payload in stream {
+                    guard !Task.isCancelled else { return }
+                    handleAuthFailure(payload)
+                }
+            } catch {
                 guard !Task.isCancelled else { return }
-                self.setAuthState(.failed(message: body.message))
+                setAuthState(.failed(message: error.localizedDescription))
             }
         }
     }
 
     private func handleStatusChange(_ status: SocketConnectionStatus) async {
-        isConnected = (status == .connected)
-
         switch status {
         case .connected:
-            guard let token = currentToken else { return }
-            do {
-                try await client.emit(AuthEvent.self, token)
-                setAuthState(.authenticating)
-            } catch {
-                setAuthState(.failed(message: error.localizedDescription))
-            }
+            await handleConnected()
 
-        case .failed(let reason):
-            // Terminal for this connection attempt: the transport does not auto-reconnect, so
-            // this state must reach the caller rather than leaving a stale `.authenticating`.
-            setAuthState(.failed(message: reason))
+        case .disconnected, .connecting, .reconnecting, .failed:
+            isConnected = false
+            authenticatedTransportConnectionID = nil
+            setAuthState(.unauthenticated)
 
-        case .disconnected, .connecting:
-            break
+        case .invalidated:
+            isConnected = false
+            authenticatedTransportConnectionID = nil
         }
     }
 
-    private func setAuthState(_ state: AuthState) {
-        authState = state
-        for cont in authStateContinuations.values { cont.yield(state) }
+    private func handleConnected() async {
+        isConnected = true
+        transportConnectionID &+= 1
+        do {
+            try await authenticate()
+        } catch {
+            setAuthState(.unauthenticated)
+        }
     }
 
-    private func removeAuthStateContinuation(_ id: UUID) {
-        authStateContinuations.removeValue(forKey: id)
+    private func authenticate() async throws {
+        guard let currentToken else { return }
+        setAuthState(.authenticating)
+        do {
+            try await client.emit(AuthEvent.self, currentToken)
+        } catch {
+            setAuthState(.unauthenticated)
+            throw error
+        }
+    }
+
+    private func handleInit(_ payload: InitEvent.Schema) {
+        guard isConnected, authState == .authenticating else { return }
+
+        if authenticatedTransportConnectionID != transportConnectionID {
+            authenticatedConnectionID &+= 1
+            authenticatedTransportConnectionID = transportConnectionID
+        }
+
+        setAuthState(
+            .authenticated(
+                connectionID: authenticatedConnectionID,
+                userID: payload.userId,
+                username: payload.username
+            )
+        )
+    }
+
+    private func handleAuthFailure(_ payload: AuthFailedEvent.Schema) {
+        guard isConnected, authState == .authenticating else { return }
+        setAuthState(.failed(message: payload.message))
+    }
+
+    private func setAuthState(_ state: AuthState) {
+        guard authState != state else { return }
+        authState = state
+        for continuation in authStateContinuations.values {
+            continuation.yield(state)
+        }
+    }
+
+    private func removeAuthStateContinuation(_ subscriptionID: UUID) {
+        authStateContinuations.removeValue(forKey: subscriptionID)
     }
 }

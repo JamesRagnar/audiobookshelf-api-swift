@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A library was created.
 public struct LibraryAddedEvent: SocketEvent {

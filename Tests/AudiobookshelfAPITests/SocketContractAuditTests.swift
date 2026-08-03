@@ -1,11 +1,159 @@
 import AudiobookshelfAPI
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 import Testing
 
 /// Socket event payload shapes corrected against the audiobookshelf 2.36.0 server source.
 @Suite
 struct SocketContractAuditTests {
+
+    @Test
+    func clientEventsAreEmittableContracts() {
+        requireEmittable(AuthEvent.self)
+        requireEmittable(CancelScanEvent.self)
+        requireEmittable(SetLogListenerEvent.self)
+        requireEmittable(RemoveLogListenerEvent.self)
+        requireEmittable(MessageAllUsersEvent.self)
+        requireEmittable(PingEvent.self)
+        requireEmittable(SearchCoversEvent.self)
+        requireEmittable(CancelCoverSearchEvent.self)
+    }
+
+    @Test
+    func serverEventsAreNotEmittableContracts() {
+        #expect(!(ItemAddedEvent.self is any EmittableSocketEvent.Type))
+        #expect(!(InitEvent.self is any EmittableSocketEvent.Type))
+        #expect(!(StreamReadyEvent.self is any EmittableSocketEvent.Type))
+    }
+
+    @Test
+    func clientEventEncodingUsesDefaultArgumentShapes() throws {
+        let scalar = try AuthEvent.encode("token", using: JSONEncoder())
+        let object = try SearchCoversEvent.encode(
+            .init(
+                requestId: "request-1",
+                title: "Book",
+                author: "Author",
+                provider: "google",
+                podcast: false
+            ),
+            using: JSONEncoder()
+        )
+        let empty = try PingEvent.encode(SocketEmptyBody(), using: JSONEncoder())
+
+        #expect(scalar.count == 1)
+        #expect(object.count == 1)
+        #expect(empty.isEmpty)
+    }
+
+    @Test
+    func emptyServerEventsAcceptZeroArgumentsOrNull() throws {
+        _ = try BackupAppliedEvent.decode(arguments: [], using: JSONDecoder())
+        _ = try BackupAppliedEvent.decode(arguments: [.null], using: JSONDecoder())
+        _ = try StreamReadyEvent.decode(arguments: [], using: JSONDecoder())
+        _ = try StreamReadyEvent.decode(arguments: [.null], using: JSONDecoder())
+    }
+
+    @Test
+    func nondefaultPoliciesAreLimitedToReplaceableState() {
+        #expect(InitEvent.defaultStreamPolicy == .latest)
+        #expect(NotificationsUpdatedEvent.defaultStreamPolicy == .latest)
+        #expect(EReaderDevicesUpdatedEvent.defaultStreamPolicy == .latest)
+        #expect(LogEvent.defaultStreamPolicy == .latest)
+
+        #expect(ItemsUpdatedEvent.defaultStreamPolicy == .lossless)
+        #expect(TaskProgress.defaultStreamPolicy == .lossless)
+        #expect(TrackProgressEvent.defaultStreamPolicy == .lossless)
+        #expect(StreamProgressEvent.defaultStreamPolicy == .lossless)
+        #expect(UserItemProgressUpdated.defaultStreamPolicy == .lossless)
+    }
+
+    @Test
+    func eventNamesAreUnique() {
+        let names = [
+            AdminMessageEvent.name,
+            AuthEvent.name,
+            AuthorAddedEvent.name,
+            AuthorRemovedEvent.name,
+            AuthorUpdatedEvent.name,
+            AuthorsNumBooksUpdatedEvent.name,
+            BackupAppliedEvent.name,
+            BatchQuickMatchCompleteEvent.name,
+            CancelCoverSearchEvent.name,
+            CancelScanEvent.name,
+            CollectionAddedEvent.name,
+            CollectionRemovedEvent.name,
+            CollectionUpdatedEvent.name,
+            CoverSearchCancelled.name,
+            CoverSearchComplete.name,
+            CoverSearchError.name,
+            CoverSearchProviderError.name,
+            CoverSearchResult.name,
+            CustomMetadataProviderAddedEvent.name,
+            CustomMetadataProviderRemovedEvent.name,
+            EReaderDevicesUpdatedEvent.name,
+            EpisodeAddedEvent.name,
+            EpisodeDownloadFinishedEvent.name,
+            EpisodeDownloadQueueClearedEvent.name,
+            EpisodeDownloadQueuedEvent.name,
+            EpisodeDownloadStartedEvent.name,
+            InitEvent.name,
+            ItemAddedEvent.name,
+            ItemRemovedEvent.name,
+            ItemUpdatedEvent.name,
+            ItemsAddedEvent.name,
+            ItemsUpdatedEvent.name,
+            LibraryAddedEvent.name,
+            LibraryRemovedEvent.name,
+            LibraryUpdatedEvent.name,
+            LogEvent.name,
+            MessageAllUsersEvent.name,
+            MetadataEmbedQueueUpdate.name,
+            NotificationsUpdatedEvent.name,
+            PingEvent.name,
+            PlaylistAddedEvent.name,
+            PlaylistRemovedEvent.name,
+            PlaylistUpdatedEvent.name,
+            PongEvent.name,
+            RemoveLogListenerEvent.name,
+            RssFeedClosedEvent.name,
+            RssFeedOpenEvent.name,
+            SearchCoversEvent.name,
+            SeriesAddedEvent.name,
+            SeriesRemovedEvent.name,
+            SeriesUpdatedEvent.name,
+            SetLogListenerEvent.name,
+            ShareClosedEvent.name,
+            ShareOpenEvent.name,
+            StreamClosedEvent.name,
+            StreamErrorEvent.name,
+            StreamOpenEvent.name,
+            StreamProgressEvent.name,
+            StreamReadyEvent.name,
+            StreamResetEvent.name,
+            TaskFinished.name,
+            TaskProgress.name,
+            TaskStarted.name,
+            TrackFinishedEvent.name,
+            TrackProgressEvent.name,
+            TrackStartedEvent.name,
+            UserAddedEvent.name,
+            UserItemProgressUpdated.name,
+            UserOfflineEvent.name,
+            UserOnlineEvent.name,
+            UserRemovedEvent.name,
+            UserSessionClosedEvent.name,
+            UserStreamUpdateEvent.name,
+            UserUpdatedEvent.name
+        ]
+
+        #expect(Set(names).count == names.count)
+    }
+
+    private func requireEmittable<Event: EmittableSocketEvent>(_ event: Event.Type) {}
+}
+
+extension SocketContractAuditTests {
 
     @Test
     func publicUserDecodesUserOnlinePayload() throws {
@@ -141,9 +289,11 @@ struct SocketContractAuditTests {
         #expect(payload.startTime == 120.5)
     }
 
-    private let publicUserJSON = """
-    { "id": "user-1", "username": "listener", "type": "user", "session": null,
-      "lastSeen": 1737600000000, "createdAt": 1737000000000, "connections": 2 }
-    """
+    private var publicUserJSON: String {
+        """
+        { "id": "user-1", "username": "listener", "type": "user", "session": null,
+          "lastSeen": 1737600000000, "createdAt": 1737000000000, "connections": 2 }
+        """
+    }
 
 }

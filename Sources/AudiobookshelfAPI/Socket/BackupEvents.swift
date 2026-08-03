@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A backup was applied to the server.
 public struct BackupAppliedEvent: SocketEvent {

@@ -26,10 +26,10 @@ The package is not responsible for:
 - knows server paths, parameters, and response expectations
 - keeps integration logic centralized and typed
 
-### `RagnarNetworking`
+### `RagnarNetworking` and `RagnarSocketIO`
 
-- owns request transport and socket transport primitives
-- provides `APIClient`, socket transport implementations, and shared networking protocols
+- `RagnarNetworking` owns HTTP request transport and provides `APIClient`
+- `RagnarSocketIO` owns Socket.IO, WebSocket transport, heartbeat, and reconnect behavior
 - executes the interfaces defined by this package
 
 ### Your app
