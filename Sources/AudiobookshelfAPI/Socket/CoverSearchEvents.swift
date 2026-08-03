@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// Cover search result streamed to client.
 public struct CoverSearchResult: SocketEvent {
@@ -118,26 +118,6 @@ public extension CoverSearchCancelled {
 
         /// The unique request ID for this search.
         public let requestId: String
-
-    }
-
-}
-
-/// Authentication failed (invalid token or user).
-public struct AuthFailed: SocketEvent {
-
-    public static let name = "auth_failed"
-
-    public typealias Schema = CustomResponse
-
-}
-
-public extension AuthFailed {
-
-    struct CustomResponse: Decodable, Sendable {
-
-        /// Error message describing the failure.
-        public let message: String
 
     }
 

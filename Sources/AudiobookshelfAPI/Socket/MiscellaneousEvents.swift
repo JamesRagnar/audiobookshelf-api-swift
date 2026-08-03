@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// Successfully authenticated the socket. Response to the `auth` client event.
 ///
@@ -15,6 +15,8 @@ import RagnarNetworking
 public struct InitEvent: SocketEvent {
 
     public static let name = "init"
+
+    public static let defaultStreamPolicy: SocketStreamPolicy = .latest
 
     public typealias Schema = CustomResponse
 
@@ -41,6 +43,8 @@ public extension InitEvent {
 public struct LogEvent: SocketEvent {
 
     public static let name = "log"
+
+    public static let defaultStreamPolicy: SocketStreamPolicy = .latest
 
     public typealias Schema = LogEventObject
 

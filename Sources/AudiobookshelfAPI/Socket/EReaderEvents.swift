@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// The list of eReader devices was updated.
 ///
@@ -15,6 +15,8 @@ import RagnarNetworking
 public struct EReaderDevicesUpdatedEvent: SocketEvent {
 
     public static let name = "ereader-devices-updated"
+
+    public static let defaultStreamPolicy: SocketStreamPolicy = .latest
 
     public typealias Schema = Payload
 

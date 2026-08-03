@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A podcast episode has been queued for download.
 public struct EpisodeDownloadQueuedEvent: SocketEvent {

@@ -6,12 +6,14 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A notification was fired.
 public struct NotificationsUpdatedEvent: SocketEvent {
 
     public static let name = "notifications_updated"
+
+    public static let defaultStreamPolicy: SocketStreamPolicy = .latest
 
     public typealias Schema = NotificationSettings
 

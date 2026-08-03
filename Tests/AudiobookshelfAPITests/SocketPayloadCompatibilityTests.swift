@@ -6,6 +6,30 @@ import Testing
 struct SocketPayloadCompatibilityTests {
 
     @Test
+    func authorRemovedPayloadDecodesIdentifierShape() throws {
+        let data = Data(
+            #"{"id":"author-1","libraryId":"library-1"}"#.utf8
+        )
+
+        let payload = try JSONDecoder().decode(AuthorRemovedEvent.Schema.self, from: data)
+
+        #expect(payload.id == "author-1")
+        #expect(payload.libraryId == "library-1")
+    }
+
+    @Test
+    func authorRemovedPayloadDecodesFullAuthorShape() throws {
+        let data = Data(
+            #"{"id":"author-1","libraryId":"library-1","name":"Author"}"#.utf8
+        )
+
+        let payload = try JSONDecoder().decode(AuthorRemovedEvent.Schema.self, from: data)
+
+        #expect(payload.id == "author-1")
+        #expect(payload.libraryId == "library-1")
+    }
+
+    @Test
     func itemRemovedPayloadDecodesLegacyIdOnlyShape() throws {
         let data = Data(
             """

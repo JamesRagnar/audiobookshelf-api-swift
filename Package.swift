@@ -22,7 +22,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking",
-            branch: "main"
+            branch: "issue-88-base"
         )
     ],
     targets: [
@@ -31,6 +31,10 @@ let package = Package(
             dependencies: [
                 .product(
                     name: "RagnarNetworking",
+                    package: "RagnarNetworking"
+                ),
+                .product(
+                    name: "RagnarSocketIO",
                     package: "RagnarNetworking"
                 ),
             ]

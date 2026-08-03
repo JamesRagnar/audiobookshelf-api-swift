@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A playlist was created.
 public struct PlaylistAddedEvent: SocketEvent {

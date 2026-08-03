@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// Background task started notification.
 public struct TaskStarted: SocketEvent {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// An RSS feed was opened.
 public struct RssFeedOpenEvent: SocketEvent {

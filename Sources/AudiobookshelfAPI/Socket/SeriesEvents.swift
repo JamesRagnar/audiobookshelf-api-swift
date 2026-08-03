@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A series was created.
 public struct SeriesAddedEvent: SocketEvent {

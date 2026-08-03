@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RagnarNetworking
+import RagnarSocketIO
 
 /// A custom metadata provider was added.
 public struct CustomMetadataProviderAddedEvent: SocketEvent {
