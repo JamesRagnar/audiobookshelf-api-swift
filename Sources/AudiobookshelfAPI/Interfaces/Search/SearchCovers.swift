@@ -13,7 +13,7 @@ public struct SearchCovers: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct SearchCovers: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Search Covers Parameters
+        /// Search Covers Request
         ///
         /// - Parameters:
         ///   - query: The search query (title and/or author).
@@ -54,16 +54,18 @@ public struct SearchCovers: Interface {
         case internalError
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 }
 
 public extension SearchCovers {
 
-    struct Response: Decodable, Sendable {
+    struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let results: [CoverResult]
 

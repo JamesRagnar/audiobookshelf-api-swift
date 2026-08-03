@@ -13,7 +13,7 @@ public struct GetPlaylist: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetPlaylist: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Playlist Parameters
+        /// Get Playlist Request
         ///
         /// - Parameter playlistID: The ID of the playlist.
         public init(playlistID: String) {
@@ -48,14 +48,14 @@ public struct GetPlaylist: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// The playlist does not belong to the authenticated user.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No playlist with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The playlist does not belong to the authenticated user.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No playlist with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

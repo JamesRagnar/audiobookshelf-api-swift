@@ -13,7 +13,7 @@ public struct UnlinkOpenID: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -25,9 +25,9 @@ public struct UnlinkOpenID: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Unlink OpenID Parameters
+        /// Unlink OpenID Request
         ///
         /// - Parameters:
         ///   - userId: The ID of the user to unlink from OpenID.
@@ -49,11 +49,12 @@ public struct UnlinkOpenID: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

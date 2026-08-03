@@ -13,7 +13,7 @@ public struct UpdateLibraryItemMedia: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdateLibraryItemMedia: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Library Item Media Parameters
+        /// Update Library Item Media Request
         ///
         /// - Parameters:
         ///   - itemId: The ID of the library item.
@@ -46,7 +46,7 @@ public struct UpdateLibraryItemMedia: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let updated: Bool
 
@@ -63,15 +63,17 @@ public struct UpdateLibraryItemMedia: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateLibraryItemMedia.Parameters {
+public extension UpdateLibraryItemMedia.Request {
 
     struct LibraryItemMediaPayload: RequestBody, Encodable, Sendable {
         public let metadata: LibraryItemMediaMetadata?

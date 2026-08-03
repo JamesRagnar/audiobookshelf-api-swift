@@ -13,7 +13,7 @@ public struct GetHLSStreamFile: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetHLSStreamFile: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get HLS Stream File Parameters
+        /// Get HLS Stream File Request
         ///
         /// - Parameters:
         ///   - streamId: The stream ID (UUID).
@@ -46,9 +46,11 @@ public struct GetHLSStreamFile: Interface {
         case notFound
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 }

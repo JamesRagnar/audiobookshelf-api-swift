@@ -13,7 +13,7 @@ public struct GetPodcastEpisode: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,7 +25,7 @@ public struct GetPodcastEpisode: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(
             libraryItemID: String,
@@ -50,16 +50,16 @@ public struct GetPodcastEpisode: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// The user is not allowed to access the library item.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No podcast episode with the given ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        /// The library item is not a podcast.
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The user is not allowed to access the library item.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No podcast episode with the given ID exists.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            /// The library item is not a podcast.
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }

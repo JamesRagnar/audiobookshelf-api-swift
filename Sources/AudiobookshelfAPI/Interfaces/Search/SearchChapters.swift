@@ -13,7 +13,7 @@ public struct SearchChapters: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct SearchChapters: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Search Chapters Parameters
+        /// Search Chapters Request
         ///
         /// - Parameters:
         ///   - query: The search query.
@@ -50,14 +50,14 @@ public struct SearchChapters: Interface {
     public enum AudiobookshelfError: Error, Sendable {
     }
 
-    public static let responseCases: ResponseMap = [
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 }
 
 public extension SearchChapters {
 
-    struct Response: Decodable, Sendable {
+    struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let results: [ChapterResult]
 

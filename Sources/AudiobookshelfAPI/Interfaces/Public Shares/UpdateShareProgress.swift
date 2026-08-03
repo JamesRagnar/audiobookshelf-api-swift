@@ -13,7 +13,7 @@ public struct UpdateShareProgress: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdateShareProgress: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Update Share Progress Parameters
+        /// Update Share Progress Request
         ///
         /// - Parameters:
         ///   - slug: The unique share identifier.
@@ -56,16 +56,17 @@ public struct UpdateShareProgress: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(204, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(204),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateShareProgress.Parameters {
+public extension UpdateShareProgress.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

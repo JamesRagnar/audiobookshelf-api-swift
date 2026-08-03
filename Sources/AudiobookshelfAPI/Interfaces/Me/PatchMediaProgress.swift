@@ -13,7 +13,7 @@ public struct PatchMediaProgress: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct PatchMediaProgress: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// PatchMediaProgress Parameters
+        /// PatchMediaProgress Request
         ///
         /// - Parameters:
         ///   - libraryItemID: The ID of the library item to create/update media progress for.
@@ -100,19 +100,19 @@ public struct PatchMediaProgress: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        // Success
-        .code(200, .noContent),
-        // Invalid request payload for the target media.
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        // No library items or podcast episodes were found with the given IDs.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            // Invalid request payload for the target media.
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            // No library items or podcast episodes were found with the given IDs.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension PatchMediaProgress.Parameters {
+public extension PatchMediaProgress.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

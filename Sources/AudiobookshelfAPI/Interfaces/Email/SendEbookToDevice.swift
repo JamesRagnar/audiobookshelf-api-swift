@@ -13,7 +13,7 @@ public struct SendEbookToDevice: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct SendEbookToDevice: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Send Ebook To Device Parameters
+        /// Send Ebook To Device Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item containing the ebook.
@@ -55,16 +55,17 @@ public struct SendEbookToDevice: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension SendEbookToDevice.Parameters {
+public extension SendEbookToDevice.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

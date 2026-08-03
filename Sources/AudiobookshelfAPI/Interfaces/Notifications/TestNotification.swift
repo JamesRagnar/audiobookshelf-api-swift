@@ -13,7 +13,7 @@ public struct TestNotification: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct TestNotification: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Test Notification Parameters
+        /// Test Notification Request
         ///
         /// - Parameters:
         ///   - notificationId: The ID of the notification to test.
@@ -55,13 +55,14 @@ public struct TestNotification: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }

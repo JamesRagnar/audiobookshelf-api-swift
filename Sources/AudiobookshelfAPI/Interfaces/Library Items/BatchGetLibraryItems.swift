@@ -13,7 +13,7 @@ public struct BatchGetLibraryItems: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct BatchGetLibraryItems: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Batch Get Library Items Parameters
+        /// Batch Get Library Items Request
         ///
         /// - Parameters:
         ///   - libraryItemIds: Array of library item IDs to retrieve.
@@ -48,7 +48,7 @@ public struct BatchGetLibraryItems: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The requested library items, always expanded regardless of the `expanded` parameter.
         public let libraryItems: [LibraryItem]
@@ -63,15 +63,16 @@ public struct BatchGetLibraryItems: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension BatchGetLibraryItems.Parameters {
+public extension BatchGetLibraryItems.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

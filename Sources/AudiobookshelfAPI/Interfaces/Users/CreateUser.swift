@@ -13,7 +13,7 @@ public struct CreateUser: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,7 +27,7 @@ public struct CreateUser: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(
             username: String,
@@ -51,7 +51,7 @@ public struct CreateUser: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The newly created user.
         public let user: User
@@ -69,17 +69,18 @@ public struct CreateUser: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 
-public extension CreateUser.Parameters {
+public extension CreateUser.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

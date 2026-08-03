@@ -13,7 +13,7 @@ public struct CreateBookmark: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreateBookmark: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Bookmark Parameters
+        /// Create Bookmark Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item to create a bookmark for.
@@ -60,17 +60,18 @@ public struct CreateBookmark: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension CreateBookmark.Parameters {
+public extension CreateBookmark.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

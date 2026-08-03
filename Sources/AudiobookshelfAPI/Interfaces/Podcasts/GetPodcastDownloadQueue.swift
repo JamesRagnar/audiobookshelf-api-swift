@@ -13,7 +13,7 @@ public struct GetPodcastDownloadQueue: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetPodcastDownloadQueue: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Podcast Download Queue Parameters
+        /// Get Podcast Download Queue Request
         ///
         /// - Parameter podcastId: The ID of the podcast library item.
         public init(podcastId: String) {
@@ -38,7 +38,7 @@ public struct GetPodcastDownloadQueue: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The queued downloads for this podcast. Does not include an in-progress download.
         public let downloads: [PodcastEpisodeDownload]
@@ -57,12 +57,13 @@ public struct GetPodcastDownloadQueue: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }

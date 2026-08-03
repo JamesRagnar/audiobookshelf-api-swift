@@ -3,22 +3,26 @@ import Foundation
 import RagnarNetworking
 import Testing
 
+/// `ResponseContract` no longer distinguishes a no-body success from any other success; both are
+/// `.success`, and it is the declared `Response` type (`Data`, here) that builds itself from
+/// whatever bytes arrived, including none. `binary200DecodesRawBytes` and
+/// `binary204NoContentReturnsEmptyData` below cover the actual decoding behavior.
 @Suite
 struct BinaryInterfacesTests {
 
     @Test
-    func binaryInterfacesKeepDecodeFor200() {
-        expectDecodeCase(GetHLSStreamFile.self)
-        expectDecodeCase(GetLibraryItemCover.self)
-        expectDecodeCase(GetLibraryFile.self)
-        expectDecodeCase(GetShareCover.self)
+    func binaryInterfacesDeclare200AsSuccess() {
+        expectSuccessCase(GetHLSStreamFile.self, statusCode: 200)
+        expectSuccessCase(GetLibraryItemCover.self, statusCode: 200)
+        expectSuccessCase(GetLibraryFile.self, statusCode: 200)
+        expectSuccessCase(GetShareCover.self, statusCode: 200)
     }
 
     @Test
-    func binaryInterfacesWithOptionalBodiesKeepNoContentFor204() {
-        expectNoContentCase(GetLibraryItemCover.self, statusCode: 204)
-        expectNoContentCase(GetLibraryFile.self, statusCode: 204)
-        expectNoContentCase(GetShareCover.self, statusCode: 204)
+    func binaryInterfacesWithOptionalBodiesDeclare204AsSuccess() {
+        expectSuccessCase(GetLibraryItemCover.self, statusCode: 204)
+        expectSuccessCase(GetLibraryFile.self, statusCode: 204)
+        expectSuccessCase(GetShareCover.self, statusCode: 204)
     }
 
     @Test
@@ -46,44 +50,24 @@ struct BinaryInterfacesTests {
         }
     }
 
-    private func expectDecodeCase<T: Interface>(_ interface: T.Type) {
-        let outcome = interface.responseCases.match(200)
-        #expect(outcome != nil)
+    private func expectSuccessCase<T: Interface>(_ interface: T.Type, statusCode: Int) {
+        let match = interface.responses.match(statusCode)
+        #expect(match != nil)
 
-        let isDecode: Bool
-        if let outcome {
-            switch outcome {
-            case .decode:
-                isDecode = true
+        let isSuccess: Bool
+        if let match {
+            switch match {
+            case .success:
+                isSuccess = true
 
-            default:
-                isDecode = false
+            case .failure:
+                isSuccess = false
             }
         } else {
-            isDecode = false
+            isSuccess = false
         }
 
-        #expect(isDecode)
-    }
-
-    private func expectNoContentCase<T: Interface>(_ interface: T.Type, statusCode: Int) {
-        let outcome = interface.responseCases.match(statusCode)
-        #expect(outcome != nil)
-
-        let isNoContent: Bool
-        if let outcome {
-            switch outcome {
-            case .noContent:
-                isNoContent = true
-
-            default:
-                isNoContent = false
-            }
-        } else {
-            isNoContent = false
-        }
-
-        #expect(isNoContent)
+        #expect(isSuccess)
     }
 
     private func makeResponse(statusCode: Int) throws -> URLResponse {

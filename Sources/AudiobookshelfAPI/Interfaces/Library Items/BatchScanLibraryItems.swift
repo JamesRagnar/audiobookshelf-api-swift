@@ -13,7 +13,7 @@ public struct BatchScanLibraryItems: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,7 +27,7 @@ public struct BatchScanLibraryItems: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(libraryItemIds: [String]) {
             self.body = Payload(libraryItemIds: libraryItemIds)
@@ -45,15 +45,16 @@ public struct BatchScanLibraryItems: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension BatchScanLibraryItems.Parameters {
+public extension BatchScanLibraryItems.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

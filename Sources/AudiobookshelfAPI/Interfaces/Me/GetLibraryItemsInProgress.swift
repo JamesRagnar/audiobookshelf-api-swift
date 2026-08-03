@@ -13,7 +13,7 @@ public struct GetLibraryItemsInProgress: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetLibraryItemsInProgress: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// GetLibraryItemsInProgress Parameters
+        /// GetLibraryItemsInProgress Request
         ///
         /// - Parameter limit: A limit for how many library items to return.
         public init(
@@ -42,16 +42,15 @@ public struct GetLibraryItemsInProgress: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The in progress library items.
         public let libraryItems: [LibraryItem]
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

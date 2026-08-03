@@ -13,7 +13,7 @@ public struct Login: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct Login: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Login Parameters
+        /// Login Request
         ///
         /// - Parameters:
         ///   - username: The username to log in with.
@@ -54,7 +54,7 @@ public struct Login: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The authenticated user.
         public let user: User
@@ -83,17 +83,17 @@ public struct Login: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// Invalid username or password.
-        .code(401, .error(AudiobookshelfError.unauthorized))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// Invalid username or password.
+            .code(401, .error(AudiobookshelfError.unauthorized))
+        ]
+    )
 
 }
 
-public extension Login.Parameters {
+public extension Login.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

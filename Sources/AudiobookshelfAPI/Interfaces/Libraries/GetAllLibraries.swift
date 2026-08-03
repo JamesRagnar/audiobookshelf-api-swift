@@ -13,7 +13,7 @@ public struct GetAllLibraries: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,25 +25,24 @@ public struct GetAllLibraries: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get All Libraries Parameters
+        /// Get All Libraries Request
         public init() {}
 
     }
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let libraries: [Library]
 
     }
 
-    public static let responseCases: ResponseMap = [
-
+    public static let responses = ResponseContract<Response>(
         /// The requested libraries.
-        .code(200, .decode)
-    ]
+        success: .exact(200)
+    )
 
 }

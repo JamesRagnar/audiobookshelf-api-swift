@@ -13,7 +13,7 @@ public struct GetAuthorImage: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public typealias Format = ArtworkFormat
 
@@ -27,9 +27,9 @@ public struct GetAuthorImage: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Get Author Image Parameters
+        /// Get Author Image Request
         ///
         /// - Parameters:
         ///   - authorID: The ID of the author.
@@ -42,7 +42,7 @@ public struct GetAuthorImage: Interface {
             self.queryItems = options.queryItems
         }
 
-        /// Get Author Image Parameters
+        /// Get Author Image Request
         ///
         /// - Parameters:
         ///   - authorID: The ID of the author.
@@ -85,14 +85,14 @@ public struct GetAuthorImage: Interface {
 
     public typealias Response = Data
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// No author with provided ID exists, or the author does not have an image.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        /// There was an error when attempting to read the image file.
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// No author with provided ID exists, or the author does not have an image.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            /// There was an error when attempting to read the image file.
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }

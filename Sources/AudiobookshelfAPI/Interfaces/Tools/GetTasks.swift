@@ -13,7 +13,7 @@ public struct GetTasks: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetTasks: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Tasks Parameters
+        /// Get Tasks Request
         ///
         /// - Parameters:
         ///   - includeQueue: Whether to include queued task data.
@@ -43,7 +43,7 @@ public struct GetTasks: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let tasks: [BackgroundTask]
 
@@ -51,10 +51,9 @@ public struct GetTasks: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }
 

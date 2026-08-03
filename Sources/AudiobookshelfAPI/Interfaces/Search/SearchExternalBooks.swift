@@ -13,7 +13,7 @@ public struct SearchExternalBooks: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct SearchExternalBooks: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Search External Books Parameters
+        /// Search External Books Request
         ///
         /// - Parameters:
         ///   - title: The book title to search for.
@@ -51,9 +51,8 @@ public struct SearchExternalBooks: Interface {
 
     public typealias Response = [ExternalBookSearchResult]
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

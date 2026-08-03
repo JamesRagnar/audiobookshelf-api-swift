@@ -33,7 +33,7 @@ struct UpdatePasswordComplianceTests {
 
     @Test
     func updatePasswordSendsRefreshTokenHeaderWhenProvided() {
-        let parameters = UpdatePassword.Parameters(
+        let parameters = UpdatePassword.Request(
             currentPassword: "old",
             newPassword: "new",
             refreshToken: "refresh-token-value"
@@ -45,7 +45,7 @@ struct UpdatePasswordComplianceTests {
 
     @Test
     func updatePasswordOmitsRefreshTokenHeaderByDefault() {
-        let parameters = UpdatePassword.Parameters(currentPassword: "old", newPassword: "new")
+        let parameters = UpdatePassword.Request(currentPassword: "old", newPassword: "new")
 
         #expect(parameters.headers?["x-refresh-token"] == nil)
     }

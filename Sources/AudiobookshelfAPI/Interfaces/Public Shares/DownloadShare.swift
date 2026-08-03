@@ -13,7 +13,7 @@ public struct DownloadShare: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct DownloadShare: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Download Share Parameters
+        /// Download Share Request
         ///
         /// - Parameters:
         ///   - slug: The unique share identifier.
@@ -51,12 +51,13 @@ public struct DownloadShare: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }

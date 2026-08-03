@@ -13,7 +13,7 @@ public struct CollectionBatchAddBooks: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,7 +27,7 @@ public struct CollectionBatchAddBooks: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         /// Collection Batch Add Books
         ///
@@ -58,21 +58,21 @@ public struct CollectionBatchAddBooks: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// A user with update permissions is required to update collections.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        /// The provided books array must not be empty.
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// A user with update permissions is required to update collections.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No collection with the specified ID exists.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            /// The provided books array must not be empty.
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension CollectionBatchAddBooks.Parameters {
+public extension CollectionBatchAddBooks.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

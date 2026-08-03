@@ -15,7 +15,7 @@ public struct UpdateAuthSettings: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -29,9 +29,9 @@ public struct UpdateAuthSettings: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Auth Settings Parameters.
+        /// Update Auth Settings Request.
         public init(settings: Body) {
             self.body = settings
         }
@@ -40,7 +40,7 @@ public struct UpdateAuthSettings: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let updated: Bool
 
@@ -56,16 +56,17 @@ public struct UpdateAuthSettings: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension UpdateAuthSettings.Parameters {
+public extension UpdateAuthSettings.Request {
 
     /// Update payload for `/api/auth-settings`.
     /// Note: This endpoint differentiates between omitted fields (no change) and explicit JSON null (clear value).

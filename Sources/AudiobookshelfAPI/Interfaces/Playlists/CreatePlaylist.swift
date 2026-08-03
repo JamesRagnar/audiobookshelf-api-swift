@@ -13,7 +13,7 @@ public struct CreatePlaylist: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         /// An Encodable version of PlaylistItem,
         /// including only the parameters required to add the Item to a Playlist
@@ -47,9 +47,9 @@ public struct CreatePlaylist: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Playlist Parameters
+        /// Create Playlist Request
         ///
         /// - Parameters:
         ///   - libraryId: The ID of the library the playlist belongs to.
@@ -85,17 +85,17 @@ public struct CreatePlaylist: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// The provided playlist data was invalid.
-        .code(400, .error(AudiobookshelfError.badRequest))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// The provided playlist data was invalid.
+            .code(400, .error(AudiobookshelfError.badRequest))
+        ]
+    )
 
 }
 
-public extension CreatePlaylist.Parameters {
+public extension CreatePlaylist.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

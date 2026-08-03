@@ -13,7 +13,7 @@ public struct GetAllSessions: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,7 +25,7 @@ public struct GetAllSessions: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init() {}
 
@@ -33,7 +33,7 @@ public struct GetAllSessions: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The total number of matching sessions.
         public let total: Int
@@ -64,13 +64,13 @@ public struct GetAllSessions: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// Unauthorized
-        .code(401, .error(AudiobookshelfError.unauthorized)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// Unauthorized
+            .code(401, .error(AudiobookshelfError.unauthorized)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

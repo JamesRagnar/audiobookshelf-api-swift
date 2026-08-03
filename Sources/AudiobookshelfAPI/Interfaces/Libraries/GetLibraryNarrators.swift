@@ -13,7 +13,7 @@ public struct GetLibraryNarrators: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetLibraryNarrators: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Narrators Parameters
+        /// Get Library Narrators Request
         ///
         /// - Parameter libraryID: The ID of the library.
         public init(
@@ -53,20 +53,21 @@ public struct GetLibraryNarrators: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
+    public static let responses = ResponseContract<Response>(
         /// The requested narrators.
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
 public extension GetLibraryNarrators {
 
-    struct Response: Decodable, Sendable {
+    struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let narrators: [Narrator]
 

@@ -13,7 +13,7 @@ public struct GetItemListeningSessions: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetItemListeningSessions: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Item Listening Sessions Parameters
+        /// Get Item Listening Sessions Request
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item.
         ///   - episodeId: The ID of the podcast episode (optional).
@@ -55,7 +55,7 @@ public struct GetItemListeningSessions: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The listening sessions.
         public let sessions: [PlaybackSession]
@@ -82,11 +82,12 @@ public struct GetItemListeningSessions: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

@@ -13,7 +13,7 @@ public struct CollectionRemoveBook: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .delete
 
@@ -25,9 +25,9 @@ public struct CollectionRemoveBook: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Remove Book from Collection Parameters
+        /// Remove Book from Collection Request
         ///
         /// - Parameters:
         ///   - collectionID: The ID of the collection.
@@ -54,14 +54,14 @@ public struct CollectionRemoveBook: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// A user with delete permissions is required to remove a book from a collection.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// A user with delete permissions is required to remove a book from a collection.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No collection with the specified ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

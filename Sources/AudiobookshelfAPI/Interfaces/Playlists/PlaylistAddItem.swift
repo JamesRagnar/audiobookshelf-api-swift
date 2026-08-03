@@ -13,7 +13,7 @@ public struct PlaylistAddItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct PlaylistAddItem: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Playlist Add Item Parameters
+        /// Playlist Add Item Request
         ///
         /// - Parameters:
         ///   - playlistID: The ID of the playlist.
@@ -63,24 +63,24 @@ public struct PlaylistAddItem: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// No library item with the provided ID exists, the library item is in a different library from the playlist,
-        /// the library item is already in the playlist, the library item is not a podcast and an episodeId was
-        /// provided, the library item is a podcast and an episodeId was not provided, or no podcast episode with the
-        /// provided ID exists in the library item.
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        /// The playlist does not belong to the authenticated user.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No playlist with the provided ID exists.    
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// No library item with the provided ID exists, the library item is in a different library from the playlist,
+            /// the library item is already in the playlist, the library item is not a podcast and an episodeId was
+            /// provided, the library item is a podcast and an episodeId was not provided, or no podcast episode with the
+            /// provided ID exists in the library item.
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            /// The playlist does not belong to the authenticated user.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No playlist with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension PlaylistAddItem.Parameters {
+public extension PlaylistAddItem.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

@@ -13,7 +13,7 @@ public struct RefreshToken: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,9 +25,9 @@ public struct RefreshToken: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Login Parameters
+        /// Login Request
         ///
         /// - Parameters:
         ///   - refreshToken: JWT refresh token
@@ -41,7 +41,7 @@ public struct RefreshToken: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The authenticated user.
         public let user: User
@@ -70,12 +70,12 @@ public struct RefreshToken: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// Invalid username or password.
-        .code(401, .error(AudiobookshelfError.unauthorized))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// Invalid username or password.
+            .code(401, .error(AudiobookshelfError.unauthorized))
+        ]
+    )
 
 }

@@ -13,7 +13,7 @@ public struct DeleteBookmark: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .delete
 
@@ -25,9 +25,9 @@ public struct DeleteBookmark: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Delete Bookmark Parameters
+        /// Delete Bookmark Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item containing the bookmark.
@@ -55,12 +55,13 @@ public struct DeleteBookmark: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .noContent),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

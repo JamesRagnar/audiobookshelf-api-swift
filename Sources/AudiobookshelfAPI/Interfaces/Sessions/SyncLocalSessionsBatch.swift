@@ -13,7 +13,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,15 +27,15 @@ public struct SyncLocalSessionsBatch: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Sync Local Sessions Batch Parameters
+        /// Sync Local Sessions Batch Request
         ///
         /// - Parameters:
         ///   - sessions: The array of local playback session data to sync with the server.
         ///   - deviceInfo: Optional device info to associate with synced sessions.
         public init(
-            sessions: [SyncLocalSession.Parameters.LocalPlaybackSession],
+            sessions: [SyncLocalSession.Request.LocalPlaybackSession],
             deviceInfo: LocalDeviceInfo? = nil
         ) {
             self.body = Payload(
@@ -48,7 +48,7 @@ public struct SyncLocalSessionsBatch: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let results: [SyncResult]
 
@@ -72,17 +72,17 @@ public struct SyncLocalSessionsBatch: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// Invalid request data or empty array provided.
-        .code(400, .error(AudiobookshelfError.badRequest))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// Invalid request data or empty array provided.
+            .code(400, .error(AudiobookshelfError.badRequest))
+        ]
+    )
 
 }
 
-public extension SyncLocalSessionsBatch.Parameters {
+public extension SyncLocalSessionsBatch.Request {
 
     /// Device metadata to associate with a batch sync request.
     struct LocalDeviceInfo: Encodable, Sendable {
@@ -125,7 +125,7 @@ public extension SyncLocalSessionsBatch.Parameters {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
-        let sessions: [SyncLocalSession.Parameters.LocalPlaybackSession]
+        let sessions: [SyncLocalSession.Request.LocalPlaybackSession]
 
         let deviceInfo: LocalDeviceInfo?
 

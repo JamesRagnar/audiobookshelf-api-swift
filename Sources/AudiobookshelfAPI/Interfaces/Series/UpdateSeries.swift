@@ -13,7 +13,7 @@ public struct UpdateSeries: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdateSeries: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Series Parameters
+        /// Update Series Request
         ///
         /// - Parameters:
         ///   - seriesId: The ID of the series to update.
@@ -62,16 +62,17 @@ public struct UpdateSeries: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateSeries.Parameters {
+public extension UpdateSeries.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

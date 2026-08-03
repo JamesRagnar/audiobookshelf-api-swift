@@ -13,7 +13,7 @@ public struct UpdateBookmark: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdateBookmark: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update Bookmark Parameters
+        /// Update Bookmark Request
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item containing the bookmark.
@@ -60,17 +60,18 @@ public struct UpdateBookmark: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateBookmark.Parameters {
+public extension UpdateBookmark.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

@@ -2,37 +2,41 @@
 import RagnarNetworking
 import Testing
 
+/// `ResponseContract` no longer distinguishes a no-body success from any other success; both are
+/// `.success`, and it is the declared `Response` type (`EmptyResponse`, here) that builds itself
+/// from zero bytes. This suite only checks that 200 is declared as a successful status for these
+/// endpoints. `InterfaceHandleNoContentTests` covers the actual empty-body decoding behavior.
 @Suite
 struct InterfaceResponseCasesTests {
 
     @Test
-    func emptyResponseInterfacesUseNoContentFor200() {
-        expectNoContentCase(PurgeCacheAll.self)
-        expectNoContentCase(PurgeItemsCache.self)
-        expectNoContentCase(SendTestEmail.self)
-        expectNoContentCase(UpdateNotificationSettings.self)
-        expectNoContentCase(ValidateCronExpression.self)
-        expectNoContentCase(DeleteSession.self)
+    func emptyResponseInterfacesDeclare200AsSuccess() {
+        expectSuccessCase(PurgeCacheAll.self)
+        expectSuccessCase(PurgeItemsCache.self)
+        expectSuccessCase(SendTestEmail.self)
+        expectSuccessCase(UpdateNotificationSettings.self)
+        expectSuccessCase(ValidateCronExpression.self)
+        expectSuccessCase(DeleteSession.self)
     }
 
-    private func expectNoContentCase<T: Interface>(_ interface: T.Type) {
-        let outcome = interface.responseCases.match(200)
-        #expect(outcome != nil)
+    private func expectSuccessCase<T: Interface>(_ interface: T.Type) {
+        let match = interface.responses.match(200)
+        #expect(match != nil)
 
-        let isNoContent: Bool
-        if let outcome {
-            switch outcome {
-            case .noContent:
-                isNoContent = true
+        let isSuccess: Bool
+        if let match {
+            switch match {
+            case .success:
+                isSuccess = true
 
-            default:
-                isNoContent = false
+            case .failure:
+                isSuccess = false
             }
         } else {
-            isNoContent = false
+            isSuccess = false
         }
 
-        #expect(isNoContent)
+        #expect(isSuccess)
     }
 
 }

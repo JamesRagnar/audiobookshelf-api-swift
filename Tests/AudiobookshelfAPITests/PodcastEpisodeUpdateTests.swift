@@ -51,7 +51,7 @@ struct PodcastEpisodeUpdateTests {
 
     @Test
     func updatePayloadOmitsUnsetFields() throws {
-        let parameters = UpdatePodcastEpisode.Parameters(
+        let parameters = UpdatePodcastEpisode.Request(
             podcastId: "podcast-1",
             episodeId: "episode-1",
             title: "New Title"
@@ -67,7 +67,7 @@ struct PodcastEpisodeUpdateTests {
 
     @Test
     func updatePayloadEncodesEnclosureObjectWhenSet() throws {
-        let parameters = UpdatePodcastEpisode.Parameters(
+        let parameters = UpdatePodcastEpisode.Request(
             podcastId: "podcast-1",
             episodeId: "episode-1",
             enclosure: .set(.init(
@@ -87,7 +87,7 @@ struct PodcastEpisodeUpdateTests {
 
     @Test
     func updatePayloadEncodesExplicitNullWhenCleared() throws {
-        let parameters = UpdatePodcastEpisode.Parameters(
+        let parameters = UpdatePodcastEpisode.Request(
             podcastId: "podcast-1",
             episodeId: "episode-1",
             enclosure: .clear

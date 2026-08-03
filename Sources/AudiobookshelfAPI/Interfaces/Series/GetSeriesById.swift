@@ -13,7 +13,7 @@ public struct GetSeriesById: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public enum Include: String {
 
@@ -33,9 +33,9 @@ public struct GetSeriesById: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Series by ID Parameters
+        /// Get Series by ID Request
         ///
         /// - Parameters:
         ///   - seriesID: The ID of the series.
@@ -63,12 +63,12 @@ public struct GetSeriesById: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// No series with provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// No series with provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

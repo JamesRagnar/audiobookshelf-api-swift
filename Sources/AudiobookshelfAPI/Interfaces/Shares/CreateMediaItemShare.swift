@@ -13,7 +13,7 @@ public struct CreateMediaItemShare: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreateMediaItemShare: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Media Item Share Parameters
+        /// Create Media Item Share Request
         ///
         /// - Parameters:
         ///   - slug: Unique identifier for the share URL.
@@ -57,7 +57,7 @@ public struct CreateMediaItemShare: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let id: String
 
@@ -91,19 +91,20 @@ public struct CreateMediaItemShare: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(201, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(409, .error(AudiobookshelfError.conflict)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(201),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(409, .error(AudiobookshelfError.conflict)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension CreateMediaItemShare.Parameters {
+public extension CreateMediaItemShare.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

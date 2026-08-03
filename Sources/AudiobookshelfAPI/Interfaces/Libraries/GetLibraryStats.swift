@@ -13,7 +13,7 @@ public struct GetLibraryStats: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetLibraryStats: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Stats Parameters
+        /// Get Library Stats Request
         ///
         /// - Parameter libraryID: The ID of the library.
         public init(libraryID: String) {
@@ -38,7 +38,7 @@ public struct GetLibraryStats: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The total amount of library items in the library.
         public let totalItems: Int
@@ -84,15 +84,15 @@ public struct GetLibraryStats: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// The user cannot access the library, or no library with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 

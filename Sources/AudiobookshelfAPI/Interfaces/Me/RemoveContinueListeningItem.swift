@@ -14,7 +14,7 @@ public struct RemoveContinueListeningItem: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -26,7 +26,7 @@ public struct RemoveContinueListeningItem: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         /// Remove Continue Listening Item
         ///
@@ -41,9 +41,8 @@ public struct RemoveContinueListeningItem: Interface {
 
     public typealias Response = User
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

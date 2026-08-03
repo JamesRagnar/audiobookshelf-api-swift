@@ -13,7 +13,7 @@ public struct CreateAPIKey: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreateAPIKey: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create API Key Parameters
+        /// Create API Key Request
         ///
         /// - Parameters:
         ///   - expiresAt: Optional Unix timestamp for when the key expires.
@@ -41,7 +41,7 @@ public struct CreateAPIKey: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The newly created API key.
         public let apiKey: CreatedAPIKey
@@ -85,17 +85,18 @@ public struct CreateAPIKey: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 
-public extension CreateAPIKey.Parameters {
+public extension CreateAPIKey.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

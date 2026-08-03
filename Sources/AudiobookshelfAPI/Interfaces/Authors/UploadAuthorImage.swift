@@ -13,7 +13,7 @@ public struct UploadAuthorImage: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct UploadAuthorImage: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Upload Author Image Parameters
+        /// Upload Author Image Request
         ///
         /// - Parameters:
         ///   - authorId: The ID of the author.
@@ -46,7 +46,7 @@ public struct UploadAuthorImage: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let author: Author
 
@@ -65,18 +65,19 @@ public struct UploadAuthorImage: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension UploadAuthorImage.Parameters {
+public extension UploadAuthorImage.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

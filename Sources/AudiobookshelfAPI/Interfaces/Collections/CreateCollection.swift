@@ -13,7 +13,7 @@ public struct CreateCollection: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreateCollection: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Collection Parameters
+        /// Create Collection Request
         /// 
         /// - Parameters:
         ///   - libraryID: The ID of the library the collection belongs to.
@@ -66,19 +66,19 @@ public struct CreateCollection: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// A user with update permissions is required to create collections.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// libraryId and name are required parameters.
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// A user with update permissions is required to create collections.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// libraryId and name are required parameters.
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }
 
-public extension CreateCollection.Parameters {
+public extension CreateCollection.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

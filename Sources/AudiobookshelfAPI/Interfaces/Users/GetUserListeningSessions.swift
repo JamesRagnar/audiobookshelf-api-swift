@@ -13,7 +13,7 @@ public struct GetUserListeningSessions: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,7 +25,7 @@ public struct GetUserListeningSessions: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(
             userId: String,
@@ -53,18 +53,19 @@ public struct GetUserListeningSessions: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
 public extension GetUserListeningSessions {
 
-    struct PaginatedResponse: Decodable, Sendable {
+    struct PaginatedResponse: Decodable, Sendable, InterfaceResponse {
 
         public let total: Int
 

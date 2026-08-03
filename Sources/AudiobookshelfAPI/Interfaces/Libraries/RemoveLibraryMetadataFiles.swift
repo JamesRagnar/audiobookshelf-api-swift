@@ -13,7 +13,7 @@ public struct RemoveLibraryMetadataFiles: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,7 +25,7 @@ public struct RemoveLibraryMetadataFiles: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init(libraryId: String) {
             self.path = "/api/libraries/\(libraryId)/remove-metadata"
@@ -48,19 +48,20 @@ public struct RemoveLibraryMetadataFiles: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
 public extension RemoveLibraryMetadataFiles {
 
-    struct RemoveMetadataFilesResponse: Decodable, Sendable {
+    struct RemoveMetadataFilesResponse: Decodable, Sendable, InterfaceResponse {
 
         public let found: Int
 

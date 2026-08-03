@@ -13,7 +13,7 @@ public struct Logout: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -25,9 +25,9 @@ public struct Logout: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Logout Parameters
+        /// Logout Request
         ///
         /// - Parameters:
         ///   - refreshToken: The JWT refresh token.
@@ -48,7 +48,7 @@ public struct Logout: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// OIDC logout URL
         public let redirectURL: String?
@@ -59,10 +59,8 @@ public struct Logout: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

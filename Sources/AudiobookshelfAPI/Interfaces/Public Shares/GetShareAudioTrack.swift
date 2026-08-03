@@ -13,7 +13,7 @@ public struct GetShareAudioTrack: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetShareAudioTrack: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .none
+        public let authentication: AuthenticationScheme? = nil
 
-        /// Get Share Audio Track Parameters
+        /// Get Share Audio Track Request
         ///
         /// - Parameters:
         ///   - slug: The unique share identifier.
@@ -53,12 +53,13 @@ public struct GetShareAudioTrack: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(204, .noContent),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        additionalSuccesses: [.exact(204)],
+        failures: [
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }

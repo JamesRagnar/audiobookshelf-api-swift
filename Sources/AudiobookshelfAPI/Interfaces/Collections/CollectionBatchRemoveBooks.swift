@@ -13,7 +13,7 @@ public struct CollectionBatchRemoveBooks: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CollectionBatchRemoveBooks: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Collection Batch Remove Books Parameters
+        /// Collection Batch Remove Books Request
         ///
         /// - Parameters:
         ///   - collectionID: The ID of the collection.
@@ -58,21 +58,21 @@ public struct CollectionBatchRemoveBooks: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// A user with update permissions is required to update collections.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No collection with the specified ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        /// The provided books array must not be empty.
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// A user with update permissions is required to update collections.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No collection with the specified ID exists.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            /// The provided books array must not be empty.
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 
-public extension CollectionBatchRemoveBooks.Parameters {
+public extension CollectionBatchRemoveBooks.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

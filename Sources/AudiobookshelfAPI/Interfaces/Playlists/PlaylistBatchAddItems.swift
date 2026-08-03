@@ -13,7 +13,7 @@ public struct PlaylistBatchAddItems: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public struct Item: Encodable, Sendable {
 
@@ -45,9 +45,9 @@ public struct PlaylistBatchAddItems: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Playlist Batch Add Items Parameters
+        /// Playlist Batch Add Items Request
         ///
         /// - Parameters:
         ///   - playlistID: The ID of the playlist.
@@ -78,18 +78,18 @@ public struct PlaylistBatchAddItems: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// One or more of the provided items does not have a libraryItemId.
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        /// The playlist does not belong to the authenticated user.
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// No playlist with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound)),
-        /// The provided items array was empty or did not exist.
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// One or more of the provided items does not have a libraryItemId.
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            /// The playlist does not belong to the authenticated user.
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// No playlist with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound)),
+            /// The provided items array was empty or did not exist.
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }

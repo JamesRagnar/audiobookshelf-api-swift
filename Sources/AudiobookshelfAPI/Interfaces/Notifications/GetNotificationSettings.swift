@@ -13,7 +13,7 @@ public struct GetNotificationSettings: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,7 +25,7 @@ public struct GetNotificationSettings: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
         public init() {}
 
@@ -33,7 +33,7 @@ public struct GetNotificationSettings: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The available notification events and their variables. Same payload as `GetNotificationData`.
         public let data: GetNotificationData.Response
@@ -49,10 +49,11 @@ public struct GetNotificationSettings: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }

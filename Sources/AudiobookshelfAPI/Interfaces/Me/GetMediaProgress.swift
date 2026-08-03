@@ -13,7 +13,7 @@ public struct GetMediaProgress: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetMediaProgress: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Media Progress Parameters
+        /// Get Media Progress Request
         ///
         /// - Parameters:
         ///   - libraryItemID: The ID of the library item to retrieve the media progress for.
@@ -56,12 +56,12 @@ public struct GetMediaProgress: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        /// No media progress was found that matches the given IDs.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            /// No media progress was found that matches the given IDs.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

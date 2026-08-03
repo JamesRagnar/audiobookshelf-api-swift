@@ -13,7 +13,7 @@ public struct GetLibraryEpisodeDownloadQueue: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct GetLibraryEpisodeDownloadQueue: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Episode Download Queue Parameters
+        /// Get Library Episode Download Queue Request
         ///
         /// - Parameter libraryId: The ID of the library.
         public init(libraryId: String) {
@@ -38,7 +38,7 @@ public struct GetLibraryEpisodeDownloadQueue: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The episode currently downloading. Null when nothing in this library is downloading.
         public let currentDownload: PodcastEpisodeDownload?
@@ -60,12 +60,13 @@ public struct GetLibraryEpisodeDownloadQueue: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }

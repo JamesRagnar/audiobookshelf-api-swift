@@ -13,7 +13,7 @@ public struct GetYourListeningStats: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,16 +25,16 @@ public struct GetYourListeningStats: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Your Listening Stats Parameters
+        /// Get Your Listening Stats Request
         public init() {}
 
     }
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let totalTime: Int
 
@@ -50,10 +50,9 @@ public struct GetYourListeningStats: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }
 

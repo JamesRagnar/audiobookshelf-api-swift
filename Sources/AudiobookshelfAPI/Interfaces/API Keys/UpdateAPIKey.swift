@@ -13,7 +13,7 @@ public struct UpdateAPIKey: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .patch
 
@@ -27,9 +27,9 @@ public struct UpdateAPIKey: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update API Key Parameters
+        /// Update API Key Request
         ///
         /// Only `isActive` and `userId` can be changed. The key's name and expiry are baked into the
         /// JWT at creation and the server ignores any attempt to update them.
@@ -51,7 +51,7 @@ public struct UpdateAPIKey: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The updated API key. The generated key itself is never returned again after creation.
         public let apiKey: APIKey
@@ -68,17 +68,18 @@ public struct UpdateAPIKey: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateAPIKey.Parameters {
+public extension UpdateAPIKey.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

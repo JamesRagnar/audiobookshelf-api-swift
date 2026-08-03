@@ -7,7 +7,7 @@ struct LocalSessionSyncContractsTests {
 
     @Test
     func localPlaybackSessionEncodingIncludesSessionId() throws {
-        let payload = SyncLocalSession.Parameters.LocalPlaybackSession(
+        let payload = SyncLocalSession.Request.LocalPlaybackSession(
             id: "session-1",
             libraryItemId: "item-1",
             mediaType: "book",
@@ -75,7 +75,7 @@ struct LocalSessionSyncContractsTests {
 
     @Test
     func batchProgressItemEncodesLastUpdateWhenProvided() throws {
-        let payload = BatchCreateUpdateMediaProgress.Parameters.ProgressItem(
+        let payload = BatchCreateUpdateMediaProgress.Request.ProgressItem(
             libraryItemId: "item-1",
             episodeId: nil,
             duration: 3600,

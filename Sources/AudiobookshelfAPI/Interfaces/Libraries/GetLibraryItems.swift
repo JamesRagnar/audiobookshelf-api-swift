@@ -13,7 +13,7 @@ public struct GetLibraryItems: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public enum Include: String {
 
@@ -31,9 +31,9 @@ public struct GetLibraryItems: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Get Library Items Parameters
+        /// Get Library Items Request
         /// - Parameters:
         ///   - libraryID: The ID of the library.
         ///   - limit: Limit the number of returned results per page. If 0, no limit will be applied.
@@ -74,7 +74,7 @@ public struct GetLibraryItems: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The requested library items
         ///  If minified is true, it will be an array of Library Item Minified.
@@ -133,15 +133,15 @@ public struct GetLibraryItems: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        /// Success
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        /// The user cannot access the library, or no library with the provided ID exists.
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            /// The user cannot access the library, or no library with the provided ID exists.
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 

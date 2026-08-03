@@ -13,7 +13,7 @@ public struct RemoveSeriesFromContinueListening: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .get
 
@@ -25,9 +25,9 @@ public struct RemoveSeriesFromContinueListening: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Remove Series From Continue Listening Parameters
+        /// Remove Series From Continue Listening Request
         ///
         /// - Parameter seriesId: The ID of the series to remove from continue listening.
         public init(seriesId: String) {
@@ -40,9 +40,8 @@ public struct RemoveSeriesFromContinueListening: Interface {
 
     public typealias Response = String
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode)
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200)
+    )
 
 }

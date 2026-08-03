@@ -13,7 +13,7 @@ public struct DeleteMediaItemShare: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .delete
 
@@ -25,9 +25,9 @@ public struct DeleteMediaItemShare: Interface {
 
         public let body: Body = .init()
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Delete Media Item Share Parameters
+        /// Delete Media Item Share Request
         ///
         /// - Parameters:
         ///   - shareId: The ID of the share to delete.
@@ -51,12 +51,13 @@ public struct DeleteMediaItemShare: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(204, .noContent),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(204),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
+        ]
+    )
 
 }

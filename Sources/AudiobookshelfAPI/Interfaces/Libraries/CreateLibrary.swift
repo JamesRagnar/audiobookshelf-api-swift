@@ -13,7 +13,7 @@ public struct CreateLibrary: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct CreateLibrary: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Library Parameters
+        /// Create Library Request
         ///
         /// - Parameters:
         ///   - name: The name of the library.
@@ -65,15 +65,16 @@ public struct CreateLibrary: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
+    )
 
 }
 
-public extension CreateLibrary.Parameters {
+public extension CreateLibrary.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

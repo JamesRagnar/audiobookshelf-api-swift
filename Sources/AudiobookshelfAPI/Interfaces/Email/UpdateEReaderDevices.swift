@@ -13,7 +13,7 @@ public struct UpdateEReaderDevices: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct UpdateEReaderDevices: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Update EReader Devices Parameters
+        /// Update EReader Devices Request
         ///
         /// - Parameters:
         ///   - devices: Array of eReader devices with name and email.
@@ -41,7 +41,7 @@ public struct UpdateEReaderDevices: Interface {
 
     // MARK: Response
 
-    public struct Response: Decodable, Sendable {
+    public struct Response: Decodable, Sendable, InterfaceResponse {
 
         public let ereaderDevices: [EReaderDevice]
 
@@ -56,16 +56,17 @@ public struct UpdateEReaderDevices: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(400, .error(AudiobookshelfError.badRequest)),
-        .code(404, .error(AudiobookshelfError.notFound))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(404, .error(AudiobookshelfError.notFound))
+        ]
+    )
 
 }
 
-public extension UpdateEReaderDevices.Parameters {
+public extension UpdateEReaderDevices.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 

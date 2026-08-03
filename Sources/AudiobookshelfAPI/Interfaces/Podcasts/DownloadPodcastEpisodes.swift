@@ -13,7 +13,7 @@ public struct DownloadPodcastEpisodes: Interface {
 
     // MARK: Request
 
-    public struct Parameters: RequestParameters {
+    public struct Request: InterfaceRequest {
 
         public let method: RequestMethod = .post
 
@@ -27,9 +27,9 @@ public struct DownloadPodcastEpisodes: Interface {
 
         public let body: Body
 
-        public let authentication: AuthenticationType = .bearer
+        public let authentication: AuthenticationScheme? = .bearer
 
-        /// Download Podcast Episodes Parameters
+        /// Download Podcast Episodes Request
         ///
         /// - Parameters:
         ///   - podcastId: The ID of the podcast library item.
@@ -59,13 +59,14 @@ public struct DownloadPodcastEpisodes: Interface {
 
     }
 
-    public static let responseCases: ResponseMap = [
-
-        .code(200, .decode),
-        .code(403, .error(AudiobookshelfError.forbidden)),
-        .code(404, .error(AudiobookshelfError.notFound)),
-        .code(500, .error(AudiobookshelfError.internalServerError))
-    ]
+    public static let responses = ResponseContract<Response>(
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
+        ]
+    )
 
 }
 
@@ -126,7 +127,7 @@ extension DownloadPodcastEpisodes {
 
 }
 
-public extension DownloadPodcastEpisodes.Parameters {
+public extension DownloadPodcastEpisodes.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
