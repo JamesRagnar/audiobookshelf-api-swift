@@ -1,82 +1,148 @@
 # Sockets
 
-`AudiobookshelfAPI` includes `ABSSocketSession` for integrating with audiobookshelf realtime events over Socket.IO.
+`AudiobookshelfAPI` provides typed Audiobookshelf event contracts and `ABSSocketSession` for authenticated realtime
+updates. `RagnarSocketIO` provides the Socket.IO client, WebSocket transport, heartbeat, and automatic reconnect behavior.
 
-## Purpose
-
-`ABSSocketSession` wraps any `SocketClient` from `RagnarNetworking` and handles the audiobookshelf auth handshake on connect and reconnect.
-
-It is useful when your app needs:
-
-- item and library update events
-- playback-related realtime updates
-- a typed event-stream API over Socket.IO
-
-## Basic Setup
+## Create a Session
 
 ```swift
 import AudiobookshelfAPI
-import RagnarNetworking
+import RagnarSocketIO
 
 let socketClient = SocketIOClient()
-let session = ABSSocketSession(client: socketClient)
+let socketSession = ABSSocketSession(client: socketClient)
 
-await session.connect(to: serverURL, token: accessToken)
+try await socketSession.connect(
+    to: serverURL,
+    token: accessToken
+)
 ```
 
-## Auth State
+Pass the configured HTTP or HTTPS Audiobookshelf server URL to `connect(to:token:)`. The URL may include a
+RouterBasePath, such as `https://example.com/audiobookshelf`. `RagnarSocketIO` resolves the WebSocket scheme,
+Socket.IO path, and Engine.IO query items. Do not construct a WebSocket URL or add the access token to the upgrade
+request.
 
-`ABSSocketSession` tracks auth state separately from raw transport state.
+Socket authentication requires an access token. API keys and refresh tokens are not supported by this socket contract.
+The session emits the access token after every initial Socket.IO connection and automatic reconnect.
+
+Use `updateToken(_:)` when the access token changes. If the transport is connected, the session retries authentication
+without replacing it.
 
 ```swift
-for await state in await session.authStateUpdates() {
-    switch state {
-    case .authenticated(let userID, let username):
-        print("Authenticated as \(userID) / \(username)")
-    case .failed(let message):
-        print("Socket auth failed: \(message)")
+try await socketSession.updateToken(newAccessToken)
+```
+
+## Transport and Authentication State
+
+Transport state and Audiobookshelf authentication state are separate.
+
+```swift
+for await status in await socketSession.statusUpdates() {
+    switch status {
+    case .connected:
+        print("Socket.IO connected")
+    case .reconnecting(let attempt):
+        print("Reconnect attempt \(attempt)")
     default:
         break
     }
 }
 ```
 
-## Event Streams
-
-Use typed socket event streams for server events:
+A connected transport is not ready for Audiobookshelf events until the server responds to authentication with `init`.
 
 ```swift
-for await event in await session.events(for: ItemsUpdatedEvent.self) {
-    print(event)
+var lastConnectionID: UInt64?
+
+for await state in await socketSession.authStateUpdates() {
+    switch state {
+    case .authenticated(let connectionID, let userID, let username):
+        if connectionID != lastConnectionID {
+            lastConnectionID = connectionID
+            await reloadRelevantRESTSnapshots()
+            print("Authenticated as \(userID) / \(username)")
+        }
+
+    case .failed(let message):
+        print("Socket authentication rejected: \(message)")
+
+    case .unauthenticated, .authenticating:
+        break
+    }
 }
 ```
 
-The session delegates event streams to the underlying socket transport, so subscriptions survive reconnects without requiring re-registration in normal use.
+`authStateUpdates()` is a current-state stream. It emits the current value immediately and buffers only the newest
+state. It is not a lossless event log. Each successfully authenticated Socket.IO connection receives a new monotonically
+changing `connectionID`, including the initial connection and every successful reconnect.
 
-## Token Updates
+Run the relevant REST snapshot load after every new authenticated `connectionID`. The `init` payload identifies the
+authenticated user but is not a complete application snapshot.
 
-If your app refreshes its auth token while connected, update the session token:
+## Receive Server Events
 
-```swift
-await session.updateToken(newAccessToken)
-```
-
-The session re-emits the auth event when appropriate.
-
-Socket auth requires an access token. Server `>= 2.36.0` rejects refresh tokens for socket
-authentication, so pass the value you would use for bearer requests, not the refresh token.
-
-## Disconnect Behavior
+Server-originated event types conform to `SocketEvent`. Their streams are throwing because decoding failure,
+invalidation, and lossless-buffer overflow must reach the consumer.
 
 ```swift
-await session.disconnect()
+let itemEvents = await socketSession.events(for: ItemUpdatedEvent.self)
+
+do {
+    for try await item in itemEvents {
+        apply(item)
+    }
+} catch {
+    await reloadAffectedRESTSnapshot()
+    let replacement = await socketSession.events(for: ItemUpdatedEvent.self)
+    consume(replacement)
+}
 ```
 
-Disconnect resets session auth state while preserving the application-owned socket session object for later reuse.
+Event contracts declare their default delivery policy. Mutation, lifecycle, keyed update, and progress events use
+`.lossless`. Replaceable snapshots and explicitly droppable telemetry may use `.latest`.
 
-## Integration Guidance
+Override the contract only when the consumer has a deliberate delivery requirement:
 
-- Own a `SocketClient` implementation at the application boundary
-- Treat `ABSSocketSession` as the audiobookshelf-specific socket layer
-- Keep token refresh and reconnect policy in app-level infrastructure
-- Use typed event consumers instead of stringly-typed event dispatch in feature code
+```swift
+let logs = await socketSession.events(
+    for: LogEvent.self,
+    policy: try .latest(capacity: 10)
+)
+```
+
+`.latest` applies to an entire subscription, not to individual entity keys. Do not apply it to mixed item, task, track,
+stream, or user progress events. A bounded lossless stream terminates with `SocketIOError.bufferOverflow` rather than
+silently dropping an event.
+
+After overflow or decoding termination, treat the affected feature state as potentially desynchronized. Reload its REST
+snapshot before opening a replacement event stream because the server provides no replay or missed-event signal.
+
+## Emit Client Events
+
+Client-originated event types conform to `EmittableSocketEvent`. `ABSSocketSession.emit` accepts only those types.
+
+```swift
+try await socketSession.emit(SetLogListenerEvent.self, 2)
+try await socketSession.emit(PingEvent.self)
+```
+
+Transport reconnect restores Socket.IO event subscriptions, but it does not restore application-level server listeners.
+Re-emit commands such as `set_log_listener` after every new authenticated `connectionID` when the feature still needs
+them.
+
+## Disconnect and Invalidate
+
+```swift
+await socketSession.disconnect()
+```
+
+`disconnect()` closes the active transport, clears the server and access token, resets authentication state, and
+preserves typed event subscriptions for later reuse.
+
+```swift
+await socketSession.invalidate()
+```
+
+`invalidate()` permanently finishes session-owned state observation and delegates permanent invalidation to the client.
+The client finishes event streams with `SocketIOError.invalidated`. Create a new client and session after invalidation.
