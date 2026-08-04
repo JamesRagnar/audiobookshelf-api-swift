@@ -14,6 +14,8 @@ struct ABSSocketSessionRecoveryTests {
         try await session.connect(to: serverURL, token: "token-1")
         await client.pushStatus(.connected)
         try await waitForAuthTokens(["token-1"], from: client)
+        #expect(await client.eventSubscriptionPolicies[InitEvent.name] == [.lossless])
+        #expect(await client.eventSubscriptionPolicies["auth_failed"] == [.lossless])
 
         try await client.pushEvent(
             named: InitEvent.name,
@@ -29,6 +31,8 @@ struct ABSSocketSessionRecoveryTests {
             eventName: InitEvent.name,
             client: client
         )
+        #expect(await client.eventSubscriptionCreations["auth_failed"] == 1)
+        #expect(await client.eventSubscriptionCount(named: "auth_failed") == 1)
 
         await session.disconnect()
         try await session.connect(to: serverURL, token: "token-2")
@@ -43,6 +47,10 @@ struct ABSSocketSessionRecoveryTests {
             .authenticated(connectionID: 1, userID: "user-1", username: "alice"),
             from: session
         )
+        #expect(await client.eventSubscriptionCreations[InitEvent.name] == 2)
+        #expect(await client.eventSubscriptionCreations["auth_failed"] == 1)
+        #expect(await client.eventSubscriptionCount(named: InitEvent.name) == 1)
+        #expect(await client.eventSubscriptionCount(named: "auth_failed") == 1)
     }
 
     @Test("auth failure subscription is replaced after overflow")
@@ -56,10 +64,11 @@ struct ABSSocketSessionRecoveryTests {
         await client.pushStatus(.connected)
         try await waitForAuthTokens(["token"], from: client)
 
-        await client.finishEventStreams(
+        #expect(try await !client.pushEvent(
             named: "auth_failed",
-            throwing: SocketIOError.bufferOverflow(eventName: "auth_failed")
-        )
+            payload: AuthFailurePayload(message: "overflow"),
+            repetitions: 1_000
+        ))
         try await waitForSubscriptionCreations(
             2,
             eventName: "auth_failed",
@@ -70,6 +79,8 @@ struct ABSSocketSessionRecoveryTests {
             eventName: "auth_failed",
             client: client
         )
+        #expect(await client.eventSubscriptionCreations[InitEvent.name] == 1)
+        #expect(await client.eventSubscriptionCount(named: InitEvent.name) == 1)
 
         await client.pushStatus(.reconnecting(attempt: 1))
         await client.pushStatus(.connected)
@@ -82,6 +93,10 @@ struct ABSSocketSessionRecoveryTests {
             .failed(message: "invalid token"),
             from: session
         )
+        #expect(await client.eventSubscriptionCreations[InitEvent.name] == 1)
+        #expect(await client.eventSubscriptionCreations["auth_failed"] == 2)
+        #expect(await client.eventSubscriptionCount(named: InitEvent.name) == 1)
+        #expect(await client.eventSubscriptionCount(named: "auth_failed") == 1)
     }
 
     @Test("normally completed subscription is restored by the next connect")
@@ -111,6 +126,24 @@ struct ABSSocketSessionRecoveryTests {
             eventName: InitEvent.name,
             client: client
         )
+    }
+
+    @Test("invalidation never restarts authentication observers")
+    func invalidationDoesNotRestartObservers() async throws {
+        let client = TestSocketClient()
+        let session = ABSSocketSession(client: client)
+        try await session.connect(
+            to: #require(URL(string: "https://example.com")),
+            token: "token"
+        )
+
+        await session.invalidate()
+        try await Task.sleep(for: .milliseconds(10))
+
+        #expect(await client.eventSubscriptionCreations[InitEvent.name] == 1)
+        #expect(await client.eventSubscriptionCreations["auth_failed"] == 1)
+        #expect(await client.eventSubscriptionCount(named: InitEvent.name) == 0)
+        #expect(await client.eventSubscriptionCount(named: "auth_failed") == 0)
     }
 
     private func currentAuthState(

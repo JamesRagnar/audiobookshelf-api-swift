@@ -252,6 +252,27 @@ extension ABSSocketSessionTests {
         }
     }
 
+    @Test("default application streams discard malformed events")
+    func defaultStreamsDiscardMalformedEvents() async throws {
+        let client = TestSocketClient()
+        let session = ABSSocketSession(client: client)
+        let stream = await session.events(for: TestSocketEvent.self)
+        var iterator = stream.makeAsyncIterator()
+
+        #expect(try await client.pushEvent(
+            named: TestSocketEvent.name,
+            payload: "malformed"
+        ))
+        #expect(try await client.pushEvent(
+            named: TestSocketEvent.name,
+            payload: TestSocketEvent.Schema(value: "valid")
+        ))
+
+        #expect(try await iterator.next() == .init(value: "valid"))
+        #expect(await client.eventSubscriptionPolicies[TestSocketEvent.name] == [.bounded])
+        #expect(await client.eventSubscriptionCount(named: TestSocketEvent.name) == 1)
+    }
+
     @Test("invalidate finishes session and event streams")
     func invalidateFinishesStreams() async throws {
         let client = TestSocketClient()

@@ -61,6 +61,7 @@ actor TestSocketClient: SocketClient {
     private(set) var connectionGenerations = 0
     private(set) var emittedEvents: [EmittedEvent] = []
     private(set) var eventSubscriptionCreations: [String: Int] = [:]
+    private(set) var eventSubscriptionPolicies: [String: [SocketStreamPolicy]] = [:]
     private(set) var observersInstalledAtFirstConnect = false
     private(set) var disconnectCount = 0
     private(set) var invalidateCount = 0
@@ -130,9 +131,11 @@ actor TestSocketClient: SocketClient {
         policy: SocketStreamPolicy?
     ) -> SocketEventStream<Event> {
         let subscriptionID = UUID()
+        let resolvedPolicy = policy ?? Event.defaultStreamPolicy
         eventSubscriptionCreations[Event.name, default: 0] += 1
+        eventSubscriptionPolicies[Event.name, default: []].append(resolvedPolicy)
         let source = SocketEventStream<Event>.makeStream(
-            policy: policy ?? Event.defaultStreamPolicy,
+            policy: resolvedPolicy,
             onTermination: { [weak self] in
                 Task {
                     await self?.removeEventSource(
@@ -184,6 +187,20 @@ actor TestSocketClient: SocketClient {
             named: name,
             arguments: [SocketIOArgument(payload)]
         )
+    }
+
+    @discardableResult
+    func pushEvent<Value: Encodable & Sendable>(
+        named name: String,
+        payload: Value,
+        repetitions: Int
+    ) throws -> Bool {
+        let arguments = [try SocketIOArgument(payload)]
+        var accepted = true
+        for _ in 0..<repetitions {
+            accepted = pushArguments(named: name, arguments: arguments) && accepted
+        }
+        return accepted
     }
 
     @discardableResult
