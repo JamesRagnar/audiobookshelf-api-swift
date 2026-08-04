@@ -204,7 +204,7 @@ extension ABSSocketSession {
         guard initObserverID == nil, !isInvalidated else { return }
         let observerID = UUID()
         initObserverID = observerID
-        let stream = await client.events(for: InitEvent.self)
+        let stream = await client.events(for: InitEvent.self, policy: .lossless)
         guard initObserverID == observerID, !isInvalidated else { return }
         initObserverTask = observeInit(stream, observerID: observerID)
     }
@@ -213,7 +213,7 @@ extension ABSSocketSession {
         guard authFailedObserverID == nil, !isInvalidated else { return }
         let observerID = UUID()
         authFailedObserverID = observerID
-        let stream = await client.events(for: AuthFailedEvent.self)
+        let stream = await client.events(for: AuthFailedEvent.self, policy: .lossless)
         guard authFailedObserverID == observerID, !isInvalidated else { return }
         authFailedObserverTask = observeAuthFailure(stream, observerID: observerID)
     }

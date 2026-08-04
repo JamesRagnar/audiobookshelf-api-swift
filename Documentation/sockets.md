@@ -82,8 +82,8 @@ authenticated user but is not a complete application snapshot.
 
 ## Receive Server Events
 
-Server-originated event types conform to `SocketEvent`. Their streams are throwing because decoding failure,
-invalidation, and lossless-buffer overflow must reach the consumer.
+Server-originated event types conform to `SocketEvent`. Their streams are throwing so invalidation and explicitly
+loss-sensitive delivery failures can reach the consumer.
 
 ```swift
 let itemEvents = await socketSession.events(for: ItemUpdatedEvent.self)
@@ -99,8 +99,9 @@ do {
 }
 ```
 
-Event contracts declare their default delivery policy. Mutation, lifecycle, keyed update, and progress events use
-`.lossless`. Replaceable snapshots and explicitly droppable telemetry may use `.latest`.
+Event contracts use `.bounded` delivery by default. The stream retains the oldest 64 pending values and discards an
+occurrence when the buffer is full or its payload does not satisfy the event schema. The subscription remains active.
+Replaceable snapshots and explicitly droppable telemetry may declare `.latest` instead.
 
 Override the contract only when the consumer has a deliberate delivery requirement:
 
@@ -112,11 +113,16 @@ let logs = await socketSession.events(
 ```
 
 `.latest` applies to an entire subscription, not to individual entity keys. Do not apply it to mixed item, task, track,
-stream, or user progress events. A bounded lossless stream terminates with `SocketIOError.bufferOverflow` rather than
-silently dropping an event.
+stream, or user progress events. Use `.lossless` when the consumer must detect any gap. A lossless stream terminates
+with `SocketIOError.bufferOverflow` or `SocketIOError.eventDecodingFailed`.
 
 After overflow or decoding termination, treat the affected feature state as potentially desynchronized. Reload its REST
 snapshot before opening a replacement event stream because the server provides no replay or missed-event signal.
+
+`ABSSocketSession` subscribes to the `init` and `auth_failed` authentication events with `.lossless` delivery. A malformed
+payload or authentication buffer overflow terminates only the affected subscription. The session reports the failure
+and installs an independent replacement while leaving the other authentication subscription active. This prevents an
+authentication attempt from remaining indefinitely `.authenticating` after an undetected gap.
 
 Transcode lifecycle events are an exception to REST snapshot recovery. `GetOpenSession` confirms that a playback session
 exists, but the server response does not include the live transcode stream, reset state, completion state, or failure.

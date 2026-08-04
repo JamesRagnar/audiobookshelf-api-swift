@@ -55,17 +55,17 @@ struct SocketContractAuditTests {
     }
 
     @Test
-    func nondefaultPoliciesAreLimitedToReplaceableState() {
+    func streamPoliciesMatchDeliverySemantics() {
         #expect(InitEvent.defaultStreamPolicy == .latest)
         #expect(NotificationsUpdatedEvent.defaultStreamPolicy == .latest)
         #expect(EReaderDevicesUpdatedEvent.defaultStreamPolicy == .latest)
         #expect(LogEvent.defaultStreamPolicy == .latest)
 
-        #expect(ItemsUpdatedEvent.defaultStreamPolicy == .lossless)
-        #expect(TaskProgress.defaultStreamPolicy == .lossless)
-        #expect(TrackProgressEvent.defaultStreamPolicy == .lossless)
-        #expect(StreamProgressEvent.defaultStreamPolicy == .lossless)
-        #expect(UserItemProgressUpdated.defaultStreamPolicy == .lossless)
+        #expect(ItemsUpdatedEvent.defaultStreamPolicy == .bounded)
+        #expect(TaskProgress.defaultStreamPolicy == .bounded)
+        #expect(TrackProgressEvent.defaultStreamPolicy == .bounded)
+        #expect(StreamProgressEvent.defaultStreamPolicy == .bounded)
+        #expect(UserItemProgressUpdated.defaultStreamPolicy == .bounded)
     }
 
     @Test
