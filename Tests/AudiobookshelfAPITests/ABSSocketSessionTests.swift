@@ -256,18 +256,39 @@ extension ABSSocketSessionTests {
     func invalidateFinishesStreams() async throws {
         let client = TestSocketClient()
         let session = ABSSocketSession(client: client)
+        try await session.connect(
+            to: #require(URL(string: "https://example.com")),
+            token: "token"
+        )
+        await client.pushStatus(.connected)
+        try await waitForAuthTokens(["token"], from: client)
+        try await client.pushEvent(
+            named: InitEvent.name,
+            payload: InitPayload(userId: "user-1", username: "alice")
+        )
+        try await waitForAuthState(
+            .authenticated(connectionID: 1, userID: "user-1", username: "alice"),
+            from: session
+        )
         let authStates = await session.authStateUpdates()
         var authIterator = authStates.makeAsyncIterator()
         let events = await session.events(for: TestSocketEvent.self)
         var eventIterator = events.makeAsyncIterator()
-        _ = await authIterator.next()
+        #expect(
+            await authIterator.next()
+                == .authenticated(connectionID: 1, userID: "user-1", username: "alice")
+        )
 
         await session.invalidate()
 
+        #expect(await authIterator.next() == .unauthenticated)
         #expect(await authIterator.next() == nil)
         await #expect(throws: SocketIOError.invalidated) {
             try await eventIterator.next()
         }
+        var terminalIterator = await session.authStateUpdates().makeAsyncIterator()
+        #expect(await terminalIterator.next() == .unauthenticated)
+        #expect(await terminalIterator.next() == nil)
         #expect(await client.invalidateCount == 1)
     }
 

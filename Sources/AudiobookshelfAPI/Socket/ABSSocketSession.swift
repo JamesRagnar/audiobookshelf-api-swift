@@ -49,7 +49,9 @@ public actor ABSSocketSession {
 
     private var statusObserverTask: Task<Void, Never>?
     private var initObserverTask: Task<Void, Never>?
+    private var initObserverID: UUID?
     private var authFailedObserverTask: Task<Void, Never>?
+    private var authFailedObserverID: UUID?
     private var authStateContinuations: [UUID: AsyncStream<AuthState>.Continuation] = [:]
 
     // MARK: - Init
@@ -114,13 +116,16 @@ public actor ABSSocketSession {
         currentServerURL = nil
         isConnected = false
         authenticatedTransportConnectionID = nil
+        setAuthState(.unauthenticated)
 
         statusObserverTask?.cancel()
         initObserverTask?.cancel()
         authFailedObserverTask?.cancel()
         statusObserverTask = nil
         initObserverTask = nil
+        initObserverID = nil
         authFailedObserverTask = nil
+        authFailedObserverID = nil
 
         for continuation in authStateContinuations.values {
             continuation.finish()
@@ -176,19 +181,41 @@ public actor ABSSocketSession {
         }
         return stream
     }
+}
 
-    // MARK: - Private Observation
+// MARK: - Private Observation
+
+extension ABSSocketSession {
 
     private func startObservationIfNeeded() async {
-        guard statusObserverTask == nil, !isInvalidated else { return }
+        guard !isInvalidated else { return }
 
-        let statusStream = await client.statusUpdates()
-        let initStream = await client.events(for: InitEvent.self)
-        let authFailedStream = await client.events(for: AuthFailedEvent.self)
+        if statusObserverTask == nil {
+            let statusStream = await client.statusUpdates()
+            guard !isInvalidated, statusObserverTask == nil else { return }
+            statusObserverTask = observeStatus(statusStream)
+        }
 
-        statusObserverTask = observeStatus(statusStream)
-        initObserverTask = observeInit(initStream)
-        authFailedObserverTask = observeAuthFailure(authFailedStream)
+        await startInitObservationIfNeeded()
+        await startAuthFailedObservationIfNeeded()
+    }
+
+    private func startInitObservationIfNeeded() async {
+        guard initObserverID == nil, !isInvalidated else { return }
+        let observerID = UUID()
+        initObserverID = observerID
+        let stream = await client.events(for: InitEvent.self)
+        guard initObserverID == observerID, !isInvalidated else { return }
+        initObserverTask = observeInit(stream, observerID: observerID)
+    }
+
+    private func startAuthFailedObservationIfNeeded() async {
+        guard authFailedObserverID == nil, !isInvalidated else { return }
+        let observerID = UUID()
+        authFailedObserverID = observerID
+        let stream = await client.events(for: AuthFailedEvent.self)
+        guard authFailedObserverID == observerID, !isInvalidated else { return }
+        authFailedObserverTask = observeAuthFailure(stream, observerID: observerID)
     }
 
     private func observeStatus(
@@ -203,7 +230,8 @@ public actor ABSSocketSession {
     }
 
     private func observeInit(
-        _ stream: SocketEventStream<InitEvent>
+        _ stream: SocketEventStream<InitEvent>,
+        observerID: UUID
     ) -> Task<Void, Never> {
         Task {
             do {
@@ -213,13 +241,17 @@ public actor ABSSocketSession {
                 }
             } catch {
                 guard !Task.isCancelled else { return }
-                setAuthState(.failed(message: error.localizedDescription))
+                await initObservationTerminated(observerID, error: error)
+                return
             }
+            guard !Task.isCancelled else { return }
+            await initObservationTerminated(observerID, error: nil)
         }
     }
 
     private func observeAuthFailure(
-        _ stream: SocketEventStream<AuthFailedEvent>
+        _ stream: SocketEventStream<AuthFailedEvent>,
+        observerID: UUID
     ) -> Task<Void, Never> {
         Task {
             do {
@@ -229,9 +261,47 @@ public actor ABSSocketSession {
                 }
             } catch {
                 guard !Task.isCancelled else { return }
-                setAuthState(.failed(message: error.localizedDescription))
+                await authFailedObservationTerminated(observerID, error: error)
+                return
             }
+            guard !Task.isCancelled else { return }
+            await authFailedObservationTerminated(observerID, error: nil)
         }
+    }
+
+    private func initObservationTerminated(
+        _ observerID: UUID,
+        error: (any Error)?
+    ) async {
+        guard initObserverID == observerID else { return }
+        initObserverTask = nil
+        initObserverID = nil
+        guard shouldReplaceAuthenticationObservation(after: error) else { return }
+        if let error {
+            setAuthState(.failed(message: error.localizedDescription))
+        }
+        await startInitObservationIfNeeded()
+    }
+
+    private func authFailedObservationTerminated(
+        _ observerID: UUID,
+        error: (any Error)?
+    ) async {
+        guard authFailedObserverID == observerID else { return }
+        authFailedObserverTask = nil
+        authFailedObserverID = nil
+        guard shouldReplaceAuthenticationObservation(after: error) else { return }
+        if let error {
+            setAuthState(.failed(message: error.localizedDescription))
+        }
+        await startAuthFailedObservationIfNeeded()
+    }
+
+    private func shouldReplaceAuthenticationObservation(
+        after error: (any Error)?
+    ) -> Bool {
+        guard !isInvalidated, let error else { return false }
+        return error as? SocketIOError != .invalidated
     }
 
     private func handleStatusChange(_ status: SocketConnectionStatus) async {
@@ -247,6 +317,7 @@ public actor ABSSocketSession {
         case .invalidated:
             isConnected = false
             authenticatedTransportConnectionID = nil
+            setAuthState(.unauthenticated)
         }
     }
 

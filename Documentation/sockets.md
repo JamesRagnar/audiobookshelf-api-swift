@@ -65,7 +65,7 @@ for await state in await socketSession.authStateUpdates() {
         }
 
     case .failed(let message):
-        print("Socket authentication rejected: \(message)")
+        print("Socket authentication failed: \(message)")
 
     case .unauthenticated, .authenticating:
         break
@@ -118,6 +118,11 @@ silently dropping an event.
 After overflow or decoding termination, treat the affected feature state as potentially desynchronized. Reload its REST
 snapshot before opening a replacement event stream because the server provides no replay or missed-event signal.
 
+Transcode lifecycle events are an exception to REST snapshot recovery. `GetOpenSession` confirms that a playback session
+exists, but the server response does not include the live transcode stream, reset state, completion state, or failure.
+The server provides no other REST endpoint for that state. If `stream_reset` or `stream_error` may have been missed, do
+not infer transcode health from the playback session. Recover playback by establishing a new authoritative stream.
+
 ## Emit Client Events
 
 Client-originated event types conform to `EmittableSocketEvent`. `ABSSocketSession.emit` accepts only those types.
@@ -144,5 +149,6 @@ preserves typed event subscriptions for later reuse.
 await socketSession.invalidate()
 ```
 
-`invalidate()` permanently finishes session-owned state observation and delegates permanent invalidation to the client.
-The client finishes event streams with `SocketIOError.invalidated`. Create a new client and session after invalidation.
+`invalidate()` publishes `.unauthenticated`, permanently finishes session-owned state observation, and delegates permanent
+invalidation to the client. The client finishes event streams with `SocketIOError.invalidated`. Create a new client and
+session after invalidation.

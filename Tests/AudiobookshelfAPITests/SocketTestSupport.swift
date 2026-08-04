@@ -60,6 +60,7 @@ actor TestSocketClient: SocketClient {
     private(set) var requestedEndpoints: [SocketIOEndpoint] = []
     private(set) var connectionGenerations = 0
     private(set) var emittedEvents: [EmittedEvent] = []
+    private(set) var eventSubscriptionCreations: [String: Int] = [:]
     private(set) var observersInstalledAtFirstConnect = false
     private(set) var disconnectCount = 0
     private(set) var invalidateCount = 0
@@ -129,6 +130,7 @@ actor TestSocketClient: SocketClient {
         policy: SocketStreamPolicy?
     ) -> SocketEventStream<Event> {
         let subscriptionID = UUID()
+        eventSubscriptionCreations[Event.name, default: 0] += 1
         let source = SocketEventStream<Event>.makeStream(
             policy: policy ?? Event.defaultStreamPolicy,
             onTermination: { [weak self] in
@@ -192,6 +194,24 @@ actor TestSocketClient: SocketClient {
         eventSources[name]?.values
             .map { $0.yield(arguments) }
             .allSatisfy { $0 } ?? true
+    }
+
+    func finishEventStreams(named name: String, throwing error: any Error) {
+        guard let sources = eventSources[name] else { return }
+        for source in sources.values {
+            source.finish(error)
+        }
+    }
+
+    func finishEventStreams(named name: String) {
+        guard let sources = eventSources[name] else { return }
+        for source in sources.values {
+            source.finish(nil)
+        }
+    }
+
+    func eventSubscriptionCount(named name: String) -> Int {
+        eventSources[name]?.count ?? 0
     }
 
     func setConnectError(_ error: (any Error)?) {
