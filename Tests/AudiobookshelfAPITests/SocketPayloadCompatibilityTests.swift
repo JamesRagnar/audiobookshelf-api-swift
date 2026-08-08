@@ -65,6 +65,27 @@ struct SocketPayloadCompatibilityTests {
     }
 
     @Test
+    func itemRemovedPayloadDecodesLegacyIDArray() throws {
+        let payload = try JSONDecoder().decode(
+            ItemRemovedEvent.ItemRemovedPayload.self,
+            from: Data(#"{"libraryItemIds":["item-1","item-2"]}"#.utf8)
+        )
+
+        #expect(payload.id == "item-1")
+        #expect(payload.libraryItemIds == ["item-1", "item-2"])
+    }
+
+    @Test(arguments: [#"{}"#, #"{"libraryItemIds":[]}"#])
+    func itemRemovedPayloadRejectsMissingIdentifiers(json: String) {
+        #expect(throws: DecodingError.self) {
+            try JSONDecoder().decode(
+                ItemRemovedEvent.ItemRemovedPayload.self,
+                from: Data(json.utf8)
+            )
+        }
+    }
+
+    @Test
     func authorsNumBooksUpdatedPayloadDecodes236Shape() throws {
         let data = Data(
             """

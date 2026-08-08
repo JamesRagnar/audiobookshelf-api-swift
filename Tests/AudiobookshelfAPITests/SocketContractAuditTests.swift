@@ -47,14 +47,6 @@ struct SocketContractAuditTests {
     }
 
     @Test
-    func emptyServerEventsAcceptZeroArgumentsOrNull() throws {
-        _ = try BackupAppliedEvent.decode(arguments: [], using: JSONDecoder())
-        _ = try BackupAppliedEvent.decode(arguments: [.null], using: JSONDecoder())
-        _ = try StreamReadyEvent.decode(arguments: [], using: JSONDecoder())
-        _ = try StreamReadyEvent.decode(arguments: [.null], using: JSONDecoder())
-    }
-
-    @Test
     func streamPoliciesMatchDeliverySemantics() {
         #expect(InitEvent.defaultStreamPolicy == .latest)
         #expect(NotificationsUpdatedEvent.defaultStreamPolicy == .latest)

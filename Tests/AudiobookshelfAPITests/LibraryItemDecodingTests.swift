@@ -9,7 +9,7 @@ struct LibraryItemDecodingTests {
 
     @Test
     func bookLibraryItemDecodes() throws {
-        let item = try decode(bookLibraryItemJSON)
+        let item = try decode(TestFixtures.bookLibraryItemJSON)
 
         #expect(item.id == "li-1")
         #expect(item.libraryId == "lib-1")
@@ -27,7 +27,7 @@ struct LibraryItemDecodingTests {
 
     @Test
     func bookLibraryItemOptionalFieldsDefaultToNil() throws {
-        let item = try decode(bookLibraryItemJSON)
+        let item = try decode(TestFixtures.bookLibraryItemJSON)
 
         #expect(item.oldLibraryItemId == nil)
         #expect(item.lastScan == nil)
@@ -41,7 +41,7 @@ struct LibraryItemDecodingTests {
 
     @Test
     func podcastLibraryItemDecodes() throws {
-        let item = try decode(podcastLibraryItemJSON)
+        let item = try decode(TestFixtures.podcastLibraryItemJSON)
 
         #expect(item.id == "li-2")
         #expect(item.mediaType == .podcast)
@@ -59,8 +59,8 @@ struct LibraryItemDecodingTests {
 
     @Test
     func unknownMediaTypeThrows() {
-        let json = bookLibraryItemJSON.replacingOccurrences(of: "\"book\"", with: "\"video\"")
-        #expect(throws: (any Error).self) {
+        let json = TestFixtures.bookLibraryItemJSON.replacingOccurrences(of: "\"book\"", with: "\"video\"")
+        #expect(throws: DecodingError.self) {
             try decode(json)
         }
     }
@@ -69,8 +69,8 @@ struct LibraryItemDecodingTests {
 
     @Test
     func missingIdThrows() {
-        let json = bookLibraryItemJSON.replacingOccurrences(of: "\"id\": \"li-1\",", with: "")
-        #expect(throws: (any Error).self) {
+        let json = TestFixtures.bookLibraryItemJSON.replacingOccurrences(of: "\"id\": \"li-1\",", with: "")
+        #expect(throws: DecodingError.self) {
             try decode(json)
         }
     }
@@ -156,52 +156,3 @@ struct LibraryItemDecodingTests {
     }
 
 }
-
-// MARK: Fixtures
-
-private let bookLibraryItemJSON = """
-{
-  "id": "li-1",
-  "ino": "111",
-  "libraryId": "lib-1",
-  "folderId": "folder-1",
-  "path": "/books/test",
-  "relPath": "test",
-  "isFile": false,
-  "addedAt": 1000,
-  "updatedAt": 2000,
-  "isMissing": false,
-  "isInvalid": false,
-  "mediaType": "book",
-  "media": {
-    "id": "book-1",
-    "metadata": { "title": "Test Book", "genres": [] },
-    "tags": []
-  }
-}
-"""
-
-private let podcastLibraryItemJSON = """
-{
-  "id": "li-2",
-  "ino": "222",
-  "libraryId": "lib-1",
-  "folderId": "folder-1",
-  "path": "/podcasts/test",
-  "relPath": "test",
-  "isFile": false,
-  "addedAt": 1000,
-  "updatedAt": 2000,
-  "isMissing": false,
-  "isInvalid": false,
-  "mediaType": "podcast",
-  "media": {
-    "id": "podcast-1",
-    "metadata": { "title": "Test Podcast", "genres": [] },
-    "tags": [],
-    "autoDownloadEpisodes": false,
-    "maxEpisodesToKeep": 0,
-    "maxNewEpisodesToDownload": 0
-  }
-}
-"""

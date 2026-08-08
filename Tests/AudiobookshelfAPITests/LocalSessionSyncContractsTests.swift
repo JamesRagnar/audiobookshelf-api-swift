@@ -62,14 +62,11 @@ struct LocalSessionSyncContractsTests {
         }
         """
 
-        do {
+        #expect(throws: DecodingError.self) {
             _ = try JSONDecoder().decode(
                 SyncLocalSessionsBatch.Response.self,
                 from: Data(invalidJSON.utf8)
             )
-            #expect(Bool(false))
-        } catch {
-            #expect(Bool(true))
         }
     }
 

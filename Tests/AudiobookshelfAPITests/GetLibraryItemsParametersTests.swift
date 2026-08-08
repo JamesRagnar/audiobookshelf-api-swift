@@ -1,98 +1,34 @@
 import AudiobookshelfAPI
-import Foundation
 import Testing
 
 @Suite
 struct GetLibraryItemsParametersTests {
 
-    // MARK: Path
-
     @Test
-    func pathIncludesLibraryID() {
-        let params = GetLibraryItems.Request(libraryID: "lib-abc")
-        #expect(params.path == "/api/libraries/lib-abc/items")
+    func defaultRequestContainsOnlyLibraryPath() {
+        let request = GetLibraryItems.Request(libraryID: "lib-1")
+
+        #expect(request.path == "/api/libraries/lib-1/items")
+        #expect(request.queryItems?.isEmpty == true)
     }
 
-    // MARK: No optional params → empty query dict (no nil-keyed entries)
+    @Test(arguments: [(true, "1"), (false, "0")])
+    func booleanValuesUseBinaryEncoding(value: Bool, encoded: String) {
+        let request = GetLibraryItems.Request(
+            libraryID: "lib-1",
+            descending: value,
+            minified: value,
+            collapseSeries: value
+        )
 
-    @Test
-    func noOptionalParamsProducesNoQueryItems() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1")
-        let items = params.queryItems ?? []
-        #expect(items["limit"] == nil)
-        #expect(items["page"] == nil)
-        #expect(items["sort"] == nil)
-        #expect(items["desc"] == nil)
-        #expect(items["filter"] == nil)
-        #expect(items["minified"] == nil)
-        #expect(items["collapseseries"] == nil)
-        #expect(items["include"] == nil)
-    }
-
-    // MARK: Pagination
-
-    @Test
-    func limitAndPageEncode() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", limit: 25, page: 3)
-        #expect(params.queryItems?["limit"] == "25")
-        #expect(params.queryItems?["page"] == "3")
-    }
-
-    // MARK: Sort
-
-    @Test
-    func sortEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", sort: "media.metadata.title")
-        #expect(params.queryItems?["sort"] == "media.metadata.title")
+        #expect(request.queryItems?["desc"] == encoded)
+        #expect(request.queryItems?["minified"] == encoded)
+        #expect(request.queryItems?["collapseseries"] == encoded)
     }
 
     @Test
-    func descendingTrueEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", descending: true)
-        #expect(params.queryItems?["desc"] == "1")
-    }
-
-    @Test
-    func descendingFalseEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", descending: false)
-        #expect(params.queryItems?["desc"] == "0")
-    }
-
-    // MARK: Filter
-
-    @Test
-    func filterEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", filter: "genres.Fantasy")
-        #expect(params.queryItems?["filter"] == "genres.Fantasy")
-    }
-
-    // MARK: Minified / collapseSeries
-
-    @Test
-    func minifiedTrueEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", minified: true)
-        #expect(params.queryItems?["minified"] == "1")
-    }
-
-    @Test
-    func collapseSeriesTrueEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", collapseSeries: true)
-        #expect(params.queryItems?["collapseseries"] == "1")
-    }
-
-    // MARK: Include
-
-    @Test
-    func singleIncludeEncodes() {
-        let params = GetLibraryItems.Request(libraryID: "lib-1", include: [.rssfeed])
-        #expect(params.queryItems?["include"] == "rssfeed")
-    }
-
-    // MARK: All params together
-
-    @Test
-    func allParamsEncode() {
-        let params = GetLibraryItems.Request(
+    func completeRequestEncodesEveryOption() {
+        let request = GetLibraryItems.Request(
             libraryID: "lib-1",
             limit: 10,
             page: 1,
@@ -103,14 +39,15 @@ struct GetLibraryItemsParametersTests {
             collapseSeries: false,
             include: [.rssfeed]
         )
-        #expect(params.queryItems?["limit"] == "10")
-        #expect(params.queryItems?["page"] == "1")
-        #expect(params.queryItems?["sort"] == "addedAt")
-        #expect(params.queryItems?["desc"] == "1")
-        #expect(params.queryItems?["filter"] == "progress.finished")
-        #expect(params.queryItems?["minified"] == "1")
-        #expect(params.queryItems?["collapseseries"] == "0")
-        #expect(params.queryItems?["include"] == "rssfeed")
+
+        #expect(request.queryItems?["limit"] == "10")
+        #expect(request.queryItems?["page"] == "1")
+        #expect(request.queryItems?["sort"] == "addedAt")
+        #expect(request.queryItems?["desc"] == "1")
+        #expect(request.queryItems?["filter"] == "progress.finished")
+        #expect(request.queryItems?["minified"] == "1")
+        #expect(request.queryItems?["collapseseries"] == "0")
+        #expect(request.queryItems?["include"] == "rssfeed")
     }
 
 }

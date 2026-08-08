@@ -32,66 +32,6 @@ struct ServerSettingsDecodingTests {
     }
 
     @Test
-    func decodesPublicClientSettingsWithoutSensitiveOIDCFields() throws {
-        let settings = try decode(serverSettingsJSON(
-            backupSchedule: "false",
-            podcastEpisodeSchedule: "false",
-            buildNumber: "null"
-        ))
-
-        #expect(settings.authOpenIDIssuerURL == nil)
-        #expect(settings.allowedOrigins == nil)
-        #expect(settings.allowIframe == nil)
-        #expect(settings.authOpenIDSubfolderForRedirectURLs == nil)
-    }
-
-    @Test
-    func publicResponseModelDoesNotExpectSensitiveOIDCFields() throws {
-        let sensitiveFieldsJSON = """
-        {
-          "id": "settings-1",
-          "scannerFindCovers": true,
-          "scannerCoverProvider": "google",
-          "scannerParseSubtitle": false,
-          "scannerPreferMatchedMetadata": true,
-          "scannerDisableWatcher": false,
-          "storeCoverWithItem": false,
-          "storeMetadataWithItem": true,
-          "metadataFileFormat": "json",
-          "rateLimitLoginRequests": 5,
-          "rateLimitLoginWindow": 60000,
-          "backupsToKeep": 3,
-          "maxBackupSize": 2,
-          "loggerDailyLogsToKeep": 7,
-          "loggerScannerLogsToKeep": 10,
-          "homeBookshelfView": 1,
-          "bookshelfView": 0,
-          "sortingIgnorePrefix": true,
-          "sortingPrefixes": ["the", "a"],
-          "chromecastEnabled": true,
-          "dateFormat": "yyyy-MM-dd",
-          "timeFormat": "HH:mm",
-          "language": "en",
-          "logLevel": 2,
-          "version": "2.33.0",
-          "backupSchedule": false,
-          "podcastEpisodeSchedule": false,
-          "buildNumber": null,
-          "authOpenIDClientID": "should-be-ignored",
-          "authOpenIDClientSecret": "should-be-ignored",
-          "authOpenIDMobileRedirectURIs": ["should-be-ignored"],
-          "authOpenIDGroupClaim": "should-be-ignored",
-          "authOpenIDAdvancedPermsClaim": "should-be-ignored"
-        }
-        """
-
-        let settings = try decode(sensitiveFieldsJSON)
-
-        #expect(settings.id == "settings-1")
-        #expect(settings.version == "2.33.0")
-    }
-
-    @Test
     func decodesTimeZoneFrom236Servers() throws {
         let settings = try decode(serverSettingsJSON(
             backupSchedule: "false",

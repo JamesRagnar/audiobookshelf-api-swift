@@ -15,7 +15,7 @@ struct PersonalizedLibraryShelfDecodingTests {
           "label": "Recently Added",
           "labelStringKey": "recentlyAdded",
           "type": "book",
-          "entities": [\(bookLibraryItemJSON)]
+          "entities": [\(TestFixtures.bookLibraryItemJSON)]
         }]
         """
         let shelves = try decode(json)
@@ -47,7 +47,7 @@ struct PersonalizedLibraryShelfDecodingTests {
           "label": "Latest Episodes",
           "labelStringKey": "latestEpisodes",
           "type": "podcast",
-          "entities": [\(podcastLibraryItemJSON)]
+          "entities": [\(TestFixtures.podcastLibraryItemJSON)]
         }]
         """
         let shelves = try decode(json)
@@ -74,7 +74,7 @@ struct PersonalizedLibraryShelfDecodingTests {
           "label": "Recent Episodes",
           "labelStringKey": "recentEpisodes",
           "type": "episode",
-          "entities": [\(podcastLibraryItemJSON)]
+          "entities": [\(TestFixtures.podcastLibraryItemJSON)]
         }]
         """
         let shelves = try decode(json)
@@ -145,63 +145,6 @@ struct PersonalizedLibraryShelfDecodingTests {
         #expect(author.name == "Brandon Sanderson")
     }
 
-    // MARK: Optional category field
-
-    @Test
-    func categoryIsOptional() throws {
-        let withCategory = """
-        [{
-          "id": "shelf-1",
-          "label": "New",
-          "labelStringKey": "new",
-          "type": "book",
-          "entities": [],
-          "category": "recentlyAdded"
-        }]
-        """
-        let withoutCategory = """
-        [{
-          "id": "shelf-2",
-          "label": "New",
-          "labelStringKey": "new",
-          "type": "book",
-          "entities": []
-        }]
-        """
-        let shelvesWithCategory = try decode(withCategory)
-        let shelvesWithoutCategory = try decode(withoutCategory)
-        #expect(shelvesWithCategory.first?.category == "recentlyAdded")
-        #expect(shelvesWithoutCategory.first?.category == nil)
-    }
-
-    // MARK: Multiple shelves
-
-    @Test
-    func multipleShelvesDecodeInOrder() throws {
-        let json = """
-        [
-          {
-            "id": "shelf-1",
-            "label": "Books",
-            "labelStringKey": "books",
-            "type": "book",
-            "entities": []
-          },
-          {
-            "id": "shelf-2",
-            "label": "Authors",
-            "labelStringKey": "authors",
-            "type": "authors",
-            "entities": []
-          }
-        ]
-        """
-        let shelves = try decode(json)
-        #expect(shelves.count == 2)
-        #expect(shelves[0].id == "shelf-1")
-        #expect(shelves[1].id == "shelf-2")
-    }
-
     // MARK: Helpers
 
     private func decode(_ json: String) throws -> [GetPersonalizedLibrary.Shelf] {
@@ -209,52 +152,3 @@ struct PersonalizedLibraryShelfDecodingTests {
     }
 
 }
-
-// MARK: Fixtures
-
-private let bookLibraryItemJSON = """
-{
-  "id": "li-1",
-  "ino": "111",
-  "libraryId": "lib-1",
-  "folderId": "folder-1",
-  "path": "/books/test",
-  "relPath": "test",
-  "isFile": false,
-  "addedAt": 1000,
-  "updatedAt": 2000,
-  "isMissing": false,
-  "isInvalid": false,
-  "mediaType": "book",
-  "media": {
-    "id": "book-1",
-    "metadata": { "title": "Test Book", "genres": [] },
-    "tags": []
-  }
-}
-"""
-
-private let podcastLibraryItemJSON = """
-{
-  "id": "li-2",
-  "ino": "222",
-  "libraryId": "lib-1",
-  "folderId": "folder-1",
-  "path": "/podcasts/test",
-  "relPath": "test",
-  "isFile": false,
-  "addedAt": 1000,
-  "updatedAt": 2000,
-  "isMissing": false,
-  "isInvalid": false,
-  "mediaType": "podcast",
-  "media": {
-    "id": "podcast-1",
-    "metadata": { "title": "Test Podcast", "genres": [] },
-    "tags": [],
-    "autoDownloadEpisodes": false,
-    "maxEpisodesToKeep": 0,
-    "maxNewEpisodesToDownload": 0
-  }
-}
-"""

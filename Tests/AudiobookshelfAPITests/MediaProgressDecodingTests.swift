@@ -142,7 +142,7 @@ struct MediaProgressDecodingTests {
     @Test
     func missingMediaItemIdThrows() {
         let json = bareProgressJSON.replacingOccurrences(of: "\"mediaItemId\": \"book-1\",", with: "")
-        #expect(throws: (any Error).self) {
+        #expect(throws: DecodingError.self) {
             try decode(json)
         }
     }
