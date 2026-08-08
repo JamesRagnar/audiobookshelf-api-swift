@@ -20,3 +20,11 @@ extension Interface {
     }
 
 }
+
+extension Array where Element == URLQueryItem {
+
+    subscript(name: String) -> String? {
+        first(where: { $0.name == name })?.value
+    }
+
+}

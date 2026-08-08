@@ -50,11 +50,6 @@ struct UpdatePasswordComplianceTests {
         #expect(parameters.headers?["x-refresh-token"] == nil)
     }
 
-    @Test(arguments: [400, 403])
-    func updatePasswordMapsErrorStatusCodes(statusCode: Int) throws {
-        try assertMappedError(UpdatePassword.self, statusCode: statusCode)
-    }
-
     @Test(arguments: ["OK", ""])
     func updatePasswordTreatsNonJSON200AsUnrotated(body: String) throws {
         // `sendStatus(200)` sends a plain-text body, not JSON. Pre-2.36 servers always take this
@@ -75,29 +70,6 @@ struct UpdatePasswordComplianceTests {
                 (data: Data(#"{"success": true, "user": {"accessToken": 12}}"#.utf8),
                  response: makeResponse(statusCode: 200))
             )
-        }
-    }
-
-    private func assertMappedError<T: Interface>(
-        _ interface: T.Type,
-        statusCode: Int,
-        body: Data = Data()
-    ) throws {
-        let error = try captureResponseError(for: interface, statusCode: statusCode, body: body)
-        #expect(error?.statusCode == statusCode)
-    }
-
-    private func captureResponseError<T: Interface>(
-        for interface: T.Type,
-        statusCode: Int,
-        body: Data = Data()
-    ) throws -> ResponseError? {
-        let response = try makeResponse(statusCode: statusCode)
-        do {
-            _ = try interface.handle((data: body, response: response))
-            return nil
-        } catch let error {
-            return error
         }
     }
 

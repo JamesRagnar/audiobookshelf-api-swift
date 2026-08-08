@@ -102,27 +102,39 @@ extension GetYourListeningStats.Response.ListenedItem: Decodable {
         case mediaMetadata
     }
 
+    enum MediaMetadataCodingKeys: String, CodingKey {
+        case author
+        case feedUrl
+        case imageUrl
+        case itunesId
+        case itunesPageUrl
+        case itunesArtistId
+        case releaseDate
+        case type
+    }
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
         self.timeListening = try container.decode(Int.self, forKey: .timeListening)
 
-        // Decode metadata polymorphically
         let metadataDecoder = try container.superDecoder(forKey: .mediaMetadata)
+        let metadataContainer = try metadataDecoder.container(keyedBy: MediaMetadataCodingKeys.self)
 
-        // Try to decode as BookMetadata first (has unique fields like isbn, authors array)
-        if let bookMetadata = try? BookMetadata(from: metadataDecoder) {
-            // Additional check: BookMetadata has 'authors' array or 'isbn' field
-            // PodcastMetadata has 'feedUrl' or 'author' (string, not array)
-            self.mediaMetadata = .book(bookMetadata)
-        } else if let podcastMetadata = try? PodcastMetadata(from: metadataDecoder) {
-            self.mediaMetadata = .podcast(podcastMetadata)
+        if metadataContainer.contains(.author)
+            || metadataContainer.contains(.feedUrl)
+            || metadataContainer.contains(.imageUrl)
+            || metadataContainer.contains(.itunesId)
+            || metadataContainer.contains(.itunesPageUrl)
+            || metadataContainer.contains(.itunesArtistId)
+            || metadataContainer.contains(.releaseDate)
+            || metadataContainer.contains(.type) {
+            self.mediaMetadata = .podcast(
+                try container.decode(PodcastMetadata.self, forKey: .mediaMetadata)
+            )
         } else {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: decoder.codingPath,
-                    debugDescription: "Unable to decode mediaMetadata as either BookMetadata or PodcastMetadata"
-                )
+            self.mediaMetadata = .book(
+                try container.decode(BookMetadata.self, forKey: .mediaMetadata)
             )
         }
     }

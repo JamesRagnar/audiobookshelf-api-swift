@@ -14,7 +14,7 @@ struct CollectionDecodingTests {
               "libraryId": "library-1",
               "name": "Favorites",
               "description": "Expanded collection",
-              "books": [\(bookLibraryItemJSON)],
+              "books": [\(TestFixtures.bookLibraryItemJSON)],
               "lastUpdate": 100,
               "createdAt": 50
             }
@@ -70,25 +70,3 @@ struct CollectionDecodingTests {
         try JSONDecoder().decode(Collection.self, from: Data(json.utf8))
     }
 }
-
-private let bookLibraryItemJSON = """
-{
-  "id": "li-1",
-  "ino": "111",
-  "libraryId": "lib-1",
-  "folderId": "folder-1",
-  "path": "/books/test",
-  "relPath": "test",
-  "isFile": false,
-  "addedAt": 1000,
-  "updatedAt": 2000,
-  "isMissing": false,
-  "isInvalid": false,
-  "mediaType": "book",
-  "media": {
-    "id": "book-1",
-    "metadata": { "title": "Test Book", "genres": [] },
-    "tags": []
-  }
-}
-"""
