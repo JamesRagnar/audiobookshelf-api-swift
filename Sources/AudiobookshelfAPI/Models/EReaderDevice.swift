@@ -15,8 +15,23 @@ public struct EReaderDevice {
     /// The email associated with the eReader device.
     public let email: String
 
-    /// The availability status of the device.
-    public let availabilityStatus: String?
+    /// The access policy for the device.
+    public let availabilityOption: String?
+
+    /// The users allowed to access the device.
+    public let users: [String]?
+
+    public init(
+        name: String,
+        email: String,
+        availabilityOption: String? = nil,
+        users: [String]? = nil
+    ) {
+        self.name = name
+        self.email = email
+        self.availabilityOption = availabilityOption
+        self.users = users
+    }
 
 }
 

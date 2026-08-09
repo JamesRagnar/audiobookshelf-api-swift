@@ -24,43 +24,58 @@ public struct BatchCreateUpdateMediaProgress: Interface {
             public let episodeId: String?
 
             /// The total duration (in seconds) of the media.
-            public let duration: Float
+            public let duration: Float?
 
             /// The percentage completion progress of the media. Will automatically be set to 1 if the media is
             /// finished.
-            public let progress: Float
+            public let progress: Float?
 
             /// The current time (in seconds) of your progress.
-            public let currentTime: Float
+            public let currentTime: Float?
 
             /// Whether the media is finished.
-            public let isFinished: Bool
+            public let isFinished: Bool?
 
             /// Whether the media will be hidden from the "Continue Listening" shelf.
-            public let hideFromContinueListening: Bool
+            public let hideFromContinueListening: Bool?
+
+            /// The ebook location for ebook progress.
+            public let ebookLocation: String?
+
+            /// The ebook progress percentage.
+            public let ebookProgress: Float?
 
             /// The time (in ms since POSIX epoch) when the user finished the media. The default will be Date.now() if
             /// isFinished is true.
             public let finishedAt: Int?
 
-            /// Date.now() or finishedAt    The time (in ms since POSIX epoch) when the user started consuming the
-            /// media. The default will be the value of finishedAt if isFinished is true.
-            public let startedAt: Int
+            /// The time (in ms since POSIX epoch) when the progress was created.
+            public let createdAt: Int?
 
             /// The time (in ms since POSIX epoch) when the progress was last updated.
             public let lastUpdate: Int?
 
+            /// The remaining time used when marking the media as finished.
+            public let markAsFinishedTimeRemaining: Float?
+
+            /// The completion percentage used when marking the media as finished.
+            public let markAsFinishedPercentComplete: Float?
+
             public init(
                 libraryItemId: String,
                 episodeId: String? = nil,
-                duration: Float,
-                progress: Float,
-                currentTime: Float,
-                isFinished: Bool,
-                hideFromContinueListening: Bool,
+                duration: Float? = nil,
+                progress: Float? = nil,
+                currentTime: Float? = nil,
+                isFinished: Bool? = nil,
+                hideFromContinueListening: Bool? = nil,
+                ebookLocation: String? = nil,
+                ebookProgress: Float? = nil,
                 finishedAt: Int? = nil,
-                startedAt: Int,
-                lastUpdate: Int? = nil
+                createdAt: Int? = nil,
+                lastUpdate: Int? = nil,
+                markAsFinishedTimeRemaining: Float? = nil,
+                markAsFinishedPercentComplete: Float? = nil
             ) {
                 self.libraryItemId = libraryItemId
                 self.episodeId = episodeId
@@ -69,9 +84,13 @@ public struct BatchCreateUpdateMediaProgress: Interface {
                 self.currentTime = currentTime
                 self.isFinished = isFinished
                 self.hideFromContinueListening = hideFromContinueListening
+                self.ebookLocation = ebookLocation
+                self.ebookProgress = ebookProgress
                 self.finishedAt = finishedAt
-                self.startedAt = startedAt
+                self.createdAt = createdAt
                 self.lastUpdate = lastUpdate
+                self.markAsFinishedTimeRemaining = markAsFinishedTimeRemaining
+                self.markAsFinishedPercentComplete = markAsFinishedPercentComplete
             }
 
         }

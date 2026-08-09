@@ -9,6 +9,8 @@ import Foundation
 import RagnarNetworking
 
 /// Update the authenticated user's e-reader devices for sending ebooks.
+/// User-scoped updates require `availabilityOption` to be `specificUsers` and
+/// `users` to contain exactly the authenticated user's ID.
 public struct UpdateUserEReaderDevices: Interface {
 
     // MARK: Request
