@@ -49,6 +49,8 @@ public struct SendEbookToDevice: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        case badRequest
+
         case forbidden
 
         case notFound
@@ -58,6 +60,7 @@ public struct SendEbookToDevice: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
             .code(403, .error(AudiobookshelfError.forbidden)),
             .code(404, .error(AudiobookshelfError.notFound))
         ]

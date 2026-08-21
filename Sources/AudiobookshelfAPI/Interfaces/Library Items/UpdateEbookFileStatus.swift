@@ -8,7 +8,7 @@
 import Foundation
 import RagnarNetworking
 
-/// Update eBook file reading progress.
+/// Toggle an ebook file between primary and supplementary status.
 public struct UpdateEbookFileStatus: Interface {
 
     // MARK: Request
@@ -23,23 +23,14 @@ public struct UpdateEbookFileStatus: Interface {
 
         public let headers: [String: String]? = nil
 
-        public typealias Body = Payload
+        public typealias Body = EmptyBody
 
-        public let body: Body
+        public let body: Body = .init()
 
         public let authentication: AuthenticationScheme? = .bearer
 
-        public init(
-            itemId: String,
-            fileId: String,
-            ebookLocation: String? = nil,
-            ebookProgress: Float? = nil
-        ) {
+        public init(itemId: String, fileId: String) {
             self.path = "/api/items/\(itemId)/ebook/\(fileId)/status"
-            self.body = Payload(
-                ebookLocation: ebookLocation,
-                ebookProgress: ebookProgress
-            )
         }
 
     }
@@ -66,17 +57,5 @@ public struct UpdateEbookFileStatus: Interface {
             .code(404, .error(AudiobookshelfError.notFound))
         ]
     )
-
-}
-
-public extension UpdateEbookFileStatus.Request {
-
-    struct Payload: RequestBody, Encodable, Sendable {
-
-        let ebookLocation: String?
-
-        let ebookProgress: Float?
-
-    }
 
 }

@@ -70,24 +70,7 @@ public extension UpdateEReaderDevices.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
-        let ereaderDevices: [UpdateEReaderDevices.EReaderDevice]
-
-    }
-
-}
-
-public extension UpdateEReaderDevices {
-
-    struct EReaderDevice: Codable, Sendable {
-
-        public let name: String
-
-        public let email: String
-
-        public init(name: String, email: String) {
-            self.name = name
-            self.email = email
-        }
+        let ereaderDevices: [EReaderDevice]
 
     }
 

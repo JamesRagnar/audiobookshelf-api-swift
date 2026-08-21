@@ -68,11 +68,15 @@ public struct Login: Interface {
         /// The server's installation source.
         public let source: String
 
+        /// The eReader devices available to the authenticated user.
+        public let ereaderDevices: [EReaderDevice]?
+
         enum CodingKeys: String, CodingKey {
             case user
             case userDefaultLibraryID = "userDefaultLibraryId"
             case serverSettings
             case source = "Source"
+            case ereaderDevices
         }
 
     }

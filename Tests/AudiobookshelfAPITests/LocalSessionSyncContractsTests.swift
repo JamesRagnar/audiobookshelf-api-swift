@@ -81,7 +81,7 @@ struct LocalSessionSyncContractsTests {
             isFinished: false,
             hideFromContinueListening: false,
             finishedAt: nil,
-            startedAt: 1000,
+            createdAt: 1000,
             lastUpdate: 2000
         )
 
@@ -91,7 +91,8 @@ struct LocalSessionSyncContractsTests {
         )
 
         #expect(object["libraryItemId"] as? String == "item-1")
-        #expect(object["startedAt"] as? Int == 1000)
+        #expect(object["startedAt"] == nil)
+        #expect(object["createdAt"] as? Int == 1000)
         #expect(object["lastUpdate"] as? Int == 2000)
     }
 
