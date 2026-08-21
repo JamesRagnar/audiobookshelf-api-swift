@@ -37,7 +37,7 @@ public struct CreateBookmark: Interface {
         ///   - title: The title of the bookmark.
         public init(
             libraryItemId: String,
-            time: Float,
+            time: Double,
             title: String
         ) {
             self.path = "/api/me/item/\(libraryItemId)/bookmark"
@@ -75,7 +75,7 @@ public extension CreateBookmark.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
-        let time: Float
+        let time: Double
 
         let title: String
 
