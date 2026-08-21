@@ -56,7 +56,7 @@ public struct GetLibraryStats: Interface {
         public let longestItems: [LibraryItemDurationStats]
 
         /// The total number of audio tracks in the library.
-        public let numAudioTrack: Int?
+        public let numAudioTracks: Int
 
         /// The total size (in bytes) of all items in the library.
         public let totalSize: Int

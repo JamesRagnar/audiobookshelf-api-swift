@@ -53,7 +53,7 @@ public struct RefreshToken: Interface {
         public let serverSettings: ServerSettings
 
         /// The server's installation source.
-        public let source: String?
+        public let source: String
 
         enum CodingKeys: String, CodingKey {
             case user
