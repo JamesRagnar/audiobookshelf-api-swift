@@ -8,7 +8,12 @@
 import Foundation
 import RagnarNetworking
 
-/// This endpoint updates an existing bookmark for a library item.
+/// This endpoint updates the title of an existing bookmark for a library item.
+///
+/// The server uses `libraryItemId` and `time` to find the existing bookmark.
+/// The PATCH operation changes only `title`; `time` is not a new bookmark position.
+/// Requests must include both `time` and `title`, and the server returns 404 when no
+/// bookmark exists at the supplied time. A different time does not move a bookmark.
 public struct UpdateBookmark: Interface {
 
     // MARK: Request
@@ -33,11 +38,11 @@ public struct UpdateBookmark: Interface {
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item containing the bookmark.
-        ///   - time: The new time (in seconds) for the bookmark.
+        ///   - time: The existing bookmark time (in seconds) used to find the bookmark.
         ///   - title: The new title of the bookmark.
         public init(
             libraryItemId: String,
-            time: Float,
+            time: Double,
             title: String
         ) {
             self.path = "/api/me/item/\(libraryItemId)/bookmark"
@@ -75,7 +80,7 @@ public extension UpdateBookmark.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
-        let time: Float
+        let time: Double
 
         let title: String
 
