@@ -59,15 +59,15 @@ public extension GetUserListeningStats {
 
     struct UserListeningStats: Decodable, Sendable, InterfaceResponse {
 
-        public let totalTime: Int
+        public let totalTime: Double
 
-        public let items: [String: Int]
+        public let items: [String: Double]
 
-        public let days: [String: Int]
+        public let days: [String: Double]
 
-        public let dayOfWeek: [String: Int]
+        public let dayOfWeek: [String: Double]
 
-        public let today: Int
+        public let today: Double
 
         public let recentSessions: [PlaybackSession]
 

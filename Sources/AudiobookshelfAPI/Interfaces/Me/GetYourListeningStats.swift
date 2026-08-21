@@ -36,15 +36,15 @@ public struct GetYourListeningStats: Interface {
 
     public struct Response: Decodable, Sendable, InterfaceResponse {
 
-        public let totalTime: Int
+        public let totalTime: Double
 
         public let items: [String: ListenedItem]
 
-        public let days: [String: Int]
+        public let days: [String: Double]
 
-        public let dayOfWeek: [String: Int]
+        public let dayOfWeek: [String: Double]
 
-        public let today: Int
+        public let today: Double
 
         public let recentSessions: [PlaybackSession]
 
@@ -64,7 +64,7 @@ public extension GetYourListeningStats.Response {
         public let id: String
 
         /// The time (in seconds) you listened to the library item.
-        public let timeListening: Int
+        public let timeListening: Double
 
         /// The metadata of the library item's media.
         /// Can be either book or podcast metadata depending on the media type.
@@ -116,7 +116,7 @@ extension GetYourListeningStats.Response.ListenedItem: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
-        self.timeListening = try container.decode(Int.self, forKey: .timeListening)
+        self.timeListening = try container.decode(Double.self, forKey: .timeListening)
 
         let metadataDecoder = try container.superDecoder(forKey: .mediaMetadata)
         let metadataContainer = try metadataDecoder.container(keyedBy: MediaMetadataCodingKeys.self)

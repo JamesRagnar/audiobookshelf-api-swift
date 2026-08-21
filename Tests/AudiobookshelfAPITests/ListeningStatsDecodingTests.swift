@@ -11,7 +11,7 @@ struct ListeningStatsDecodingTests {
             """
             {
               "id": "podcast-1",
-              "timeListening": 120,
+              "timeListening": 120.5,
               "mediaMetadata": {
                 "title": "Example Podcast",
                 "author": "Example Host",
@@ -25,6 +25,7 @@ struct ListeningStatsDecodingTests {
         let podcast = try #require(item.mediaMetadata.podcast)
         #expect(podcast.title == "Example Podcast")
         #expect(podcast.author == "Example Host")
+        #expect(item.timeListening == 120.5)
         #expect(item.mediaMetadata.book == nil)
     }
 
