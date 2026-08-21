@@ -69,7 +69,7 @@ public struct Login: Interface {
         public let source: String
 
         /// The eReader devices available to the authenticated user.
-        public let ereaderDevices: [EReaderDevice]
+        public let ereaderDevices: [EReaderDevice]?
 
         enum CodingKeys: String, CodingKey {
             case user
@@ -77,15 +77,6 @@ public struct Login: Interface {
             case serverSettings
             case source = "Source"
             case ereaderDevices
-        }
-
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            user = try container.decode(User.self, forKey: .user)
-            userDefaultLibraryID = try container.decode(String.self, forKey: .userDefaultLibraryID)
-            serverSettings = try container.decode(ServerSettings.self, forKey: .serverSettings)
-            source = try container.decode(String.self, forKey: .source)
-            ereaderDevices = try container.decodeIfPresent([EReaderDevice].self, forKey: .ereaderDevices) ?? []
         }
 
     }
