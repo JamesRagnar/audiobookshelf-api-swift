@@ -35,25 +35,17 @@ public struct GetLibraryCollections: Interface {
 
         /// Get Library Collection Request
         ///
-        /// - Note: Sorting and filtering are not yet implemented.
-        ///
         /// - Parameters:
         ///   - libraryID: The ID of the library.
         ///   - limit: Limit the number of returned results per page. If 0, no limit will be applied.
         /// - page: The page number (0 indexed) to request. If there is no limit applied, then page will have no effect
         /// and all results will be returned.
-        ///   - sort: What to sort the results by.
-        ///   - descending: Whether to reverse the sort order.
-        ///   - filter: What to filter the results by.
         ///   - minified: Whether to request minified objects.
         ///   - include: A comma separated list of what to include with the library items.
         public init(
             libraryID: String,
             limit: Int? = nil,
             page: Int? = nil,
-            sort: String? = nil,
-            descending: Bool? = nil,
-            filter: String? = nil,
             minified: Bool? = nil,
             include: Set<Include>? = nil
         ) {
@@ -62,9 +54,6 @@ public struct GetLibraryCollections: Interface {
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfPresent("limit", limit?.description)
             queryItems.appendIfPresent("page", page?.description)
-            queryItems.appendIfPresent("sort", sort)
-            queryItems.appendIfPresent("desc", descending?.binaryString)
-            queryItems.appendIfPresent("filter", filter)
             queryItems.appendIfPresent("minified", minified?.binaryString)
             queryItems.appendIfPresent("include", include?.joined())
             self.queryItems = queryItems

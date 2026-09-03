@@ -23,7 +23,7 @@ public struct GetLibraryItemsForNarrator: Interface {
             narratorName: String,
             limit: Int? = nil,
             page: Int? = nil,
-            sort: String? = nil,
+            sort: GetLibraryItems.Request.Sort? = nil,
             descending: Bool? = nil,
             minified: Bool? = nil,
             collapseSeries: Bool? = nil,

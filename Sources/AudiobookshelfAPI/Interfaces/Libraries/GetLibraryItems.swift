@@ -8,12 +8,46 @@
 import Foundation
 import RagnarNetworking
 
+/// Server-supported sort values for library items.
+///
+/// Book libraries support the common and book-only values. Podcast libraries
+/// support the common and podcast-only values. The server treats `sequence` as
+/// meaningful for series-filtered book results and falls back to title sorting
+/// for other book queries. Progress sorting uses the authenticated user's
+/// progress, with items that have no progress sorted last.
+public enum LibraryItemSort: String, CaseIterable, Sendable {
+
+    /// Common to book and podcast libraries.
+    case addedAt
+    case size
+    case birthtimeMs
+    case mtimeMs
+    case mediaMetadataTitle = "media.metadata.title"
+    case random
+
+    /// Supported by book libraries.
+    case mediaDuration = "media.duration"
+    case mediaMetadataPublishedYear = "media.metadata.publishedYear"
+    case mediaMetadataAuthorNameLF = "media.metadata.authorNameLF"
+    case mediaMetadataAuthorName = "media.metadata.authorName"
+    case sequence
+    case progress
+    case progressCreatedAt = "progress.createdAt"
+    case progressFinishedAt = "progress.finishedAt"
+
+    /// Supported by podcast libraries.
+    case mediaMetadataAuthor = "media.metadata.author"
+    case mediaNumTracks = "media.numTracks"
+}
+
 /// This endpoint returns a library's items, optionally sorted and/or filtered.
 public struct GetLibraryItems: Interface {
 
     // MARK: Request
 
     public struct Request: InterfaceRequest {
+
+        public typealias Sort = LibraryItemSort
 
         public enum Include: String {
 
@@ -39,7 +73,8 @@ public struct GetLibraryItems: Interface {
         ///   - limit: Limit the number of returned results per page. If 0, no limit will be applied.
         /// - page: The page number (0 indexed) to request. If there is no limit applied, then page will have no effect
         /// and all results will be returned.
-        ///   - sort: What to sort the results by. Specify the attribute to sort by using JavaScript object notation.
+        ///   - sort: The server-supported field to sort the results by. Valid values depend on the library media type;
+        ///     see `LibraryItemSort`.
         ///   - descending: Whether to reverse the sort order. 0 for false, 1 for true.
         ///   - filter: What to filter the results by. See Filtering.
         ///   - minified: Whether to request minified objects.
@@ -49,7 +84,7 @@ public struct GetLibraryItems: Interface {
             libraryID: String,
             limit: Int? = nil,
             page: Int? = nil,
-            sort: String? = nil,
+            sort: Sort? = nil,
             descending: Bool? = nil,
             filter: String? = nil,
             minified: Bool? = nil,
@@ -61,7 +96,7 @@ public struct GetLibraryItems: Interface {
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfPresent("limit", limit?.description)
             queryItems.appendIfPresent("page", page?.description)
-            queryItems.appendIfPresent("sort", sort)
+            queryItems.appendIfPresent("sort", sort?.rawValue)
             queryItems.appendIfPresent("desc", descending?.binaryString)
             queryItems.appendIfPresent("filter", filter)
             queryItems.appendIfPresent("minified", minified?.binaryString)

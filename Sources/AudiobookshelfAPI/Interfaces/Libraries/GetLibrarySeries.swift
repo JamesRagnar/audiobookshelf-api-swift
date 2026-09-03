@@ -20,13 +20,21 @@ public struct GetLibrarySeries: Interface {
             case rssfeed
 
         }
-        public enum Sort: String {
+        public enum Sort: String, CaseIterable, Sendable {
 
             case numBooks
 
             case totalDuration
 
             case addedAt
+
+            case name
+
+            case lastBookAdded
+
+            case lastBookUpdated
+
+            case random
 
         }
 

@@ -15,11 +15,31 @@ public struct GetAllSessions: Interface {
 
     public struct Request: InterfaceRequest {
 
+        public enum Sort: String, CaseIterable, Sendable {
+
+            case displayTitle
+
+            case duration
+
+            case playMethod
+
+            case startTime
+
+            case currentTime
+
+            case timeListening
+
+            case updatedAt
+
+            case createdAt
+
+        }
+
         public let method: RequestMethod = .get
 
         public let path: String = "/api/sessions"
 
-        public let queryItems: [URLQueryItem]? = nil
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -27,7 +47,28 @@ public struct GetAllSessions: Interface {
 
         public let authentication: AuthenticationScheme? = .bearer
 
-        public init() {}
+        /// Get all playback sessions.
+        /// - Parameters:
+        ///   - user: The user ID to filter by. The server only applies this filter for valid user IDs.
+        ///   - page: The page number (0 indexed) to request.
+        ///   - itemsPerPage: The number of sessions to return per page.
+        ///   - sort: The field to sort sessions by. The server defaults to updatedAt when omitted.
+        ///   - descending: Whether to reverse the sort order. The server defaults to ascending.
+        public init(
+            user: String? = nil,
+            page: Int? = nil,
+            itemsPerPage: Int? = nil,
+            sort: Sort? = nil,
+            descending: Bool? = nil
+        ) {
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("user", user)
+            queryItems.appendIfPresent("page", page?.description)
+            queryItems.appendIfPresent("itemsPerPage", itemsPerPage?.description)
+            queryItems.appendIfPresent("sort", sort?.rawValue)
+            queryItems.appendIfPresent("desc", descending?.binaryString)
+            self.queryItems = queryItems.isEmpty ? nil : queryItems
+        }
 
     }
 
