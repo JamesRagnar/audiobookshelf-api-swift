@@ -69,6 +69,12 @@ public extension GetUserListeningSessions {
 
         public let total: Int
 
+        public let numPages: Int
+
+        public let page: Int
+
+        public let itemsPerPage: Int
+
         public let sessions: [PlaybackSession]
 
     }

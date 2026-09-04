@@ -54,9 +54,6 @@ public struct GetRecentEpisodes: Interface {
         /// The recent podcast episodes.
         public let episodes: [PodcastEpisode]
 
-        /// The total number of episodes.
-        public let total: Int
-
         /// The limit set in the request.
         public let limit: Int
 

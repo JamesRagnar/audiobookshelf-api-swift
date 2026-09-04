@@ -54,6 +54,9 @@ public struct GetYourListeningSessions: Interface {
         /// The total number of pages when using this itemsPerPage limit.
         public let numPages: Int
 
+        /// The provided page parameter.
+        public let page: Int
+
         /// The provided itemsPerPage parameter.
         public let itemsPerPage: Int
 

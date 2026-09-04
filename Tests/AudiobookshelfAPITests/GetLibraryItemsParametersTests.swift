@@ -32,7 +32,7 @@ struct GetLibraryItemsParametersTests {
             libraryID: "lib-1",
             limit: 10,
             page: 1,
-            sort: "addedAt",
+            sort: .addedAt,
             descending: true,
             filter: "progress.finished",
             minified: true,
@@ -48,6 +48,30 @@ struct GetLibraryItemsParametersTests {
         #expect(request.queryItems?["minified"] == "1")
         #expect(request.queryItems?["collapseseries"] == "0")
         #expect(request.queryItems?["include"] == "rssfeed")
+    }
+
+    @Test(arguments: [
+        (LibraryItemSort.addedAt, "addedAt"),
+        (.size, "size"),
+        (.birthtimeMs, "birthtimeMs"),
+        (.mtimeMs, "mtimeMs"),
+        (.mediaMetadataTitle, "media.metadata.title"),
+        (.random, "random"),
+        (.mediaDuration, "media.duration"),
+        (.mediaMetadataPublishedYear, "media.metadata.publishedYear"),
+        (.mediaMetadataAuthorNameLF, "media.metadata.authorNameLF"),
+        (.mediaMetadataAuthorName, "media.metadata.authorName"),
+        (.sequence, "sequence"),
+        (.progress, "progress"),
+        (.progressCreatedAt, "progress.createdAt"),
+        (.progressFinishedAt, "progress.finishedAt"),
+        (.mediaMetadataAuthor, "media.metadata.author"),
+        (.mediaNumTracks, "media.numTracks")
+    ])
+    func libraryItemSortUsesServerRawValue(sort: LibraryItemSort, rawValue: String) {
+        let request = GetLibraryItems.Request(libraryID: "lib-1", sort: sort)
+
+        #expect(request.queryItems?["sort"] == rawValue)
     }
 
 }
