@@ -66,6 +66,15 @@ struct SortContractTests {
     }
 
     @Test
+    func authorPageWithoutLimitIsOmitted() {
+        let request = GetLibraryAuthors.Request(libraryID: "lib-1", page: 2)
+
+        #expect(request.queryItems?["page"] == nil)
+        #expect(request.queryItems?["sort"] == "name")
+        #expect(request.queryItems?["desc"] == "0")
+    }
+
+    @Test
     func authorRequestEncodesPaginationAndDirection() {
         let request = GetLibraryAuthors.Request(
             libraryID: "lib-1",
@@ -84,7 +93,16 @@ struct SortContractTests {
     @Test
     func authorsResponseDecodesPaginatedResults() throws {
         let body = Data(
-            #"{"results":[{"id":"author-1","name":"Someone"}],"total":1,"limit":25,"page":2,"sortBy":"name","sortDesc":false}"#.utf8
+            #"""
+            {
+                "results": [{"id": "author-1", "name": "Someone"}],
+                "total": 1,
+                "limit": 25,
+                "page": 2,
+                "sortBy": "name",
+                "sortDesc": false
+            }
+            """#.utf8
         )
 
         let response = try GetLibraryAuthors.handle((data: body, response: makeResponse()))

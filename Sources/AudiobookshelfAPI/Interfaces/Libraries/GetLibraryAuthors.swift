@@ -46,7 +46,7 @@ public struct GetLibraryAuthors: Interface {
         /// - Parameters:
         ///   - libraryID: The ID of the library.
         ///   - limit: The number of authors to return per page. If supplied without a page, page 0 is requested.
-        ///   - page: The page number (0 indexed) to request when a limit is supplied.
+        ///   - page: The page number (0 indexed) to request when a limit is supplied. Ignored without a limit.
         ///   - sort: The field to sort authors by. Defaults to name.
         ///   - descending: Whether to reverse the sort order. Defaults to ascending.
         public init(
@@ -60,7 +60,7 @@ public struct GetLibraryAuthors: Interface {
 
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfPresent("limit", limit?.description)
-            let resolvedPage = limit == nil ? page : page ?? 0
+            let resolvedPage = limit == nil ? nil : page ?? 0
             queryItems.appendIfPresent("page", resolvedPage?.description)
             queryItems.appendIfPresent("sort", sort.rawValue)
             queryItems.appendIfPresent("desc", descending.binaryString)
