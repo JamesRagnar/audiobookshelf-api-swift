@@ -58,6 +58,14 @@ struct SortContractTests {
     }
 
     @Test
+    func authorLimitDefaultsToFirstPage() {
+        let request = GetLibraryAuthors.Request(libraryID: "lib-1", limit: 25)
+
+        #expect(request.queryItems?["limit"] == "25")
+        #expect(request.queryItems?["page"] == "0")
+    }
+
+    @Test
     func authorRequestEncodesPaginationAndDirection() {
         let request = GetLibraryAuthors.Request(
             libraryID: "lib-1",
