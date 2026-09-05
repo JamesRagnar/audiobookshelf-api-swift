@@ -30,16 +30,16 @@ public struct GetYourListeningSessions: Interface {
         /// Get Your Listening Sessions Request
         /// 
         /// - Parameters:
-        ///   - itemsPerPage: The number of listening sessions to retrieve per page.
-        ///   - page: The page (0 indexed) to retrieve.
+        ///   - itemsPerPage: The number of listening sessions to retrieve per page. The server defaults to 10.
+        ///   - page: The page (0 indexed) to retrieve. The server defaults to 0.
         public init(
-            itemsPerPage: Int,
-            page: Int
+            itemsPerPage: Int? = nil,
+            page: Int? = nil
         ) {
-            self.queryItems = [
-                URLQueryItem(name: "itemsPerPage", value: itemsPerPage.description),
-                URLQueryItem(name: "page", value: page.description)
-            ]
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("itemsPerPage", itemsPerPage?.description)
+            queryItems.appendIfPresent("page", page?.description)
+            self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
 
     }
