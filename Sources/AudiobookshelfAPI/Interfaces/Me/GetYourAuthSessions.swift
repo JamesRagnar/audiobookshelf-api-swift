@@ -34,20 +34,20 @@ public struct GetYourAuthSessions: Interface {
         /// Get Your Auth Sessions Request
         ///
         /// - Parameters:
-        ///   - itemsPerPage: The number of sessions to retrieve per page.
-        ///   - page: The page (0 indexed) to retrieve.
+        ///   - itemsPerPage: The number of sessions to retrieve per page. The server defaults to 10.
+        ///   - page: The page (0 indexed) to retrieve. The server defaults to 0.
         ///   - refreshToken: The JWT refresh token for the current session. When provided, the server can
         ///     mark the matching session with `current`. Without it, every session reports `current` as
         ///     false.
         public init(
-            itemsPerPage: Int,
-            page: Int,
+            itemsPerPage: Int? = nil,
+            page: Int? = nil,
             refreshToken: String? = nil
         ) {
-            self.queryItems = [
-                URLQueryItem(name: "itemsPerPage", value: itemsPerPage.description),
-                URLQueryItem(name: "page", value: page.description)
-            ]
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("itemsPerPage", itemsPerPage?.description)
+            queryItems.appendIfPresent("page", page?.description)
+            self.queryItems = queryItems.isEmpty ? nil : queryItems
 
             if let refreshToken {
                 self.headers = ["x-refresh-token": refreshToken]

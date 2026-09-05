@@ -32,15 +32,12 @@ public struct SearchChapters: Interface {
         /// - Parameters:
         ///   - query: The search query.
         ///   - libraryId: Limit search to specific library (optional).
-        ///   - limit: Maximum number of results (optional).
         public init(
             query: String,
-            libraryId: String? = nil,
-            limit: Int? = nil
+            libraryId: String? = nil
         ) {
             var items: [URLQueryItem] = [URLQueryItem(name: "q", value: query)]
             items.appendIfPresent("libraryId", libraryId)
-            items.appendIfPresent("limit", limit?.description)
             self.queryItems = items
         }
     }

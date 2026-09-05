@@ -31,19 +31,19 @@ public struct GetLibraryUserPlaylists: Interface {
         ///
         /// - Parameters:
         ///   - libraryID: The ID of the library.
-        ///   - limit: Limit the number of returned results per page. If 0, no limit will be applied.
-        /// - page: The page number (0 indexed) to request. If there is no limit applied, then page will have no effect
-        /// and all results will be returned.
+        ///   - limit: Limit the number of returned results per page. If 0 or omitted, no limit will be applied.
+        ///   - page: The page number (0 indexed) to request. If there is no limit applied, then page has no effect.
         public init(
             libraryID: String,
-            limit: Int,
-            page: Int
+            limit: Int? = nil,
+            page: Int? = nil
         ) {
             self.path = "/api/libraries/\(libraryID)/playlists"
-            self.queryItems = [
-                URLQueryItem(name: "limit", value: limit.description),
-                URLQueryItem(name: "page", value: page.description)
-            ]
+
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfPresent("limit", limit?.description)
+            queryItems.appendIfPresent("page", page?.description)
+            self.queryItems = queryItems.isEmpty ? nil : queryItems
         }
 
     }

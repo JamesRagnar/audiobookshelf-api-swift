@@ -73,6 +73,13 @@ struct AuthSessionContractTests {
     }
 
     @Test
+    func listRequestAllowsServerPaginationDefaults() {
+        let request = GetYourAuthSessions.Request()
+
+        #expect(request.queryItems == nil)
+    }
+
+    @Test
     func deleteRequestBuildsSessionPath() {
         let request = DeleteYourAuthSession.Request(sessionID: "session-1")
         #expect(request.path == "/api/me/sessions/session-1")
