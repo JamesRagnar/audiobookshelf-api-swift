@@ -22,7 +22,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/JamesRagnar/RagnarNetworking",
-            branch: "main"
+            exact: .init(1, 0, 0)
         )
     ],
     targets: [
