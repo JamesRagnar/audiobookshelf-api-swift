@@ -9,6 +9,9 @@ import Foundation
 import RagnarNetworking
 
 /// Update a narrator's metadata in a library.
+///
+/// On servers older than v2.36.1, this library-scoped route may also update books in other libraries
+/// that use the same narrator. Disable this mutation when library isolation is required on older servers.
 public struct UpdateLibraryNarrator: Interface {
 
     // MARK: Request
@@ -35,14 +38,13 @@ public struct UpdateLibraryNarrator: Interface {
         ///   - libraryId: The ID of the library.
         ///   - narratorName: The current narrator name.
         ///   - newName: The new narrator name.
+        /// - Important: Servers older than v2.36.1 may mutate matching narrators in other libraries.
         public init(
             libraryId: String,
             narratorName: String,
             newName: String
         ) {
-            let encodedNarrator = Data(narratorName.utf8)
-                .base64EncodedString()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+            let encodedNarrator = Base64URL.encode(narratorName)
             self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
             self.body = Payload(name: newName)
         }

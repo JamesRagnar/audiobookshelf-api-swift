@@ -52,6 +52,9 @@ public struct Series {
     /// - Note: Series Num Books - Added Attribute
     public let numBooks: Int?
 
+    /// Comma-separated or range-based sequence values for collapsed subseries responses.
+    public let seriesSequenceList: String?
+
     // MARK: Series Books
 
     /// The name of the series with any prefix removed.
@@ -132,6 +135,7 @@ extension Series: Decodable {
         case nameIgnorePrefix
         case libraryItemIds
         case numBooks
+        case seriesSequenceList
         case nameIgnorePrefixSort
         case type
         case books
@@ -158,6 +162,7 @@ extension Series: Decodable {
         self.nameIgnorePrefix = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefix)
         self.libraryItemIds = try container.decodeIfPresent([String].self, forKey: .libraryItemIds)
         self.numBooks = try container.decodeIfPresent(Int.self, forKey: .numBooks)
+        self.seriesSequenceList = try container.decodeIfPresent(String.self, forKey: .seriesSequenceList)
         self.nameIgnorePrefixSort = try container.decodeIfPresent(String.self, forKey: .nameIgnorePrefixSort)
         self.type = try container.decodeIfPresent(String.self, forKey: .type)
         self.books = try container.decodeIfPresent([LibraryItem].self, forKey: .books)

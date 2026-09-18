@@ -24,6 +24,16 @@ struct SeriesDecodingTests {
         #expect(firstUnread.count == 1)
         #expect(firstUnread.first?.id == "li-1")
     }
+
+    @Test
+    func seriesSequenceListDecodesAsString() throws {
+        let series = try JSONDecoder().decode(
+            Series.self,
+            from: Data("{\"id\":\"series-1\",\"name\":\"Series\",\"seriesSequenceList\":\"1-3, 5\"}".utf8)
+        )
+
+        #expect(series.seriesSequenceList == "1-3, 5")
+    }
 }
 
 private let seriesBookJSON = """

@@ -9,6 +9,9 @@ import Foundation
 import RagnarNetworking
 
 /// Remove a narrator from a library.
+///
+/// On servers older than v2.36.1, this library-scoped route may also update books in other libraries
+/// that use the same narrator. Disable this mutation when library isolation is required on older servers.
 public struct RemoveLibraryNarrator: Interface {
 
     // MARK: Request
@@ -32,10 +35,9 @@ public struct RemoveLibraryNarrator: Interface {
         /// - Parameters:
         ///   - libraryId: The ID of the library.
         ///   - narratorName: The narrator name to remove.
+        /// - Important: Servers older than v2.36.1 may mutate matching narrators in other libraries.
         public init(libraryId: String, narratorName: String) {
-            let encodedNarrator = Data(narratorName.utf8)
-                .base64EncodedString()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+            let encodedNarrator = Base64URL.encode(narratorName)
             self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
         }
 

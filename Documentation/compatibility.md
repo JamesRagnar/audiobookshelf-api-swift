@@ -5,6 +5,27 @@ Supported server range: `>= 2.26.0` and `<= 2.36.x`.
 `ServerCompatibility` evaluates the overall range. It does not gate individual members, so check the
 server version before using anything listed below.
 
+Overall range support does not guarantee identical behavior for every operation across server patch
+releases. In particular, callers should check the full server patch version before offering legacy
+settings writes or library-scoped narrator mutations.
+
+## 2.36.1
+
+The server silently ignores these seven legacy `/api/settings` properties while returning HTTP 200:
+`metadataFileFormat`, `rateLimitLoginRequests`, `rateLimitLoginWindow`, `backupPath`,
+`loggerDailyLogsToKeep`, `loggerScannerLogsToKeep`, and `podcastEpisodeSchedule`. A nil property is
+omitted by the client. A non-nil legacy property is still encoded and sent. Deprecation does not
+suppress transmission, and HTTP 200 does not prove that a supplied setting changed.
+
+The typed media payload omits `ebookFile`, `chapters`, and `audioFiles`; those remain response fields.
+This client-side omission is separate from the server ignoring those fields if another client sends
+them. Chapter writes use `UpdateLibraryItemChapters`.
+
+Resized artwork accepts `webp`, `jpeg`, and `png`. Auth custom messages are sanitized by the server,
+so the returned value may differ from submitted HTML. Missing-share requests require the session
+cookie obtained through `GetMediaShare`. Narrator mutations are library-isolated on v2.36.1; older
+supported servers may affect matching narrators in other libraries.
+
 ## 2.36.0
 
 Added. On older servers the endpoint does not exist unless noted.
