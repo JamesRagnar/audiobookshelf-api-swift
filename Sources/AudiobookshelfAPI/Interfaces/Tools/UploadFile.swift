@@ -106,7 +106,10 @@ public struct UploadFile: Interface {
         ///
         /// - Important: `fileData` must already contain a complete multipart body. The legacy
         ///   library and folder arguments are retained for source compatibility and are unused.
-        @available(*, deprecated, message: "Use init(fileData:filename:mimeType:libraryId:folderId:title:author:series:) for structured multipart uploads. This initializer requires a complete multipart body and its ID arguments are unused.")
+        @available(
+            *, deprecated,
+            message: "Use the structured multipart initializer; legacy arguments are unused."
+        )
         public init(
             fileData: Data,
             contentType: String,
@@ -203,7 +206,9 @@ private struct MultipartUploadBody: Sendable {
                 fields: fields
             )
             let boundaryData = Data(boundary.utf8)
-            let headerData = Data(("form-data; name=\"file\"; filename=\"\(filename)\"\r\nContent-Type: \(mimeType)").utf8)
+            let header = "form-data; name=\"file\"; filename=\"\(filename)\"\r\n"
+                + "Content-Type: \(mimeType)"
+            let headerData = Data(header.utf8)
             let values = fields.compactMap(\.1).map { Data($0.utf8) }
             let collides = values.contains { $0.range(of: boundaryData) != nil } ||
                 fileData.range(of: boundaryData) != nil ||

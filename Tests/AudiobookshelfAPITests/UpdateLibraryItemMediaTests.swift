@@ -32,6 +32,16 @@ struct UpdateLibraryItemMediaTests {
         }
     }
 
+    @Test
+    func missingUpdatedDefaultsToFalse() throws {
+        let response = try JSONDecoder().decode(
+            UpdateLibraryItemMedia.Response.self,
+            from: Data("{\"libraryItem\":\(libraryItemJSON)}".utf8)
+        )
+
+        #expect(response.updated == false)
+    }
+
 }
 
 private let libraryItemJSON = """

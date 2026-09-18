@@ -41,8 +41,30 @@ struct UploadFileTests {
             title: "A Title"
         )
         let configuration = ServerConfiguration(
-            url: URL(string: "https://example.com/abs/")!,
+            url: try #require(URL(string: "https://example.com/abs/")),
             defaultHeaders: ["content-type": "application/json"]
+        )
+        let built = try URLRequest(
+            interfaceRequest: request,
+            context: RequestContext(configuration: configuration, credential: "token")
+        )
+
+        #expect(built.value(forHTTPHeaderField: "Content-Type") == request.body.contentType)
+    }
+
+    @Test
+    func structuredRequestOverridesIncorrectMultipartBoundaryDefaults() throws {
+        let request = try UploadFile.Request(
+            fileData: Data([1, 2, 3]),
+            filename: "book.m4b",
+            mimeType: "audio/mp4",
+            libraryId: "library-1",
+            folderId: "folder-1",
+            title: "A Title"
+        )
+        let configuration = ServerConfiguration(
+            url: try #require(URL(string: "https://example.com")),
+            defaultHeaders: ["cOnTeNt-TyPe": "multipart/form-data; boundary=wrong"]
         )
         let built = try URLRequest(
             interfaceRequest: request,

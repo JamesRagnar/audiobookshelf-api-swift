@@ -29,8 +29,8 @@ struct AuthSettingsContractTests {
             )
         )
 
-        #expect(response.authOpenIDTokenSigningAlgorithm == nil)
-        #expect(response.authOpenIDButtonText == nil)
+        #expect(response.authOpenIDTokenSigningAlgorithm.isEmpty)
+        #expect(response.authOpenIDButtonText.isEmpty)
         #expect(response.authOpenIDMobileRedirectURIs == nil)
         #expect(response.authOpenIDSamplePermissions == "{\"root\":false}")
     }
@@ -52,6 +52,26 @@ struct AuthSettingsContractTests {
                 )
             )
         }
+    }
+
+    @Test
+    func adminResponseDefaultsMissingLegacyStringsToEmpty() throws {
+        let response = try JSONDecoder().decode(
+            GetAuthSettings.Response.self,
+            from: Data(
+                """
+                {
+                  "authActiveAuthMethods": [],
+                  "authOpenIDAutoLaunch": false,
+                  "authOpenIDAutoRegister": false,
+                  "authOpenIDSamplePermissions": "{}"
+                }
+                """.utf8
+            )
+        )
+
+        #expect(response.authOpenIDTokenSigningAlgorithm.isEmpty)
+        #expect(response.authOpenIDButtonText.isEmpty)
     }
 
 }

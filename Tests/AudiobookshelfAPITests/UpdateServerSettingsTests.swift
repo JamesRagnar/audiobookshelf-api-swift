@@ -62,9 +62,30 @@ struct UpdateServerSettingsTests {
 
         #expect(object.count == 20)
         #expect(object["backupSchedule"] as? Bool == false)
-        #expect(object["allowedOrigins"] as? [Any] != nil)
+        #expect(object["allowedOrigins"] is [Any])
         #expect(object["logLevel"] as? Int == 0)
         #expect(object["scannerParseSubtitle"] as? Bool == false)
+    }
+
+    @Test
+    func legacySettingsRemainEncodedForOlderServers() throws {
+        let object = try encode(UpdateServerSettings.Request.ServerSettingsUpdate(
+            metadataFileFormat: "abs",
+            rateLimitLoginRequests: 5,
+            rateLimitLoginWindow: 60,
+            backupPath: "/backups",
+            loggerDailyLogsToKeep: 7,
+            loggerScannerLogsToKeep: 8,
+            podcastEpisodeSchedule: "0 * * * *"
+        ))
+
+        #expect(object["metadataFileFormat"] as? String == "abs")
+        #expect(object["rateLimitLoginRequests"] as? Int == 5)
+        #expect(object["rateLimitLoginWindow"] as? Int == 60)
+        #expect(object["backupPath"] as? String == "/backups")
+        #expect(object["loggerDailyLogsToKeep"] as? Int == 7)
+        #expect(object["loggerScannerLogsToKeep"] as? Int == 8)
+        #expect(object["podcastEpisodeSchedule"] as? String == "0 * * * *")
     }
 
     private func encode(_ value: some Encodable) throws -> [String: Any] {

@@ -43,7 +43,7 @@ public struct ServerSettings {
     public let metadataFileFormat: String
 
     /// The configured backup path. Read-only through `/api/settings` on newer servers.
-    public let backupPath: String
+    public let backupPath: String?
 
     /// The maximum number of login requests per rateLimitLoginWindow.
     public let rateLimitLoginRequests: Int
@@ -229,7 +229,7 @@ extension ServerSettings: Decodable {
         storeCoverWithItem = try container.decode(Bool.self, forKey: .storeCoverWithItem)
         storeMetadataWithItem = try container.decode(Bool.self, forKey: .storeMetadataWithItem)
         metadataFileFormat = try container.decode(String.self, forKey: .metadataFileFormat)
-        backupPath = try container.decode(String.self, forKey: .backupPath)
+        backupPath = try container.decodeIfPresent(String.self, forKey: .backupPath)
         rateLimitLoginRequests = try container.decode(Int.self, forKey: .rateLimitLoginRequests)
         rateLimitLoginWindow = try container.decode(Int.self, forKey: .rateLimitLoginWindow)
         authActiveAuthMethods = try container.decodeIfPresent([String].self, forKey: .authActiveAuthMethods)
