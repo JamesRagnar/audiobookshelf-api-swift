@@ -11,6 +11,8 @@ import RagnarNetworking
 /// Update authentication settings.
 /// Note: This endpoint differentiates between omitted fields (no change) and explicit JSON null (clear value).
 /// Use `Nullable.null` to send JSON null; use `nil` to omit the field.
+/// The server sanitizes `authLoginCustomMessage` HTML. The returned value may differ from the submitted text,
+/// and `updated` may be false when the sanitized value equals the stored value.
 public struct UpdateAuthSettings: Interface {
 
     // MARK: Request

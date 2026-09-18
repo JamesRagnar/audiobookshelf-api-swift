@@ -56,4 +56,10 @@ struct ArtworkRequestOptionsTests {
         #expect(request.authentication == .none)
     }
 
+    @Test
+    func pngIsExpressibleForBothArtworkEndpoints() {
+        #expect(GetLibraryItemCover.Request(itemID: "item-1", format: .png).queryItems?["format"] == "png")
+        #expect(GetAuthorImage.Request(authorID: "author-1", format: .png).queryItems?["format"] == "png")
+    }
+
 }

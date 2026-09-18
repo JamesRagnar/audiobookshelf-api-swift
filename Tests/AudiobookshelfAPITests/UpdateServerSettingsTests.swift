@@ -34,6 +34,39 @@ struct UpdateServerSettingsTests {
         #expect(disabled["backupSchedule"] as? Bool == false)
     }
 
+    @Test
+    func allowedSettingsRetainExplicitFalseZeroAndEmptyValues() throws {
+        let settings = UpdateServerSettings.Request.ServerSettingsUpdate(
+            scannerParseSubtitle: false,
+            scannerFindCovers: false,
+            scannerCoverProvider: "google",
+            scannerPreferMatchedMetadata: false,
+            scannerDisableWatcher: false,
+            storeCoverWithItem: false,
+            storeMetadataWithItem: false,
+            allowIframe: false,
+            backupSchedule: .disabled,
+            backupsToKeep: 0,
+            maxBackupSize: 0,
+            homeBookshelfView: 0,
+            bookshelfView: 0,
+            sortingIgnorePrefix: false,
+            chromecastEnabled: false,
+            dateFormat: "",
+            timeFormat: "",
+            language: "",
+            allowedOrigins: [],
+            logLevel: 0
+        )
+        let object = try encode(settings)
+
+        #expect(object.count == 20)
+        #expect(object["backupSchedule"] as? Bool == false)
+        #expect(object["allowedOrigins"] as? [Any] != nil)
+        #expect(object["logLevel"] as? Int == 0)
+        #expect(object["scannerParseSubtitle"] as? Bool == false)
+    }
+
     private func encode(_ value: some Encodable) throws -> [String: Any] {
         let data = try JSONEncoder().encode(value)
         return try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])

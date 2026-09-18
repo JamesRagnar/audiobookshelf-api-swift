@@ -91,23 +91,30 @@ public extension UpdateServerSettings.Request {
 
         public var storeCoverWithItem: Bool?
         public var storeMetadataWithItem: Bool?
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore metadataFileFormat; it remains encoded for older supported servers.")
         public var metadataFileFormat: String?
 
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore rateLimitLoginRequests; it remains encoded for older supported servers.")
         public var rateLimitLoginRequests: Int?
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore rateLimitLoginWindow; it remains encoded for older supported servers.")
         public var rateLimitLoginWindow: Int?
         public var allowIframe: Bool?
 
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore backupPath; it remains encoded for older supported servers.")
         public var backupPath: String?
         public var backupSchedule: ScheduleValue?
         public var backupsToKeep: Int?
         public var maxBackupSize: Int?
 
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore loggerDailyLogsToKeep; it remains encoded for older supported servers.")
         public var loggerDailyLogsToKeep: Int?
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore loggerScannerLogsToKeep; it remains encoded for older supported servers.")
         public var loggerScannerLogsToKeep: Int?
 
         public var homeBookshelfView: Int?
         public var bookshelfView: Int?
 
+        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore podcastEpisodeSchedule; it remains encoded for older supported servers.")
         public var podcastEpisodeSchedule: String?
 
         public var sortingIgnorePrefix: Bool?

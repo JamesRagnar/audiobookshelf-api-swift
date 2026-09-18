@@ -77,6 +77,7 @@ struct ServerSettingsDecodingTests {
           "storeCoverWithItem": false,
           "storeMetadataWithItem": true,
           "metadataFileFormat": "json",
+          "backupPath": "/backups",
           "rateLimitLoginRequests": 5,
           "rateLimitLoginWindow": 60000,
           "backupsToKeep": 3,

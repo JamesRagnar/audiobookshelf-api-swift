@@ -34,7 +34,10 @@ public struct GetAuthSettings: Interface {
     // MARK: Response
 
     public static let responses = ResponseContract<Response>(
-        success: .exact(200)
+        success: .exact(200),
+        failures: [
+            .code(403, .error(AudiobookshelfError.forbidden))
+        ]
     )
 
 }
@@ -59,9 +62,9 @@ public extension GetAuthSettings {
 
         public let authOpenIDLogoutURL: String?
 
-        public let authOpenIDTokenSigningAlgorithm: String
+        public let authOpenIDTokenSigningAlgorithm: String?
 
-        public let authOpenIDButtonText: String
+        public let authOpenIDButtonText: String?
 
         public let authOpenIDAutoLaunch: Bool
 
@@ -70,6 +73,24 @@ public extension GetAuthSettings {
         public let authOpenIDMatchExistingBy: String?
 
         public let authOpenIDSubfolderForRedirectURLs: String?
+
+        public let authOpenIDClientID: String?
+
+        public let authOpenIDClientSecret: String?
+
+        public let authOpenIDMobileRedirectURIs: [String]?
+
+        public let authOpenIDGroupClaim: String?
+
+        public let authOpenIDAdvancedPermsClaim: String?
+
+        public let authOpenIDSamplePermissions: String
+
+    }
+
+    enum AudiobookshelfError: Error, Sendable {
+
+        case forbidden
 
     }
 
