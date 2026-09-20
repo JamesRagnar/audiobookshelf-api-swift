@@ -32,9 +32,7 @@ public struct DeleteGenre: Interface {
         /// - Parameters:
         ///   - genre: The genre name to delete.
         public init(genre: String) {
-            let encodedGenre = Data(genre.utf8)
-                .base64EncodedString()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+            let encodedGenre = Base64URL.encode(genre)
             self.path = "/api/genres/\(encodedGenre)"
         }
 

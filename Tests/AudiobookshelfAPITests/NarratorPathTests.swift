@@ -25,4 +25,21 @@ struct NarratorPathTests {
         #expect(removeURL?.absoluteString.hasSuffix("/abs/api/libraries/library/narrators/\(encoded)") == true)
     }
 
+    @Test(arguments: [
+        ("ÿ?", "w78_"),
+        ("ñ>", "w7E-")
+    ])
+    func deleteTagAndGenrePathsKeepEncodedValuesAsOneURLSegment(name: String, encoded: String) throws {
+        let tag = DeleteTag.Request(tag: name)
+        let genre = DeleteGenre.Request(genre: name)
+        let baseURL = try #require(URL(string: "https://example.com/abs/"))
+        let configuration = ServerConfiguration(url: baseURL)
+        let context = RequestContext(configuration: configuration, credential: "token")
+
+        let tagURL = try URLRequest(interfaceRequest: tag, context: context).url
+        let genreURL = try URLRequest(interfaceRequest: genre, context: context).url
+        #expect(tagURL?.absoluteString.hasSuffix("/abs/api/tags/\(encoded)") == true)
+        #expect(genreURL?.absoluteString.hasSuffix("/abs/api/genres/\(encoded)") == true)
+    }
+
 }

@@ -109,6 +109,8 @@ public extension GetAuthSettings {
             case authOpenIDSamplePermissions
         }
 
+        /// Decodes legacy deployments that omit or return null for the two nonoptional string fields while
+        /// preserving the existing public API. Incompatible value types still fail decoding.
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             authLoginCustomMessage = try container.decodeIfPresent(String.self, forKey: .authLoginCustomMessage)

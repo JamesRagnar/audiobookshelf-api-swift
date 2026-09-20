@@ -91,23 +91,42 @@ public extension UpdateServerSettings.Request {
 
         public var storeCoverWithItem: Bool?
         public var storeMetadataWithItem: Bool?
-        private var metadataFileFormatValue: String?
-        private var rateLimitLoginRequestsValue: Int?
-        private var rateLimitLoginWindowValue: Int?
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var metadataFileFormat: String?
+
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var rateLimitLoginRequests: Int?
+
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var rateLimitLoginWindow: Int?
+
         public var allowIframe: Bool?
 
-        private var backupPathValue: String?
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var backupPath: String?
+
         public var backupSchedule: ScheduleValue?
         public var backupsToKeep: Int?
         public var maxBackupSize: Int?
 
-        private var loggerDailyLogsToKeepValue: Int?
-        private var loggerScannerLogsToKeepValue: Int?
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var loggerDailyLogsToKeep: Int?
+
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var loggerScannerLogsToKeep: Int?
 
         public var homeBookshelfView: Int?
         public var bookshelfView: Int?
 
-        private var podcastEpisodeScheduleValue: String?
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
+        public var podcastEpisodeSchedule: String?
 
         public var sortingIgnorePrefix: Bool?
 
@@ -117,48 +136,6 @@ public extension UpdateServerSettings.Request {
         public var language: String?
         public var allowedOrigins: [String]?
         public var logLevel: Int?
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore metadataFileFormat.")
-        public var metadataFileFormat: String? {
-            get { metadataFileFormatValue }
-            set { metadataFileFormatValue = newValue }
-        }
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore rateLimitLoginRequests.")
-        public var rateLimitLoginRequests: Int? {
-            get { rateLimitLoginRequestsValue }
-            set { rateLimitLoginRequestsValue = newValue }
-        }
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore rateLimitLoginWindow.")
-        public var rateLimitLoginWindow: Int? {
-            get { rateLimitLoginWindowValue }
-            set { rateLimitLoginWindowValue = newValue }
-        }
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore backupPath.")
-        public var backupPath: String? {
-            get { backupPathValue }
-            set { backupPathValue = newValue }
-        }
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore loggerDailyLogsToKeep.")
-        public var loggerDailyLogsToKeep: Int? {
-            get { loggerDailyLogsToKeepValue }
-            set { loggerDailyLogsToKeepValue = newValue }
-        }
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore loggerScannerLogsToKeep.")
-        public var loggerScannerLogsToKeep: Int? {
-            get { loggerScannerLogsToKeepValue }
-            set { loggerScannerLogsToKeepValue = newValue }
-        }
-
-        @available(*, deprecated, message: "Audiobookshelf v2.36.1 and later ignore podcastEpisodeSchedule.")
-        public var podcastEpisodeSchedule: String? {
-            get { podcastEpisodeScheduleValue }
-            set { podcastEpisodeScheduleValue = newValue }
-        }
 
         private enum CodingKeys: String, CodingKey {
             case scannerParseSubtitle
@@ -199,19 +176,19 @@ public extension UpdateServerSettings.Request {
             try container.encodeIfPresent(scannerDisableWatcher, forKey: .scannerDisableWatcher)
             try container.encodeIfPresent(storeCoverWithItem, forKey: .storeCoverWithItem)
             try container.encodeIfPresent(storeMetadataWithItem, forKey: .storeMetadataWithItem)
-            try container.encodeIfPresent(metadataFileFormatValue, forKey: .metadataFileFormat)
-            try container.encodeIfPresent(rateLimitLoginRequestsValue, forKey: .rateLimitLoginRequests)
-            try container.encodeIfPresent(rateLimitLoginWindowValue, forKey: .rateLimitLoginWindow)
+            try container.encodeIfPresent(metadataFileFormat, forKey: .metadataFileFormat)
+            try container.encodeIfPresent(rateLimitLoginRequests, forKey: .rateLimitLoginRequests)
+            try container.encodeIfPresent(rateLimitLoginWindow, forKey: .rateLimitLoginWindow)
             try container.encodeIfPresent(allowIframe, forKey: .allowIframe)
-            try container.encodeIfPresent(backupPathValue, forKey: .backupPath)
+            try container.encodeIfPresent(backupPath, forKey: .backupPath)
             try container.encodeIfPresent(backupSchedule, forKey: .backupSchedule)
             try container.encodeIfPresent(backupsToKeep, forKey: .backupsToKeep)
             try container.encodeIfPresent(maxBackupSize, forKey: .maxBackupSize)
-            try container.encodeIfPresent(loggerDailyLogsToKeepValue, forKey: .loggerDailyLogsToKeep)
-            try container.encodeIfPresent(loggerScannerLogsToKeepValue, forKey: .loggerScannerLogsToKeep)
+            try container.encodeIfPresent(loggerDailyLogsToKeep, forKey: .loggerDailyLogsToKeep)
+            try container.encodeIfPresent(loggerScannerLogsToKeep, forKey: .loggerScannerLogsToKeep)
             try container.encodeIfPresent(homeBookshelfView, forKey: .homeBookshelfView)
             try container.encodeIfPresent(bookshelfView, forKey: .bookshelfView)
-            try container.encodeIfPresent(podcastEpisodeScheduleValue, forKey: .podcastEpisodeSchedule)
+            try container.encodeIfPresent(podcastEpisodeSchedule, forKey: .podcastEpisodeSchedule)
             try container.encodeIfPresent(sortingIgnorePrefix, forKey: .sortingIgnorePrefix)
             try container.encodeIfPresent(chromecastEnabled, forKey: .chromecastEnabled)
             try container.encodeIfPresent(dateFormat, forKey: .dateFormat)
@@ -257,19 +234,19 @@ public extension UpdateServerSettings.Request {
             self.scannerDisableWatcher = scannerDisableWatcher
             self.storeCoverWithItem = storeCoverWithItem
             self.storeMetadataWithItem = storeMetadataWithItem
-            self.metadataFileFormatValue = metadataFileFormat
-            self.rateLimitLoginRequestsValue = rateLimitLoginRequests
-            self.rateLimitLoginWindowValue = rateLimitLoginWindow
+            self.metadataFileFormat = metadataFileFormat
+            self.rateLimitLoginRequests = rateLimitLoginRequests
+            self.rateLimitLoginWindow = rateLimitLoginWindow
             self.allowIframe = allowIframe
-            self.backupPathValue = backupPath
+            self.backupPath = backupPath
             self.backupSchedule = backupSchedule
             self.backupsToKeep = backupsToKeep
             self.maxBackupSize = maxBackupSize
-            self.loggerDailyLogsToKeepValue = loggerDailyLogsToKeep
-            self.loggerScannerLogsToKeepValue = loggerScannerLogsToKeep
+            self.loggerDailyLogsToKeep = loggerDailyLogsToKeep
+            self.loggerScannerLogsToKeep = loggerScannerLogsToKeep
             self.homeBookshelfView = homeBookshelfView
             self.bookshelfView = bookshelfView
-            self.podcastEpisodeScheduleValue = podcastEpisodeSchedule
+            self.podcastEpisodeSchedule = podcastEpisodeSchedule
             self.sortingIgnorePrefix = sortingIgnorePrefix
             self.chromecastEnabled = chromecastEnabled
             self.dateFormat = dateFormat

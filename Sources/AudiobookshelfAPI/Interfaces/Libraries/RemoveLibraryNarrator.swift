@@ -10,8 +10,8 @@ import RagnarNetworking
 
 /// Remove a narrator from a library.
 ///
-/// On servers older than v2.36.1, this library-scoped route may also update books in other libraries
-/// that use the same narrator. Disable this mutation when library isolation is required on older servers.
+/// Requires Audiobookshelf v2.36.1 or later for library-scoped behavior. Older supported servers may
+/// update matching books in other libraries. Gate this mutation by the full server version or avoid it.
 public struct RemoveLibraryNarrator: Interface {
 
     // MARK: Request
@@ -35,7 +35,8 @@ public struct RemoveLibraryNarrator: Interface {
         /// - Parameters:
         ///   - libraryId: The ID of the library.
         ///   - narratorName: The narrator name to remove.
-        /// - Important: Servers older than v2.36.1 may mutate matching narrators in other libraries.
+        /// - Important: Requires Audiobookshelf v2.36.1 or later for library-scoped behavior. Older supported
+        ///   servers may mutate matching narrators in other libraries.
         public init(libraryId: String, narratorName: String) {
             let encodedNarrator = Base64URL.encode(narratorName)
             self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
