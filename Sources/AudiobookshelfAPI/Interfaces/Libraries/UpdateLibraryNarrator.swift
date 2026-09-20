@@ -9,6 +9,9 @@ import Foundation
 import RagnarNetworking
 
 /// Update a narrator's metadata in a library.
+///
+/// Requires Audiobookshelf v2.36.1 or later for library-scoped behavior. Older supported servers may
+/// update matching books in other libraries. Gate this mutation by the full server version or avoid it.
 public struct UpdateLibraryNarrator: Interface {
 
     // MARK: Request
@@ -35,14 +38,14 @@ public struct UpdateLibraryNarrator: Interface {
         ///   - libraryId: The ID of the library.
         ///   - narratorName: The current narrator name.
         ///   - newName: The new narrator name.
+        /// - Important: Requires Audiobookshelf v2.36.1 or later for library-scoped behavior. Older supported
+        ///   servers may mutate matching narrators in other libraries.
         public init(
             libraryId: String,
             narratorName: String,
             newName: String
         ) {
-            let encodedNarrator = Data(narratorName.utf8)
-                .base64EncodedString()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+            let encodedNarrator = Base64URL.encode(narratorName)
             self.path = "/api/libraries/\(libraryId)/narrators/\(encodedNarrator)"
             self.body = Payload(name: newName)
         }

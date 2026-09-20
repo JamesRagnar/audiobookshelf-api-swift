@@ -52,11 +52,34 @@ public struct UpdateLibraryItemMedia: Interface {
 
         public let libraryItem: LibraryItem
 
+        enum CodingKeys: String, CodingKey {
+            case updated
+            case libraryItem
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            if !container.contains(.updated) {
+                updated = false
+            } else if try container.decodeNil(forKey: .updated) {
+                updated = false
+            } else if let value = try? container.decode(Bool.self, forKey: .updated) {
+                updated = value
+            } else {
+                updated = !(try container.decode(String.self, forKey: .updated)).isEmpty
+            }
+            libraryItem = try container.decode(LibraryItem.self, forKey: .libraryItem)
+        }
+
     }
 
     public enum AudiobookshelfError: Error, Sendable {
 
         case notFound
+
+        case badRequest
+
+        case internalError
 
         /// You do not have access to this library item, or you lack the required permission.
         case forbidden
@@ -66,8 +89,10 @@ public struct UpdateLibraryItemMedia: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
             .code(403, .error(AudiobookshelfError.forbidden)),
-            .code(404, .error(AudiobookshelfError.notFound))
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalError))
         ]
     )
 

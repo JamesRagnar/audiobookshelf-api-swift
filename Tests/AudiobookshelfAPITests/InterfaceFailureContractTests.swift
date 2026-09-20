@@ -104,6 +104,7 @@ private let interfaceFailureExpectations: [Expectation] = [
     ),
     expectation(FireTestEvent.self, [403: FireTestEvent.AudiobookshelfError.forbidden]),
     expectation(GetAdminYearStats.self, [403: GetAdminYearStats.AudiobookshelfError.forbidden]),
+    expectation(GetAuthSettings.self, [403: GetAuthSettings.AudiobookshelfError.forbidden]),
     expectation(GetAllFeeds.self, [403: GetAllFeeds.AudiobookshelfError.forbidden]),
     expectation(GetAllSessions.self, [404: GetAllSessions.AudiobookshelfError.notFound]),
     expectation(GetEbookFile.self, [403: GetEbookFile.AudiobookshelfError.forbidden]),
@@ -145,8 +146,13 @@ private let interfaceFailureExpectations: [Expectation] = [
     ),
     expectation(GetLibraryItem.self, [403: GetLibraryItem.AudiobookshelfError.forbidden, 404: .notFound]),
     expectation(
+        GetAuthorImage.self,
+        [400: GetAuthorImage.AudiobookshelfError.badRequest, 404: .notFound, 500: .internalServerError]
+    ),
+    expectation(
         GetLibraryItemCover.self,
         [
+            400: GetLibraryItemCover.AudiobookshelfError.badRequest,
             404: GetLibraryItemCover.AudiobookshelfError.notFound,
             500: .internalServerError
         ]
@@ -301,7 +307,15 @@ private let interfaceFailureExpectations: [Expectation] = [
     expectation(UpdateEReaderDevices.self, [404: UpdateEReaderDevices.AudiobookshelfError.notFound]),
     expectation(UpdateEmailSettings.self, [404: UpdateEmailSettings.AudiobookshelfError.notFound]),
     expectation(UpdateLibrary.self, [400: UpdateLibrary.AudiobookshelfError.badRequest]),
-    expectation(UpdateLibraryItemMedia.self, [403: UpdateLibraryItemMedia.AudiobookshelfError.forbidden]),
+    expectation(
+        UpdateLibraryItemMedia.self,
+        [
+            400: UpdateLibraryItemMedia.AudiobookshelfError.badRequest,
+            403: .forbidden,
+            404: .notFound,
+            500: .internalError
+        ]
+    ),
     expectation(UpdateNotification.self, [403: UpdateNotification.AudiobookshelfError.forbidden, 404: .notFound]),
     expectation(UpdateNotificationSettings.self, [403: UpdateNotificationSettings.AudiobookshelfError.forbidden]),
     expectation(UpdatePassword.self, [400: UpdatePassword.AudiobookshelfError.badRequest, 403: .forbidden]),
@@ -311,5 +325,14 @@ private let interfaceFailureExpectations: [Expectation] = [
     ),
     expectation(UpdateSeries.self, [403: UpdateSeries.AudiobookshelfError.forbidden]),
     expectation(UploadAuthorImage.self, [404: UploadAuthorImage.AudiobookshelfError.notFound]),
+    expectation(
+        UploadFile.self,
+        [
+            400: UploadFile.AudiobookshelfError.badRequest,
+            403: .forbidden,
+            404: .notFound,
+            500: .internalError
+        ]
+    ),
     expectation(ValidateCronExpression.self, [400: ValidateCronExpression.AudiobookshelfError.badRequest])
 ]

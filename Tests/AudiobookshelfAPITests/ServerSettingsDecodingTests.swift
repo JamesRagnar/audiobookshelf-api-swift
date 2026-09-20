@@ -52,6 +52,7 @@ struct ServerSettingsDecodingTests {
         ))
 
         #expect(settings.timeZone == nil)
+        #expect(settings.backupPath == nil)
     }
 
     private func decode(_ json: String) throws -> ServerSettings {
@@ -77,6 +78,7 @@ struct ServerSettingsDecodingTests {
           "storeCoverWithItem": false,
           "storeMetadataWithItem": true,
           "metadataFileFormat": "json",
+          "backupPath": null,
           "rateLimitLoginRequests": 5,
           "rateLimitLoginWindow": 60000,
           "backupsToKeep": 3,

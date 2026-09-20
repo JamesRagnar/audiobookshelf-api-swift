@@ -32,9 +32,7 @@ public struct DeleteTag: Interface {
         /// - Parameters:
         ///   - tag: The tag name to delete.
         public init(tag: String) {
-            let encodedTag = Data(tag.utf8)
-                .base64EncodedString()
-                .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+            let encodedTag = Base64URL.encode(tag)
             self.path = "/api/tags/\(encodedTag)"
         }
 

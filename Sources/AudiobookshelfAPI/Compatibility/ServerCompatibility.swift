@@ -22,11 +22,10 @@ public enum CompatibilityResult: Sendable, Equatable {
 
 /// Evaluates audiobookshelf server version strings against the package's known-compatible range.
 ///
-/// Compatibility is evaluated at the `MAJOR.MINOR` level. Patch releases are assumed
-/// non-breaking per semver convention and are not used to gate compatibility.
+/// The overall range is supported, but individual operations may differ between patch releases.
 ///
 /// - Minimum supported minor: **2.26**
-/// - Maximum tested minor: **2.36**
+/// - Maximum supported minor: **2.36**
 public enum ServerCompatibility: Sendable {
 
     private static let minimumVersion = Version(major: 2, minor: 26, patch: 0)

@@ -77,6 +77,8 @@ public struct GetAuthorImage: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        case badRequest
+
         case notFound
 
         case internalServerError
@@ -88,6 +90,7 @@ public struct GetAuthorImage: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
             /// No author with provided ID exists, or the author does not have an image.
             .code(404, .error(AudiobookshelfError.notFound)),
             /// There was an error when attempting to read the image file.

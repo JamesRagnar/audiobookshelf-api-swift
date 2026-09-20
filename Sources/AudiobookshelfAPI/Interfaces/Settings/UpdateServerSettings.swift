@@ -91,23 +91,41 @@ public extension UpdateServerSettings.Request {
 
         public var storeCoverWithItem: Bool?
         public var storeMetadataWithItem: Bool?
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var metadataFileFormat: String?
 
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var rateLimitLoginRequests: Int?
+
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var rateLimitLoginWindow: Int?
+
         public var allowIframe: Bool?
 
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var backupPath: String?
+
         public var backupSchedule: ScheduleValue?
         public var backupsToKeep: Int?
         public var maxBackupSize: Int?
 
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var loggerDailyLogsToKeep: Int?
+
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var loggerScannerLogsToKeep: Int?
 
         public var homeBookshelfView: Int?
         public var bookshelfView: Int?
 
+        /// Legacy setting supported by Audiobookshelf before v2.36.1.
+        /// Audiobookshelf v2.36.1 and later ignore this value; it remains encoded for older supported servers.
         public var podcastEpisodeSchedule: String?
 
         public var sortingIgnorePrefix: Bool?
@@ -118,6 +136,67 @@ public extension UpdateServerSettings.Request {
         public var language: String?
         public var allowedOrigins: [String]?
         public var logLevel: Int?
+
+        private enum CodingKeys: String, CodingKey {
+            case scannerParseSubtitle
+            case scannerFindCovers
+            case scannerCoverProvider
+            case scannerPreferMatchedMetadata
+            case scannerDisableWatcher
+            case storeCoverWithItem
+            case storeMetadataWithItem
+            case metadataFileFormat
+            case rateLimitLoginRequests
+            case rateLimitLoginWindow
+            case allowIframe
+            case backupPath
+            case backupSchedule
+            case backupsToKeep
+            case maxBackupSize
+            case loggerDailyLogsToKeep
+            case loggerScannerLogsToKeep
+            case homeBookshelfView
+            case bookshelfView
+            case podcastEpisodeSchedule
+            case sortingIgnorePrefix
+            case chromecastEnabled
+            case dateFormat
+            case timeFormat
+            case language
+            case allowedOrigins
+            case logLevel
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(scannerParseSubtitle, forKey: .scannerParseSubtitle)
+            try container.encodeIfPresent(scannerFindCovers, forKey: .scannerFindCovers)
+            try container.encodeIfPresent(scannerCoverProvider, forKey: .scannerCoverProvider)
+            try container.encodeIfPresent(scannerPreferMatchedMetadata, forKey: .scannerPreferMatchedMetadata)
+            try container.encodeIfPresent(scannerDisableWatcher, forKey: .scannerDisableWatcher)
+            try container.encodeIfPresent(storeCoverWithItem, forKey: .storeCoverWithItem)
+            try container.encodeIfPresent(storeMetadataWithItem, forKey: .storeMetadataWithItem)
+            try container.encodeIfPresent(metadataFileFormat, forKey: .metadataFileFormat)
+            try container.encodeIfPresent(rateLimitLoginRequests, forKey: .rateLimitLoginRequests)
+            try container.encodeIfPresent(rateLimitLoginWindow, forKey: .rateLimitLoginWindow)
+            try container.encodeIfPresent(allowIframe, forKey: .allowIframe)
+            try container.encodeIfPresent(backupPath, forKey: .backupPath)
+            try container.encodeIfPresent(backupSchedule, forKey: .backupSchedule)
+            try container.encodeIfPresent(backupsToKeep, forKey: .backupsToKeep)
+            try container.encodeIfPresent(maxBackupSize, forKey: .maxBackupSize)
+            try container.encodeIfPresent(loggerDailyLogsToKeep, forKey: .loggerDailyLogsToKeep)
+            try container.encodeIfPresent(loggerScannerLogsToKeep, forKey: .loggerScannerLogsToKeep)
+            try container.encodeIfPresent(homeBookshelfView, forKey: .homeBookshelfView)
+            try container.encodeIfPresent(bookshelfView, forKey: .bookshelfView)
+            try container.encodeIfPresent(podcastEpisodeSchedule, forKey: .podcastEpisodeSchedule)
+            try container.encodeIfPresent(sortingIgnorePrefix, forKey: .sortingIgnorePrefix)
+            try container.encodeIfPresent(chromecastEnabled, forKey: .chromecastEnabled)
+            try container.encodeIfPresent(dateFormat, forKey: .dateFormat)
+            try container.encodeIfPresent(timeFormat, forKey: .timeFormat)
+            try container.encodeIfPresent(language, forKey: .language)
+            try container.encodeIfPresent(allowedOrigins, forKey: .allowedOrigins)
+            try container.encodeIfPresent(logLevel, forKey: .logLevel)
+        }
 
         public init(
             scannerParseSubtitle: Bool? = nil,

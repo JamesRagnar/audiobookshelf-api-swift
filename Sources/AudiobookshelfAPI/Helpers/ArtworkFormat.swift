@@ -16,4 +16,6 @@ public enum ArtworkFormat: String, Sendable {
 
     case jpeg
 
+    case png
+
 }
