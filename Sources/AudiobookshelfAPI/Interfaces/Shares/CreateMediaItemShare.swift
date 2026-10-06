@@ -8,7 +8,8 @@
 import Foundation
 import RagnarNetworking
 
-/// Create a public share for a media item.
+/// Create a public share record for a book or podcastEpisode on 2.26.0+.
+/// Public playback lookup currently resolves only books.
 public struct CreateMediaItemShare: Interface {
 
     // MARK: Request
@@ -35,7 +36,8 @@ public struct CreateMediaItemShare: Interface {
         ///   - slug: Unique identifier for the share URL.
         ///   - mediaItemType: Type of media ('book' or 'podcastEpisode').
         ///   - mediaItemId: ID of the media item to share.
-        ///   - expiresAt: Optional expiration timestamp (milliseconds since epoch).
+        ///   - expiresAt: Wire expiresAt in epoch milliseconds; nil encodes 0 for permanent.
+        ///     Negative values are invalid.
         ///   - isDownloadable: Whether the share allows downloads.
         public init(
             slug: String,
@@ -48,7 +50,7 @@ public struct CreateMediaItemShare: Interface {
                 slug: slug,
                 mediaItemType: mediaItemType,
                 mediaItemId: mediaItemId,
-                expiresAt: expiresAt,
+                expiresAt: expiresAt ?? 0,
                 isDownloadable: isDownloadable
             )
         }
@@ -67,13 +69,39 @@ public struct CreateMediaItemShare: Interface {
 
         public let slug: String
 
+        /// Optional wire expiresAt, ISO-8601 date (2.26.0+); missing/null means permanent.
         public let expiresAt: Date?
 
+        /// Required wire createdAt, ISO-8601 date (2.26.0+).
         public let createdAt: Date
 
+        /// Required wire updatedAt, ISO-8601 date (2.26.0+).
         public let updatedAt: Date
 
         public let isDownloadable: Bool
+
+        private enum CodingKeys: CodingKey {
+            case id
+            case mediaItemId
+            case mediaItemType
+            case slug
+            case expiresAt
+            case createdAt
+            case updatedAt
+            case isDownloadable
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            id = try container.decode(String.self, forKey: .id)
+            mediaItemId = try container.decode(String.self, forKey: .mediaItemId)
+            mediaItemType = try container.decode(String.self, forKey: .mediaItemType)
+            slug = try container.decode(String.self, forKey: .slug)
+            expiresAt = try container.decodeISODateIfPresent(forKey: .expiresAt)
+            createdAt = try container.decodeISODate(forKey: .createdAt)
+            updatedAt = try container.decodeISODate(forKey: .updatedAt)
+            isDownloadable = try container.decode(Bool.self, forKey: .isDownloadable)
+        }
 
     }
 
@@ -114,7 +142,7 @@ public extension CreateMediaItemShare.Request {
 
         let mediaItemId: String
 
-        let expiresAt: Int?
+        let expiresAt: Int
 
         let isDownloadable: Bool
 

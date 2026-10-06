@@ -9,6 +9,12 @@ import Foundation
 
 /// Shared scaling and cache-busting options for public artwork requests.
 ///
+/// On 2.37.0+ resized/cache paths require UUID identifiers. Invalid/nonpositive dimensions
+/// become unspecified; positive dimensions are clamped server-side to 4096. Cache defaults
+/// missing width to 400 and height to proportional scaling, then requires positive safe
+/// integers and webp/jpeg/png. Raw requests bypass resized-cache handling.
+/// Options are transmitted as supplied; this package does not clamp or reject them.
+///
 /// Used by endpoints that serve a library item's cover or an author's image.
 public struct ArtworkRequestOptions: Sendable {
 

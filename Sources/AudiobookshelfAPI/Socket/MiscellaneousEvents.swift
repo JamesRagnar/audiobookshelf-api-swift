@@ -100,20 +100,29 @@ public extension MetadataEmbedQueueUpdate {
 public struct LogEventObject: Decodable, Sendable {
 
     public enum LogName: String, Decodable, Sendable {
+        case trace = "TRACE"
         case debug = "DEBUG"
         case info = "INFO"
         case warn = "WARN"
         case error = "ERROR"
+        case fatal = "FATAL"
+        case note = "NOTE"
     }
 
     public enum LogLevel: Int, Decodable, Sendable {
+        case trace = 0
         case debug = 1
-        case info
-        case warning
-        case error
+        case info = 2
+        case warning = 3
+        case error = 4
+        case fatal = 5
+        case note = 6
     }
 
-    /// The date and time of the log event.
+    /// Required logger source, wire source (2.26.0+).
+    public let source: String
+
+    /// Required logger display string, wire timestamp (2.26.0+); not epoch time.
     public let timestamp: String
 
     /// The log event's message.

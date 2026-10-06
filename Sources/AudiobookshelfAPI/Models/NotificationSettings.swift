@@ -31,7 +31,8 @@ public struct NotificationSettings {
     /// The maximum number of notifications in the notification queue before events are ignored.
     public let maxNotificationQueue: Int
 
-    /// The time (in ms) between notification pushes.
+    /// Read-only wire notificationDelay, milliseconds between pushes (2.26.0+).
+    /// UpdateNotificationSettings ignores writes to this field.
     public let notificationDelay: Int
 
 }

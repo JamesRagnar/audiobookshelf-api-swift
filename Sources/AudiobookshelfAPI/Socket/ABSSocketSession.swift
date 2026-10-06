@@ -63,7 +63,9 @@ public actor ABSSocketSession {
 
     // MARK: - Public API
 
-    /// Connects to an Audiobookshelf server and authenticates with an access token.
+    /// Connects to an Audiobookshelf server and authenticates with an opaque bearer credential.
+    /// Access tokens work throughout the maintained range; API-key JWTs require 2.37.0+.
+    /// Refresh tokens are not supported credentials.
     ///
     /// The server URL may include a RouterBasePath. Endpoint resolution is delegated to
     /// `RagnarSocketIO`. Repeating the URL lets the client preserve its active transport while a
@@ -91,7 +93,8 @@ public actor ABSSocketSession {
         }
     }
 
-    /// Updates the access token and retries authentication on an active connection.
+    /// Updates the opaque bearer credential and retries authentication on an active connection.
+    /// API-key JWTs require 2.37.0+; refresh tokens are unsupported.
     public func updateToken(_ token: String) async throws {
         currentToken = token
         guard isConnected else { return }

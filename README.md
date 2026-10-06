@@ -26,7 +26,7 @@
 
 ## Supported Server Range
 
-**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.36.x`**
+**Supported range: `audiobookshelf` `>= 2.26.0` and `<= 2.37.x`**
 
 Some members require a newer server than the minimum. See `Documentation/compatibility.md` for the
 per-version list.

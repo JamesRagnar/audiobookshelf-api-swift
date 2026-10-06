@@ -8,6 +8,7 @@
 import Foundation
 import RagnarNetworking
 
+/// Mutates the user's series-hide list rather than item progress.
 /// This endpoint removes a series from the "Continue Listening" shelf.
 public struct RemoveSeriesFromContinueListening: Interface {
 
@@ -38,10 +39,17 @@ public struct RemoveSeriesFromContinueListening: Interface {
 
     // MARK: Response
 
-    public typealias Response = String
+    /// Full user on changed and already-satisfied operations (2.26.0+).
+    public typealias Response = User
+
+    /// Unknown series returns 404.
+    public enum AudiobookshelfError: Error, Sendable {
+        case notFound
+    }
 
     public static let responses = ResponseContract<Response>(
-        success: .exact(200)
+        success: .exact(200),
+        failures: [.code(404, .error(AudiobookshelfError.notFound))]
     )
 
 }

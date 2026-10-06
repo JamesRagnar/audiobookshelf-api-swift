@@ -77,27 +77,33 @@ public struct UploadFile: Interface {
             boundaryGenerator: @escaping @Sendable () -> String
         ) throws {
             guard !fileData.isEmpty else { throw ValidationError.emptyFileData }
-            guard Self.isNonEmptyText(libraryId) else { throw ValidationError.invalidLibraryID }
-            guard Self.isNonEmptyText(folderId) else { throw ValidationError.invalidFolderID }
-            guard Self.isNonEmptyText(title), !title.unicodeScalars.contains(where: Self.isNUL) else {
+            guard MultipartValidation.isNonEmptyText(libraryId) else { throw ValidationError.invalidLibraryID }
+            guard MultipartValidation.isNonEmptyText(folderId) else { throw ValidationError.invalidFolderID }
+            guard MultipartValidation.isNonEmptyText(title),
+                  !title.unicodeScalars.contains(where: MultipartValidation.isNUL) else {
                 throw ValidationError.invalidTitle
             }
-            guard Self.isValidFilename(filename) else { throw ValidationError.invalidFilename }
-            guard Self.isValidMIMEType(mimeType) else { throw ValidationError.invalidMIMEType }
+            guard MultipartValidation.isValidFilename(filename) else { throw ValidationError.invalidFilename }
+            guard MultipartValidation.isValidMIMEType(mimeType) else { throw ValidationError.invalidMIMEType }
 
-            let multipart = try MultipartUploadBody(
-                fileData: fileData,
-                filename: filename,
-                mimeType: mimeType,
-                boundaryGenerator: boundaryGenerator,
-                fields: [
-                    ("library", libraryId),
-                    ("folder", folderId),
-                    ("title", title),
-                    ("author", author),
-                    ("series", series)
-                ]
-            )
+            let multipart: MultipartUploadBody
+            do {
+                multipart = try MultipartUploadBody(
+                    fileData: fileData,
+                    filename: filename,
+                    mimeType: mimeType,
+                    boundaryGenerator: boundaryGenerator,
+                    fields: [
+                        ("library", libraryId),
+                        ("folder", folderId),
+                        ("title", title),
+                        ("author", author),
+                        ("series", series)
+                    ]
+                )
+            } catch {
+                throw ValidationError.boundaryGenerationFailed
+            }
             self.body = BinaryBody(data: multipart.data, contentType: multipart.contentType)
             self.headers = ["Content-Type": multipart.contentType]
         }
@@ -147,103 +153,5 @@ public struct UploadFile: Interface {
             .code(500, .error(AudiobookshelfError.internalError))
         ]
     )
-
-}
-
-private extension UploadFile.Request {
-
-    static func isNUL(_ scalar: Unicode.Scalar) -> Bool {
-        scalar.value == 0
-    }
-
-    static func isNonEmptyText(_ value: String) -> Bool {
-        !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-            !value.unicodeScalars.contains(where: isNUL)
-    }
-
-    static func isValidFilename(_ value: String) -> Bool {
-        guard !value.isEmpty, value != ".", value != ".." else { return false }
-        guard !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
-        return !value.unicodeScalars.contains { scalar in
-            scalar == "/" || scalar == "\\" || scalar == "\"" ||
-                scalar.value == 0 || scalar.value == 0x7F || scalar.value == 0x0D || scalar.value == 0x0A ||
-                (0x01...0x1F).contains(scalar.value)
-        }
-    }
-
-    static func isValidMIMEType(_ value: String) -> Bool {
-        let parts = value.split(separator: "/", omittingEmptySubsequences: false)
-        guard parts.count == 2 else { return false }
-        let separators = "()<>@,;:\\\"/[]?={} \t"
-        return parts.allSatisfy { part in
-            !part.isEmpty && part.unicodeScalars.allSatisfy { scalar in
-                scalar.value >= 0x21 && scalar.value <= 0x7E && !separators.unicodeScalars.contains(scalar)
-            }
-        }
-    }
-
-}
-
-private struct MultipartUploadBody: Sendable {
-
-    let data: Data
-    let contentType: String
-
-    init(
-        fileData: Data,
-        filename: String,
-        mimeType: String,
-        boundaryGenerator: @escaping @Sendable () -> String,
-        fields: [(String, String?)]
-    ) throws(UploadFile.Request.ValidationError) {
-        for _ in 0..<8 {
-            let boundary = boundaryGenerator()
-            let data = Self.makeData(
-                boundary: boundary,
-                fileData: fileData,
-                filename: filename,
-                mimeType: mimeType,
-                fields: fields
-            )
-            let boundaryData = Data(boundary.utf8)
-            let header = "form-data; name=\"file\"; filename=\"\(filename)\"\r\n"
-                + "Content-Type: \(mimeType)"
-            let headerData = Data(header.utf8)
-            let values = fields.compactMap(\.1).map { Data($0.utf8) }
-            let collides = values.contains { $0.range(of: boundaryData) != nil } ||
-                fileData.range(of: boundaryData) != nil ||
-                headerData.range(of: boundaryData) != nil
-            if !collides {
-                self.data = data
-                self.contentType = "multipart/form-data; boundary=\(boundary)"
-                return
-            }
-        }
-        throw .boundaryGenerationFailed
-    }
-
-    private static func makeData(
-        boundary: String,
-        fileData: Data,
-        filename: String,
-        mimeType: String,
-        fields: [(String, String?)]
-    ) -> Data {
-        var data = Data()
-        let prefix = Data("--\(boundary)\r\n".utf8)
-        for (name, value) in fields {
-            guard let value else { continue }
-            data.append(prefix)
-            data.append(Data("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n".utf8))
-            data.append(Data(value.utf8))
-            data.append(Data("\r\n".utf8))
-        }
-        data.append(prefix)
-        data.append(Data("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n".utf8))
-        data.append(Data("Content-Type: \(mimeType)\r\n\r\n".utf8))
-        data.append(fileData)
-        data.append(Data("\r\n--\(boundary)--\r\n".utf8))
-        return data
-    }
 
 }

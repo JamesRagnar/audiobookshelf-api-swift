@@ -29,15 +29,62 @@ public struct UpdateUser: Interface {
 
         public let authentication: AuthenticationScheme? = .bearer
 
+        /// User write on 2.26.0+.
+        /// - Parameters:
+        ///   - email: Optional wire email; nil omits. Only a nonempty string applies; empty/null cannot clear it.
+        ///   - itemTagsSelected: Optional top-level wire tag list; nil preserves;
+        ///     [] explicitly clears selection. accessAllTags bypasses this list.
+        ///   - permissions: Optional legacy Boolean permissions object.
+        ///   - permissionUpdates: Optional Boolean patch; non-nil patch members override legacy values.
         public init(
             userId: String,
             username: String? = nil,
             password: String? = nil,
             type: User.UserType? = nil,
             isActive: Bool? = nil,
-            isLocked: Bool? = nil,
             librariesAccessible: [String]? = nil,
-            permissions: UserPermissions? = nil
+            permissions: UserPermissions? = nil,
+            email: String? = nil,
+            itemTagsSelected: [String]? = nil,
+            permissionUpdates: UserPermissionsPatch? = nil
+        ) {
+            self.path = "/api/users/\(userId)"
+            self.body = Payload(
+                username: username,
+                password: password,
+                type: type,
+                isActive: isActive,
+                isLocked: nil,
+                librariesAccessible: librariesAccessible,
+                permissions: permissions != nil || permissionUpdates != nil
+                    || librariesAccessible != nil || itemTagsSelected != nil
+                    ? (permissionUpdates ?? UserPermissionsPatch()).merging(permissions) : nil,
+                email: email,
+                itemTagsSelected: itemTagsSelected
+            )
+        }
+
+        /// User write on 2.26.0+.
+        /// - Parameters:
+        ///   - email: Optional wire email; nil omits. Only a nonempty string applies; empty/null cannot clear it.
+        ///   - itemTagsSelected: Optional top-level wire tag list; nil preserves;
+        ///     [] explicitly clears selection. accessAllTags bypasses this list.
+        ///   - permissions: Optional legacy Boolean permissions object.
+        ///   - permissionUpdates: Optional Boolean patch; non-nil patch members override legacy values.
+        ///   - isLocked: Legacy wire Boolean, encoded when non-nil; ignored on 2.26.0...2.37.1.
+        @available(*, deprecated, message: "isLocked is ignored; use the initializer without isLocked.")
+        public init(
+            userId: String,
+            username: String? = nil,
+            password: String? = nil,
+            type: User.UserType? = nil,
+            isActive: Bool? = nil,
+            isLocked: Bool?,
+            librariesAccessible: [String]? = nil,
+            permissions: UserPermissions? = nil,
+            email: String? = nil,
+            itemTagsSelected: [String]? = nil,
+            permissionUpdates: UserPermissionsPatch? = nil
         ) {
             self.path = "/api/users/\(userId)"
             self.body = Payload(
@@ -47,7 +94,11 @@ public struct UpdateUser: Interface {
                 isActive: isActive,
                 isLocked: isLocked,
                 librariesAccessible: librariesAccessible,
-                permissions: permissions
+                permissions: permissions != nil || permissionUpdates != nil
+                    || librariesAccessible != nil || itemTagsSelected != nil
+                    ? (permissionUpdates ?? UserPermissionsPatch()).merging(permissions) : nil,
+                email: email,
+                itemTagsSelected: itemTagsSelected
             )
         }
 
@@ -106,7 +157,11 @@ public extension UpdateUser.Request {
 
         let librariesAccessible: [String]?
 
-        let permissions: UserPermissions?
+        let permissions: [String: Bool]?
+
+        let email: String?
+
+        let itemTagsSelected: [String]?
 
     }
 

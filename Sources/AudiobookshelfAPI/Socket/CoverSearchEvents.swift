@@ -9,6 +9,7 @@ import Foundation
 import RagnarSocketIO
 
 /// Cover search result streamed to client.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct CoverSearchResult: SocketEvent {
 
     public static let name = "cover_search_result"
@@ -35,6 +36,7 @@ public extension CoverSearchResult {
 }
 
 /// Cover search operation completed.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct CoverSearchComplete: SocketEvent {
 
     public static let name = "cover_search_complete"
@@ -55,6 +57,7 @@ public extension CoverSearchComplete {
 }
 
 /// Cover search error occurred.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct CoverSearchError: SocketEvent {
 
     public static let name = "cover_search_error"
@@ -78,6 +81,7 @@ public extension CoverSearchError {
 }
 
 /// Cover search provider-specific error.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct CoverSearchProviderError: SocketEvent {
 
     public static let name = "cover_search_provider_error"
@@ -104,6 +108,7 @@ public extension CoverSearchProviderError {
 }
 
 /// Cover search cancelled by user.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct CoverSearchCancelled: SocketEvent {
 
     public static let name = "cover_search_cancelled"

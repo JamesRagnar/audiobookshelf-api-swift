@@ -124,6 +124,14 @@ public struct LibraryItem {
     /// - Note: Library Item Personalized - Added Attribute
     public let finishedAt: Int?
 
+    /// Optional wire numEpisodesIncomplete (2.26.0+), user-specific filtered podcast count.
+    /// Zero can be omitted; missing/null is not an explicit zero.
+    public let numEpisodesIncomplete: Int?
+
+    /// Optional admin/book wire mediaItemShare (2.26.0+).
+    /// Missing/null means no matching share or excluded context.
+    public let mediaItemShare: Share?
+
     // MARK: Other
 
     /// The time (in ms since POSIX epoch) when the corresponding media progress was last updated.
@@ -180,6 +188,8 @@ extension LibraryItem: Decodable {
         case weight
         case finishedAt
         case progressLastUpdate
+        case numEpisodesIncomplete
+        case mediaItemShare
     }
 
     public init(from decoder: any Decoder) throws {
@@ -219,6 +229,8 @@ extension LibraryItem: Decodable {
         )
         self.weight = try container.decodeIfPresent(Float.self, forKey: .weight)
         self.finishedAt = try container.decodeIfPresent(Int.self, forKey: .finishedAt)
+        self.numEpisodesIncomplete = try container.decodeIfPresent(Int.self, forKey: .numEpisodesIncomplete)
+        self.mediaItemShare = try container.decodeIfPresent(Share.self, forKey: .mediaItemShare)
         self.progressLastUpdate = try container.decodeIfPresent(Int.self, forKey: .progressLastUpdate)
 
         switch mediaType {

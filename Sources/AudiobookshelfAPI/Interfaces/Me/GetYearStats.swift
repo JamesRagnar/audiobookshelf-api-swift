@@ -29,7 +29,7 @@ public struct GetYearStats: Interface {
 
         /// Get Year Stats Request
         ///
-        /// - Parameter year: The year to get statistics for.
+        /// - Parameter year: Required year in 2000...9999 (2.26.0+).
         public init(year: Int) {
             self.path = "/api/me/stats/year/\(year)"
         }
@@ -40,8 +40,14 @@ public struct GetYearStats: Interface {
 
     public typealias Response = YearStats
 
+    public enum AudiobookshelfError: Error, Sendable {
+        /// Year must be an integer in 2000...9999.
+        case badRequest
+    }
+
     public static let responses = ResponseContract<Response>(
-        success: .exact(200)
+        success: .exact(200),
+        failures: [.code(400, .error(AudiobookshelfError.badRequest))]
     )
 
 }

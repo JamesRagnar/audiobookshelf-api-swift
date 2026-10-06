@@ -43,6 +43,10 @@ public struct BookMetadata {
     /// A description for the book. Will be null if empty.
     public let description: String?
 
+    /// Optional wire descriptionPlain (2.26.0+), HTML-stripped expanded description.
+    /// Missing/null means unavailable or excluded from this response variant.
+    public let descriptionPlain: String?
+
     /// The ISBN of the book. Will be null if unknown.
     public let isbn: String?
 
@@ -101,6 +105,7 @@ extension BookMetadata: Decodable {
         case publishedDate
         case publisher
         case description
+        case descriptionPlain
         case isbn
         case asin
         case language
@@ -124,6 +129,7 @@ extension BookMetadata: Decodable {
         self.publishedDate = try container.decodeIfPresent(String.self, forKey: .publishedDate)
         self.publisher = try container.decodeIfPresent(String.self, forKey: .publisher)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
+        self.descriptionPlain = try container.decodeIfPresent(String.self, forKey: .descriptionPlain)
         self.isbn = try container.decodeIfPresent(String.self, forKey: .isbn)
         self.asin = try container.decodeIfPresent(String.self, forKey: .asin)
         self.language = try container.decodeIfPresent(String.self, forKey: .language)

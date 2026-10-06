@@ -6,6 +6,23 @@ import Testing
 @Suite("ABSSocketSession Tests")
 struct ABSSocketSessionTests {
 
+    @Test(arguments: ["opaque-access-token", "opaque-api-key-JWT"])
+    func bearerCredentialsTravelUnmodifiedThroughAuthentication(token: String) async throws {
+        let client = TestSocketClient()
+        let session = ABSSocketSession(client: client)
+        try await session.connect(to: #require(URL(string: "https://example.invalid")), token: token)
+        await client.pushStatus(.connected)
+        try await waitForAuthTokens([token], from: client)
+        #expect(try await client.emittedAuthTokens() == [token])
+        try await client.pushEvent(
+            named: InitEvent.name, payload: InitPayload(userId: "user-1", username: "reader")
+        )
+        try await waitForAuthState(
+            .authenticated(connectionID: 1, userID: "user-1", username: "reader"), from: session
+        )
+        await session.invalidate()
+    }
+
     @Test("observers are installed before the first connection")
     func observersPrecedeConnection() async throws {
         let client = TestSocketClient()

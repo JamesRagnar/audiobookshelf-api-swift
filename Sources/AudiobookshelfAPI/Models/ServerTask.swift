@@ -7,7 +7,8 @@
 
 import Foundation
 
-/// A long running background task.
+/// A long running background task on 2.26.0+.
+/// Optional translation/description/error fields accept missing/null; completed tasks can clear them.
 public struct BackgroundTask {
 
     /// Unique task identifier.
@@ -16,26 +17,26 @@ public struct BackgroundTask {
     /// Task type/action identifier.
     public let action: String
 
-    /// Custom data for the action.
-    public let data: [String: String]?
+    /// Required wire data object (2.26.0+), including {}; nested JSON values are retained.
+    public let data: [String: JSONValue]
 
     /// Human-readable task title.
     public let title: String
 
     /// Translation key for title.
-    public let titleKey: String
+    public let titleKey: String?
 
     /// Substitution values for title translation.
-    public let titleSubs: [String]
+    public let titleSubs: [String]?
 
     /// Detailed description of what the task is doing.
-    public let description: String
+    public let description: String?
 
     /// Translation key for description.
-    public let descriptionKey: String
+    public let descriptionKey: String?
 
     /// Substitution values for description translation.
-    public let descriptionSubs: [String]
+    public let descriptionSubs: [String]?
 
     /// Error message if task failed.
     public let error: String?

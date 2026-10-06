@@ -34,22 +34,32 @@ public struct UpdateLibrary: Interface {
         /// - Parameters:
         ///   - libraryId: The ID of the library to update.
         ///   - name: The new name of the library.
-        ///   - folders: Array of folder paths for the library.
+        ///   - folders: Complete replacement wire folders list (2.26.0+). Nil preserves all;
+        ///     [] removes all folders and associated library items. Retain existing folders by ID.
         ///   - icon: The icon for the library.
         ///   - provider: The metadata provider for the library.
+        ///   - mediaType: Optional wire mediaType, book or podcast; nil omits.
+        ///   - displayOrder: Optional wire displayOrder integer; nil preserves.
+        ///   - settings: Optional partial wire settings; nil preserves (2.26.0+).
         public init(
             libraryId: String,
             name: String? = nil,
-            folders: [String]? = nil,
+            folders: [LibraryFolderUpdate]? = nil,
             icon: String? = nil,
-            provider: String? = nil
+            provider: String? = nil,
+            mediaType: String? = nil,
+            displayOrder: Int? = nil,
+            settings: LibrarySettingsUpdate? = nil
         ) {
             self.path = "/api/libraries/\(libraryId)"
             self.body = Payload(
                 name: name,
                 folders: folders,
                 icon: icon,
-                provider: provider
+                provider: provider,
+                mediaType: mediaType,
+                displayOrder: displayOrder,
+                settings: settings
             )
         }
 
@@ -65,7 +75,7 @@ public struct UpdateLibrary: Interface {
 
         case notFound
 
-        /// The `limit` or `page` query parameter was not a non-negative integer.
+        /// Invalid library configuration payload.
         case badRequest
 
     }
@@ -87,11 +97,14 @@ public extension UpdateLibrary.Request {
 
         let name: String?
 
-        let folders: [String]?
+        let folders: [LibraryFolderUpdate]?
 
         let icon: String?
 
         let provider: String?
+        let mediaType: String?
+        let displayOrder: Int?
+        let settings: LibrarySettingsUpdate?
 
     }
 

@@ -21,6 +21,19 @@ public struct BookChapter {
     /// The title of the chapter.
     public let title: String
 
+    /// Creates a chapter with wire keys id, start, end and title.
+    /// - Parameters:
+    ///   - id: Required chapter identifier.
+    ///   - start: Required start position in fractional seconds.
+    ///   - end: Required end position in fractional seconds.
+    ///   - title: Required chapter title.
+    public init(id: Int, start: Float, end: Float, title: String) {
+        self.id = id
+        self.start = start
+        self.end = end
+        self.title = title
+    }
+
 }
 
 extension BookChapter: Decodable {}

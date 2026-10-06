@@ -46,3 +46,5 @@ extension Series: InterfaceResponse {}
 extension User: InterfaceResponse {}
 
 extension YearStats: InterfaceResponse {}
+
+extension AdminYearStats: InterfaceResponse {}

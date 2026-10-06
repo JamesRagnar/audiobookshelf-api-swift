@@ -36,17 +36,26 @@ public struct CreatePodcast: Interface {
         ///   - folderId: The folder ID within the library.
         ///   - path: Full filesystem path for the podcast folder.
         ///   - metadata: Podcast metadata.
+        ///   - tags: Optional media.tags string list; nil defaults to [], [] is explicit.
+        ///   - autoDownloadEpisodes: Optional media.autoDownloadEpisodes; nil defaults false.
+        ///   - autoDownloadSchedule: Optional media.autoDownloadSchedule cron string;
+        ///     nil/empty uses the configured default (2.26.0+).
+        /// Retention defaults are 0 kept / 3 new; change them using UpdateLibraryItemMedia.
         public init(
             libraryId: String,
             folderId: String,
             path: String,
-            metadata: PodcastMetadataPayload
+            metadata: PodcastMetadataPayload,
+            tags: [String]? = nil,
+            autoDownloadEpisodes: Bool? = nil,
+            autoDownloadSchedule: String? = nil
         ) {
             self.body = Payload(
                 libraryId: libraryId,
                 folderId: folderId,
                 path: path,
-                media: MediaPayload(metadata: metadata)
+                media: MediaPayload(metadata: metadata, tags: tags, autoDownloadEpisodes: autoDownloadEpisodes,
+                                    autoDownloadSchedule: autoDownloadSchedule)
             )
         }
     }
@@ -59,6 +68,7 @@ public struct CreatePodcast: Interface {
         case badRequest
         case forbidden
         case notFound
+        case internalServerError
     }
 
     public static let responses = ResponseContract<Response>(
@@ -66,7 +76,8 @@ public struct CreatePodcast: Interface {
         failures: [
             .code(400, .error(AudiobookshelfError.badRequest)),
             .code(403, .error(AudiobookshelfError.forbidden)),
-            .code(404, .error(AudiobookshelfError.notFound))
+            .code(404, .error(AudiobookshelfError.notFound)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
         ]
     )
 }
@@ -82,6 +93,9 @@ public extension CreatePodcast.Request {
 
     struct MediaPayload: Encodable, Sendable {
         let metadata: PodcastMetadataPayload
+        let tags: [String]?
+        let autoDownloadEpisodes: Bool?
+        let autoDownloadSchedule: String?
     }
 
     struct PodcastMetadataPayload: Encodable, Sendable {

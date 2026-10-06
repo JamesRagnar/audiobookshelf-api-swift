@@ -17,6 +17,10 @@ public struct GetPersonalizedLibrary: Interface {
 
         public enum Include: String {
 
+            /// Admin/book share context on 2.26.0+; detail requires expanded=true.
+            /// Inclusion is not guaranteed on every entity/shelf variant.
+            case share
+
             case rssfeed
 
         }

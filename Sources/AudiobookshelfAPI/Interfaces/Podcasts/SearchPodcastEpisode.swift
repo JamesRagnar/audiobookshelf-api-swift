@@ -41,7 +41,8 @@ public struct SearchPodcastEpisode: Interface {
     // MARK: Response
 
     public struct Response: Decodable, Sendable, InterfaceResponse {
-        public let episode: PodcastEpisode?
+        /// Required wire episodes, parsed RSS matches on 2.26.0+; [] for none, multiple allowed.
+        public let episodes: [PodcastFeedEpisode]
     }
 
     public enum AudiobookshelfError: Error, Sendable {
