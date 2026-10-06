@@ -48,8 +48,8 @@ public struct YearStats: Decodable, Sendable {
         /// Required wire id: book ID, not library-item ID (2.26.0+).
         public let id: String
 
-        /// Required wire title: book title (2.26.0+).
-        public let title: String
+        /// Optional wire title: book title (2.26.0+); missing/null means no stored title.
+        public let title: String?
 
         /// Required wire duration: rounded duration seconds (2.26.0+).
         public let duration: Int
@@ -64,7 +64,7 @@ public struct YearStats: Decodable, Sendable {
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             id = try container.decode(String.self, forKey: .id)
-            title = try container.decode(String.self, forKey: .title)
+            title = try container.decodeIfPresent(String.self, forKey: .title)
             duration = try container.decode(Int.self, forKey: .duration)
             finishedAt = try container.decodeISODate(forKey: .finishedAt)
         }
