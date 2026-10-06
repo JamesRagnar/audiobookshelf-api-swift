@@ -36,11 +36,13 @@ public struct PlaybackSession {
     /// If the library item is a book, the chapters it contains.
     public let chapters: [BookChapter]?
 
-    /// The title of the playing item to show to the user.
-    public let displayTitle: String
+    /// Optional wire displayTitle: playing-item title across the maintained 2.26.0...2.37.x range.
+    /// Missing/null decodes as nil in direct-play and transcoded sessions; strings, including empty, are preserved.
+    public let displayTitle: String?
 
-    /// The author of the playing item to show to the user.
-    public let displayAuthor: String
+    /// Optional wire displayAuthor: playing-item author across the maintained 2.26.0...2.37.x range.
+    /// Missing/null decodes as nil in direct-play and transcoded sessions; strings, including empty, are preserved.
+    public let displayAuthor: String?
 
     /// The cover path of the library item's media.
     public let coverPath: String?
@@ -146,8 +148,8 @@ extension PlaybackSession: Decodable {
         mediaType = try container.decode(MediaType.self, forKey: .mediaType)
         mediaMetadata = try MediaMetadata(from: decoder)
         chapters = try container.decodeIfPresent([BookChapter].self, forKey: .chapters)
-        displayTitle = try container.decode(String.self, forKey: .displayTitle)
-        displayAuthor = try container.decode(String.self, forKey: .displayAuthor)
+        displayTitle = try container.decodeIfPresent(String.self, forKey: .displayTitle)
+        displayAuthor = try container.decodeIfPresent(String.self, forKey: .displayAuthor)
         coverPath = try container.decodeIfPresent(String.self, forKey: .coverPath)
         coverAspectRatio = try container.decodeIfPresent(Int.self, forKey: .coverAspectRatio)
         duration = try container.decode(Float.self, forKey: .duration)
