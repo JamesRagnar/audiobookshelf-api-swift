@@ -8,7 +8,8 @@
 import Foundation
 import RagnarNetworking
 
-/// Update a library item's cover via URL or server-local image path.
+/// Select a server-local image path as a library item's cover using PATCH.
+/// Use `DownloadLibraryItemCoverFromURL` to download a cover from a URL.
 
 public struct UpdateLibraryItemCover: Interface {
 
