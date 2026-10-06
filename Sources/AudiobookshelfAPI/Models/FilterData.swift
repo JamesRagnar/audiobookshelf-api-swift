@@ -9,6 +9,9 @@ import Foundation
 
 /// Filter data for a library, containing aggregated metadata for filtering and browsing.
 /// Returned when requesting a library with the `?include=filterdata` query parameter.
+/// The complete 2.26.0+ response supplies lists/counts for both media types:
+/// unrelated lists are [], counts are zero, and counts are independent of list lengths.
+/// Existing optional types are retained; missing/null optional properties decode as nil.
 public struct FilterData {
 
     /// List of authors in the library (book libraries only).

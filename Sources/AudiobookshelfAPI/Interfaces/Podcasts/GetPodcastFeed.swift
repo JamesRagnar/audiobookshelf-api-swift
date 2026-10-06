@@ -32,13 +32,18 @@ public struct GetPodcastFeed: Interface {
 
         public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create Podcast from Feed Request
-        ///
+        /// Looks up parsed RSS only, with exactly the required wire rssFeed (2.26.0+).
+        public init(rssFeed: String) {
+            self.body = Payload(rssFeed: rssFeed, libraryId: nil, folderId: nil, autoDownloadEpisodes: nil)
+        }
+
+        /// Legacy feed lookup on 2.26.0+; this endpoint creates nothing.
         /// - Parameters:
-        ///   - rssFeed: The RSS feed URL.
-        ///   - libraryId: The ID of the library.
-        ///   - folderId: The folder ID within the library.
-        ///   - autoDownloadEpisodes: Whether to auto-download new episodes (optional).
+        ///   - rssFeed: Required wire RSS URL.
+        ///   - libraryId: Legacy field, transmitted but ignored.
+        ///   - folderId: Legacy field, transmitted but ignored.
+        ///   - autoDownloadEpisodes: Legacy field, non-nil values transmitted but ignored.
+        @available(*, deprecated, message: "Use init(rssFeed:); the other fields are ignored.")
         public init(
             rssFeed: String,
             libraryId: String,
@@ -83,8 +88,8 @@ public extension GetPodcastFeed.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
         let rssFeed: String
-        let libraryId: String
-        let folderId: String
+        let libraryId: String?
+        let folderId: String?
         let autoDownloadEpisodes: Bool?
     }
 

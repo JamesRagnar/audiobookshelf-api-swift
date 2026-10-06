@@ -23,10 +23,14 @@ RouterBasePath, such as `https://example.com/audiobookshelf`. `RagnarSocketIO` r
 Socket.IO path, and Engine.IO query items. Do not construct a WebSocket URL or add the access token to the upgrade
 request.
 
-Socket authentication requires an access token. API keys and refresh tokens are not supported by this socket contract.
-The session emits the access token after every initial Socket.IO connection and automatic reconnect.
+Socket authentication accepts an opaque bearer credential. Access tokens work throughout the
+maintained range; API-key JWTs require server 2.37.0+. Refresh tokens are unsupported credentials.
+API keys must be active, unexpired and owned by an active user; these are server outcomes.
+The session transmits the credential unchanged after initial connection and automatic reconnect.
+The same init and auth_failed shapes are used for both credentials. Failure messages such as
+"Invalid API key" and "API key expired" are diagnostic text, not stable control-flow identifiers.
 
-Use `updateToken(_:)` when the access token changes. If the transport is connected, the session retries authentication
+Use `updateToken(_:)` when the bearer credential changes. If the transport is connected, the session retries authentication
 without replacing it.
 
 ```swift
@@ -148,7 +152,7 @@ them.
 await socketSession.disconnect()
 ```
 
-`disconnect()` closes the active transport, clears the server and access token, resets authentication state, and
+`disconnect()` closes the active transport, clears the server and bearer credential, resets authentication state, and
 preserves typed event subscriptions for later reuse.
 
 ```swift
@@ -158,3 +162,6 @@ await socketSession.invalidate()
 `invalidate()` publishes `.unauthenticated`, permanently finishes session-owned state observation, and delegates permanent
 invalidation to the client. The client finishes event streams with `SocketIOError.invalidated`. Create a new client and
 session after invalidation.
+
+Streaming cover-search commands and events require server 2.30.0+: SearchCoversEvent,
+CancelCoverSearchEvent, CoverSearchResult, CoverSearchComplete, CoverSearchError and related events.

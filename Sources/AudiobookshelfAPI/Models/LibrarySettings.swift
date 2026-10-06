@@ -43,11 +43,11 @@ public struct LibrarySettings {
     /// The region to use when searching for podcasts.
     public let podcastSearchRegion: String?
 
-    /// The percentage of completion at which to mark media as finished.
-    public let markAsFinishedPercentComplete: Int?
+    /// Optional wire markAsFinishedPercentComplete (2.26.0+), 0...100 percent; null clears it.
+    public let markAsFinishedPercentComplete: Double?
 
-    /// The time remaining (in seconds) at which to mark media as finished.
-    public let markAsFinishedTimeRemaining: Int?
+    /// Optional wire markAsFinishedTimeRemaining (2.26.0+), nonnegative fractional seconds; null clears it.
+    public let markAsFinishedTimeRemaining: Double?
 
 }
 

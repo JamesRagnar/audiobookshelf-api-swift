@@ -8,7 +8,7 @@
 import Foundation
 import RagnarNetworking
 
-/// This endpoint checks for new podcast episodes from the podcast's RSS feed.
+/// Checks RSS and queues new episode downloads on 2.26.0+; this GET mutates state.
 public struct CheckNewPodcastEpisodes: Interface {
 
     // MARK: Request
@@ -19,7 +19,7 @@ public struct CheckNewPodcastEpisodes: Interface {
 
         public let path: String
 
-        public let queryItems: [URLQueryItem]? = nil
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -29,9 +29,13 @@ public struct CheckNewPodcastEpisodes: Interface {
 
         /// Check New Podcast Episodes Request
         ///
-        /// - Parameter podcastId: The ID of the podcast library item to check for new episodes.
-        public init(podcastId: String) {
+        /// - Parameters:
+        ///   - podcastId: Required podcast library-item ID.
+        ///   - limit: Optional wire query limit; nil uses 3. Positive values limit downloads;
+        ///     zero (normal no-limit choice) and negative values mean no limit.
+        public init(podcastId: String, limit: Int? = nil) {
             self.path = "/api/podcasts/\(podcastId)/checknew"
+            self.queryItems = limit.map { [URLQueryItem(name: "limit", value: String($0))] }
         }
 
     }
@@ -41,11 +45,13 @@ public struct CheckNewPodcastEpisodes: Interface {
     public struct Response: Decodable, Sendable, InterfaceResponse {
 
         /// The new episodes found in the RSS feed.
-        public let episodes: [RssPodcastEpisode]
+        public let episodes: [PodcastFeedEpisode]
 
     }
 
     public enum AudiobookshelfError: Error, Sendable {
+
+        case badRequest
 
         case forbidden
 
@@ -59,6 +65,7 @@ public struct CheckNewPodcastEpisodes: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
             .code(403, .error(AudiobookshelfError.forbidden)),
             .code(404, .error(AudiobookshelfError.notFound)),
             .code(500, .error(AudiobookshelfError.internalServerError))
@@ -69,35 +76,8 @@ public struct CheckNewPodcastEpisodes: Interface {
 
 extension CheckNewPodcastEpisodes {
 
-    public struct RssPodcastEpisode: Decodable, Sendable {
-
-        /// The title of the episode.
-        public let title: String
-
-        /// The subtitle of the episode.
-        public let subtitle: String?
-
-        /// A description of the episode.
-        public let description: String?
-
-        /// When the episode was published.
-        public let pubDate: String?
-
-        /// The episode number.
-        public let episode: String?
-
-        /// The season number.
-        public let season: String?
-
-        /// The type of episode.
-        public let episodeType: String?
-
-        /// The globally unique identifier for the episode.
-        public let guid: String?
-
-        /// The time (in ms since POSIX epoch) when the episode was published.
-        public let publishedAt: Int?
-
-    }
+    /// Legacy RSS response name; now exposes the complete parsed episode.
+    @available(*, deprecated, renamed: "PodcastFeedEpisode")
+    public typealias RssPodcastEpisode = PodcastFeedEpisode
 
 }

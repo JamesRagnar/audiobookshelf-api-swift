@@ -9,6 +9,7 @@ import Foundation
 import RagnarSocketIO
 
 /// Authenticates the socket connection.
+/// Opaque access-token auth; API-key JWTs also work on 2.37.0+. Refresh tokens are unsupported.
 /// Causes the server to emit the `init` event on success or the `auth_failed` event on failure.
 public struct AuthEvent: EmittableSocketEvent {
 
@@ -27,7 +28,8 @@ public struct CancelScanEvent: EmittableSocketEvent {
 
 }
 
-/// Makes the server emit log events of the given level or below to the client.
+/// Requests events at or above the numeric threshold (2.26.0+).
+/// FATAL and NOTE are emitted regardless of the listener's normal threshold.
 public struct SetLogListenerEvent: EmittableSocketEvent {
 
     public static let name = "set_log_listener"
@@ -79,6 +81,7 @@ public struct PingEvent: EmittableSocketEvent {
 }
 
 /// Starts a streamed cover search.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct SearchCoversEvent: EmittableSocketEvent {
 
     public static let name = "search_covers"
@@ -115,6 +118,7 @@ public extension SearchCoversEvent {
 }
 
 /// Cancels a streamed cover search.
+/// Streaming cover-search contract requires server 2.30.0+.
 public struct CancelCoverSearchEvent: EmittableSocketEvent {
 
     public static let name = "cancel_cover_search"

@@ -63,9 +63,9 @@ struct ServerContractAuditTests {
         // Both REST endpoints serialize the database row, not `toClientJson()`: no `slug`, and
         // `url` / `authHeaderValue` present. Keep the fixture populated so the shape is covered.
         let row = #"""
-        {"id": "p-1", "name": "Custom", "mediaType": "book",
-         "url": "https://example.com/meta", "authHeaderValue": "Bearer abc",
-         "createdAt": "2026-01-01T00:00:00.000Z", "updatedAt": "2026-01-01T00:00:00.000Z"}
+            {"id": "p-1", "name": "Custom", "mediaType": "book",
+            "url": "https://example.com/meta", "authHeaderValue": "Bearer abc",
+            "createdAt": "2026-01-01T00:00:00.000Z", "updatedAt": "2026-01-01T00:00:00.000Z"}
         """#
 
         let list = try GetCustomMetadataProviders.handle(
@@ -177,7 +177,8 @@ struct ServerContractAuditTests {
         let body = Data(
             """
             { "apiKey": { "apiKey": "generated-secret", "id": "key-1", "name": "CI", "userId": "user-1",
-              "isActive": true, "createdByUserId": "user-1", "createdAt": 1, "updatedAt": 2,
+              "isActive": true, "createdByUserId": "user-1", "createdAt": "2026-01-01T00:00:00Z",
+              "updatedAt": "2026-01-02T00:00:00.000Z",
               "permissions": { "download": true, "update": false, "delete": false, "upload": false,
                 "accessAllLibraries": true, "accessAllTags": true, "accessExplicitContent": true } } }
             """.utf8

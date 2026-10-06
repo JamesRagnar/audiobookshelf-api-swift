@@ -35,7 +35,32 @@ public struct GetLoggerData: Interface {
 
     public struct Response: Decodable, Sendable, InterfaceResponse {
 
-        public let logs: [LogEntry]
+        /// Required wire currentDailyLogs on 2.26.0+; [] or exactly "" means no entries.
+        public let currentDailyLogs: [LogEventObject]
+
+        /// Legacy read-only alias; logs is not a wire key.
+        @available(*, deprecated, renamed: "currentDailyLogs")
+        public var logs: [LogEventObject] { currentDailyLogs }
+
+        private enum CodingKeys: CodingKey {
+            case currentDailyLogs
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            if let entries = try? container.decode([LogEventObject].self, forKey: .currentDailyLogs) {
+                currentDailyLogs = entries
+            } else {
+                let fallback = try container.decode(String.self, forKey: .currentDailyLogs)
+                guard fallback.isEmpty else {
+                    throw DecodingError.dataCorruptedError(
+                        forKey: .currentDailyLogs, in: container,
+                        debugDescription: "Expected logs array or empty string."
+                    )
+                }
+                currentDailyLogs = []
+            }
+        }
 
     }
 
@@ -56,14 +81,8 @@ public struct GetLoggerData: Interface {
 
 public extension GetLoggerData {
 
-    struct LogEntry: Decodable, Sendable {
-
-        public let timestamp: Int
-
-        public let level: String
-
-        public let message: String
-
-    }
+    /// Legacy REST entry name; REST and socket logs share the same wire shape.
+    @available(*, deprecated, renamed: "LogEventObject")
+    typealias LogEntry = LogEventObject
 
 }

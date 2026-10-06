@@ -41,7 +41,7 @@ public struct ExternalBookSearchResult {
     public let publisher: String?
 
     /// The year the book was published.
-    /// Decoded from either a string or integer — FantLab returns an integer.
+    /// Decoded from either a string or integer; FantLab returns an integer.
     public let publishedYear: String?
 
     /// An HTML description of the book.
@@ -71,14 +71,19 @@ public struct ExternalBookSearchResult {
     /// The language of the book (Audible and custom providers only).
     public let language: String?
 
-    /// The duration of the audiobook in minutes (Audible and custom providers only).
-    public let duration: Int?
+    /// Optional wire duration, fractional runtime minutes (2.26.0+; Audible/custom providers).
+    /// Missing/null means unknown; accepts integer/fractional numbers, rejects strings.
+    public let duration: Double?
 
     /// The regional market identifier (Audible only).
     public let region: String?
 
     /// The provider rating (Audible only).
     public let rating: String?
+
+    /// Audible adult-content flag (2.37.0+), wire key explicit.
+    /// Missing/null means unknown, including older servers and other providers.
+    public let explicit: Bool?
 
     /// Whether the audiobook is abridged (Audible only).
     public let abridged: Bool?
@@ -93,7 +98,7 @@ extension ExternalBookSearchResult: Decodable {
     private enum CodingKeys: String, CodingKey {
         case title, subtitle, author, narrator, publisher, publishedYear
         case description, descriptionPlain, cover, isbn, asin
-        case genres, tags, series, language, duration, region, rating, abridged, matchConfidence
+        case genres, tags, series, language, duration, region, rating, explicit, abridged, matchConfidence
     }
 
     public init(from decoder: any Decoder) throws {
@@ -104,12 +109,12 @@ extension ExternalBookSearchResult: Decodable {
         narrator = try container.decodeIfPresent(String.self, forKey: .narrator)
         publisher = try container.decodeIfPresent(String.self, forKey: .publisher)
         // publishedYear is a String in most providers but an Int in FantLab.
-        if let stringYear = try? container.decodeIfPresent(String.self, forKey: .publishedYear) {
-            publishedYear = stringYear
-        } else if let intYear = try? container.decodeIfPresent(Int.self, forKey: .publishedYear) {
-            publishedYear = String(intYear)
-        } else {
+        if try !container.contains(.publishedYear) || container.decodeNil(forKey: .publishedYear) {
             publishedYear = nil
+        } else if let stringYear = try? container.decode(String.self, forKey: .publishedYear) {
+            publishedYear = stringYear
+        } else {
+            publishedYear = String(try container.decode(Int.self, forKey: .publishedYear))
         }
         description = try container.decodeIfPresent(String.self, forKey: .description)
         descriptionPlain = try container.decodeIfPresent(String.self, forKey: .descriptionPlain)
@@ -119,18 +124,20 @@ extension ExternalBookSearchResult: Decodable {
         genres = try container.decodeIfPresent([String].self, forKey: .genres)
         // tags changed from a comma-separated String to [String] in server 2.32.0.
         // Support both formats to maintain the >= 2.26.0 compatibility guarantee.
-        if let arrayTags = try? container.decodeIfPresent([String].self, forKey: .tags) {
-            tags = arrayTags
-        } else if let stringTags = try? container.decodeIfPresent(String.self, forKey: .tags) {
-            tags = stringTags.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-        } else {
+        if try !container.contains(.tags) || container.decodeNil(forKey: .tags) {
             tags = nil
+        } else if let arrayTags = try? container.decode([String].self, forKey: .tags) {
+            tags = arrayTags
+        } else {
+            let stringTags = try container.decode(String.self, forKey: .tags)
+            tags = stringTags.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
         }
         series = try container.decodeIfPresent([SeriesMatch].self, forKey: .series)
         language = try container.decodeIfPresent(String.self, forKey: .language)
-        duration = try container.decodeIfPresent(Int.self, forKey: .duration)
+        duration = try container.decodeIfPresent(Double.self, forKey: .duration)
         region = try container.decodeIfPresent(String.self, forKey: .region)
         rating = try container.decodeIfPresent(String.self, forKey: .rating)
+        explicit = try container.decodeIfPresent(Bool.self, forKey: .explicit)
         abridged = try container.decodeIfPresent(Bool.self, forKey: .abridged)
         matchConfidence = try container.decodeIfPresent(Double.self, forKey: .matchConfidence)
     }

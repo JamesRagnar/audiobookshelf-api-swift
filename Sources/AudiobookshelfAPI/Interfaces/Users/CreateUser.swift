@@ -29,13 +29,23 @@ public struct CreateUser: Interface {
 
         public let authentication: AuthenticationScheme? = .bearer
 
+        /// User write on 2.26.0+.
+        /// - Parameters:
+        ///   - email: Optional wire email; nil omits. Omission leaves email null.
+        ///   - itemTagsSelected: Optional top-level wire tag list; nil defaults to [];
+        ///     [] explicitly clears selection. accessAllTags bypasses this list.
+        ///   - permissions: Optional legacy Boolean permissions object.
+        ///   - permissionUpdates: Optional Boolean patch; non-nil patch members override legacy values.
         public init(
             username: String,
             password: String,
             type: User.UserType,
             isActive: Bool = true,
             librariesAccessible: [String]? = nil,
-            permissions: UserPermissions? = nil
+            permissions: UserPermissions? = nil,
+            email: String? = nil,
+            itemTagsSelected: [String]? = nil,
+            permissionUpdates: UserPermissionsPatch? = nil
         ) {
             self.body = Payload(
                 username: username,
@@ -43,7 +53,10 @@ public struct CreateUser: Interface {
                 type: type,
                 isActive: isActive,
                 librariesAccessible: librariesAccessible,
-                permissions: permissions
+                permissions: permissions != nil || permissionUpdates != nil
+                    ? (permissionUpdates ?? UserPermissionsPatch()).merging(permissions) : nil,
+                email: email,
+                itemTagsSelected: itemTagsSelected
             )
         }
 
@@ -94,7 +107,11 @@ public extension CreateUser.Request {
 
         let librariesAccessible: [String]?
 
-        let permissions: UserPermissions?
+        let permissions: [String: Bool]?
+
+        let email: String?
+
+        let itemTagsSelected: [String]?
 
     }
 

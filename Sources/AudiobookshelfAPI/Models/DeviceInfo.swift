@@ -12,8 +12,8 @@ public struct DeviceInfo {
     /// Unique identifier.
     public let id: String
 
-    /// User identifier.
-    public let userId: String
+    /// Optional wire userId (2.26.0+); anonymous devices can omit it or send null.
+    public let userId: String?
 
     /// Device identifier, as provided in the request.
     public let deviceId: String

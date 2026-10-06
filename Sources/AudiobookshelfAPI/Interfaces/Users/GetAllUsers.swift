@@ -19,7 +19,7 @@ public struct GetAllUsers: Interface {
 
         public let path: String = "/api/users"
 
-        public let queryItems: [URLQueryItem]? = nil
+        public let queryItems: [URLQueryItem]?
 
         public let headers: [String: String]? = nil
 
@@ -27,7 +27,11 @@ public struct GetAllUsers: Interface {
 
         public let authentication: AuthenticationScheme? = .bearer
 
-        public init() {}
+        /// Optional includeLatestSession query convenience on 2.26.0+.
+        /// True sends include=latestSession; false omits the query.
+        public init(includeLatestSession: Bool = false) {
+            self.queryItems = includeLatestSession ? [URLQueryItem(name: "include", value: "latestSession")] : nil
+        }
 
     }
 

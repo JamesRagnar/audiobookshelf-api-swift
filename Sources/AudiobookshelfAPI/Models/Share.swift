@@ -25,19 +25,44 @@ public struct Share {
     /// The ID of the media item being shared.
     public let mediaItemId: String
 
-    /// The time (in ms since POSIX epoch) when the share expires. Will be null if no expiration.
-    public let expiresAt: Int?
+    /// ISO-8601 expiry (wire key expiresAt), 2.26.0+; missing/null means permanent.
+    public let expiresAt: Date?
 
     /// Whether the shared media item can be downloaded.
     public let isDownloadable: Bool
 
-    /// The time (in ms since POSIX epoch) when the share was created.
-    public let createdAt: Int
+    /// Required ISO-8601 creation date (wire key createdAt), 2.26.0+.
+    public let createdAt: Date
 
-    /// The time (in ms since POSIX epoch) when the share was last updated.
-    public let updatedAt: Int
+    /// Required ISO-8601 update date (wire key updatedAt), 2.26.0+.
+    public let updatedAt: Date
 
 }
 
-extension Share: Decodable {}
+extension Share: Decodable {
+
+    private enum CodingKeys: CodingKey {
+        case id
+        case slug
+        case mediaItemType
+        case mediaItemId
+        case expiresAt
+        case isDownloadable
+        case createdAt
+        case updatedAt
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        slug = try container.decode(String.self, forKey: .slug)
+        mediaItemType = try container.decode(String.self, forKey: .mediaItemType)
+        mediaItemId = try container.decode(String.self, forKey: .mediaItemId)
+        expiresAt = try container.decodeISODateIfPresent(forKey: .expiresAt)
+        isDownloadable = try container.decode(Bool.self, forKey: .isDownloadable)
+        createdAt = try container.decodeISODate(forKey: .createdAt)
+        updatedAt = try container.decodeISODate(forKey: .updatedAt)
+    }
+
+}
 extension Share: Sendable {}

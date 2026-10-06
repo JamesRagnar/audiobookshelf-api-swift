@@ -12,8 +12,8 @@ public struct PlaybackSession {
     /// The ID of the playback session.
     public let id: String
 
-    /// The ID of the user the playback session is for.
-    public let userId: String
+    /// Optional wire userId, 2.26.0+; null for anonymous or deleted-user sessions.
+    public let userId: String?
 
     /// The ID of the library that contains the library item.
     public let libraryId: String?
@@ -30,20 +30,26 @@ public struct PlaybackSession {
     /// The media type of the library item.
     public let mediaType: MediaType
 
-    /// The metadata of the library item's media.
-    public let mediaMetadata: BookMetadata
+    /// Required wire mediaMetadata, decoded using mediaType on 2.26.0+.
+    public let mediaMetadata: MediaMetadata
 
     /// If the library item is a book, the chapters it contains.
     public let chapters: [BookChapter]?
 
-    /// The title of the playing item to show to the user.
-    public let displayTitle: String
+    /// Optional wire displayTitle: playing-item title across the maintained 2.26.0...2.37.x range.
+    /// Missing/null decodes as nil in direct-play and transcoded sessions; strings, including empty, are preserved.
+    public let displayTitle: String?
 
-    /// The author of the playing item to show to the user.
-    public let displayAuthor: String
+    /// Optional wire displayAuthor: playing-item author across the maintained 2.26.0...2.37.x range.
+    /// Missing/null decodes as nil in direct-play and transcoded sessions; strings, including empty, are preserved.
+    public let displayAuthor: String?
 
     /// The cover path of the library item's media.
     public let coverPath: String?
+
+    /// Optional share-only wire coverAspectRatio (2.33.2+): 0 rectangular, 1 square.
+    /// Ordinary sessions and older responses omit it; missing/null decodes as nil.
+    public let coverAspectRatio: Int?
 
     /// The total duration (in seconds) of the playing item.
     public let duration: Float
@@ -98,10 +104,97 @@ public struct PlaybackSession {
 
 }
 
-extension PlaybackSession: Decodable {}
+extension PlaybackSession: Decodable {
+
+    private enum CodingKeys: CodingKey {
+        case id
+        case userId
+        case libraryId
+        case libraryItemId
+        case episodeId
+        case bookId
+        case mediaType
+        case mediaMetadata
+        case chapters
+        case displayTitle
+        case displayAuthor
+        case coverPath
+        case coverAspectRatio
+        case duration
+        case playMethod
+        case mediaPlayer
+        case deviceInfo
+        case serverVersion
+        case date
+        case dayOfWeek
+        case timeListening
+        case startTime
+        case currentTime
+        case startedAt
+        case updatedAt
+        case audioTracks
+        case videoTrack
+        case libraryItem
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        libraryId = try container.decodeIfPresent(String.self, forKey: .libraryId)
+        libraryItemId = try container.decodeIfPresent(String.self, forKey: .libraryItemId)
+        episodeId = try container.decodeIfPresent(String.self, forKey: .episodeId)
+        bookId = try container.decodeIfPresent(String.self, forKey: .bookId)
+        mediaType = try container.decode(MediaType.self, forKey: .mediaType)
+        mediaMetadata = try MediaMetadata(from: decoder)
+        chapters = try container.decodeIfPresent([BookChapter].self, forKey: .chapters)
+        displayTitle = try container.decodeIfPresent(String.self, forKey: .displayTitle)
+        displayAuthor = try container.decodeIfPresent(String.self, forKey: .displayAuthor)
+        coverPath = try container.decodeIfPresent(String.self, forKey: .coverPath)
+        coverAspectRatio = try container.decodeIfPresent(Int.self, forKey: .coverAspectRatio)
+        duration = try container.decode(Float.self, forKey: .duration)
+        playMethod = try container.decode(PlayMethod.self, forKey: .playMethod)
+        mediaPlayer = try container.decodeIfPresent(String.self, forKey: .mediaPlayer)
+        deviceInfo = try container.decodeIfPresent(DeviceInfo.self, forKey: .deviceInfo)
+        serverVersion = try container.decode(String.self, forKey: .serverVersion)
+        date = try container.decode(String.self, forKey: .date)
+        dayOfWeek = try container.decode(String.self, forKey: .dayOfWeek)
+        timeListening = try container.decodeIfPresent(Float.self, forKey: .timeListening)
+        startTime = try container.decode(Float.self, forKey: .startTime)
+        currentTime = try container.decode(Float.self, forKey: .currentTime)
+        startedAt = try container.decode(Int.self, forKey: .startedAt)
+        updatedAt = try container.decode(Int.self, forKey: .updatedAt)
+        audioTracks = try container.decodeIfPresent([AudioTrack].self, forKey: .audioTracks)
+        videoTrack = try container.decodeIfPresent(VideoTrack.self, forKey: .videoTrack)
+        libraryItem = try container.decodeIfPresent(LibraryItem.self, forKey: .libraryItem)
+    }
+
+}
 extension PlaybackSession: Sendable {}
 
 extension PlaybackSession {
+
+    /// Required metadata object selected by the containing session's mediaType.
+    /// Standalone decoding uses the containing session object and its discriminator.
+    public enum MediaMetadata: Decodable, Sendable {
+        case book(BookMetadata)
+        case podcast(PodcastMetadata)
+
+        private enum CodingKeys: CodingKey {
+            case mediaType, mediaMetadata
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            switch try container.decode(MediaType.self, forKey: .mediaType) {
+            case .book:
+                self = .book(try container.decode(BookMetadata.self, forKey: .mediaMetadata))
+
+            case .podcast:
+                self = .podcast(try container.decode(PodcastMetadata.self, forKey: .mediaMetadata))
+            }
+        }
+    }
 
     public enum MediaType: String {
 

@@ -5,6 +5,8 @@
 //  Created by James Harquail on 2024-11-17.
 //
 
+import Foundation
+
 public struct MediaProgress {
 
     /// The ID of the media progress. If the media progress is for a book, this will just be the libraryItemId. If for a
@@ -58,6 +60,22 @@ public struct MediaProgress {
     /// The time (in ms since POSIX epoch) when the media was finished. Will be null if the media has is not finished.
     public let finishedAt: Int?
 
+    /// Optional administrator GetUser enrichment, wire displayTitle (2.26.0+).
+    /// Missing/null means not included.
+    public let displayTitle: String?
+
+    /// Optional administrator GetUser enrichment, wire displaySubtitle (2.26.0+).
+    /// Missing/null means not included.
+    public let displaySubtitle: String?
+
+    /// Optional administrator GetUser enrichment, wire coverPath (2.26.0+).
+    /// Missing/null means not included.
+    public let coverPath: String?
+
+    /// Optional administrator GetUser enrichment, wire mediaUpdatedAt (2.26.0+).
+    /// Missing/null means not included. ISO-8601, unlike the integer progress timestamps.
+    public let mediaUpdatedAt: Date?
+
     // MARK: Media Progress With Media
 
     /// The media of the library item the media progress is for.
@@ -101,6 +119,10 @@ extension MediaProgress: Decodable {
         case finishedAt
         case media
         case episode
+        case displayTitle
+        case displaySubtitle
+        case coverPath
+        case mediaUpdatedAt
     }
 
     public init(from decoder: Decoder) throws {
@@ -122,6 +144,10 @@ extension MediaProgress: Decodable {
         lastUpdate = try container.decode(Int.self, forKey: .lastUpdate)
         startedAt = try container.decode(Int.self, forKey: .startedAt)
         finishedAt = try container.decodeIfPresent(Int.self, forKey: .finishedAt)
+        displayTitle = try container.decodeIfPresent(String.self, forKey: .displayTitle)
+        displaySubtitle = try container.decodeIfPresent(String.self, forKey: .displaySubtitle)
+        coverPath = try container.decodeIfPresent(String.self, forKey: .coverPath)
+        mediaUpdatedAt = try container.decodeISODateIfPresent(forKey: .mediaUpdatedAt)
         episode = try container.decodeIfPresent(PodcastEpisode.self, forKey: .episode)
 
         if

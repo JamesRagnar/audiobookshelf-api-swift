@@ -1,6 +1,6 @@
 # Compatibility
 
-Supported server range: `>= 2.26.0` and `<= 2.36.x`.
+Supported server range: `>= 2.26.0` and `<= 2.37.x`.
 
 `ServerCompatibility` evaluates the overall range. It does not gate individual members, so check the
 server version before using anything listed below.
@@ -8,6 +8,48 @@ server version before using anything listed below.
 Overall range support does not guarantee identical behavior for every operation across server patch
 releases. In particular, callers should check the full server patch version before offering legacy
 settings writes or library-scoped narrator mutations.
+
+## 2.37.0 and 2.37.1
+
+API-key JWT socket authentication and Audible external-book explicit flags start at 2.37.0.
+Access tokens remain supported; refresh tokens are not socket credentials.
+External-book explicit is optional, with missing/null meaning unknown.
+
+Local cover PATCH still selects an image path. On 2.37.0+ its normalized path must match
+metadata.path of a scanned file belonging to the item. URL download uses POST with url;
+image bytes use a multipart POST part named cover.
+
+Resized/cached artwork identifiers must be UUIDs. Invalid/nonpositive requested dimensions
+become unspecified; positive values clamp to 4096. The cache defaults missing width to 400,
+uses proportional height when omitted, and requires positive safe integer dimensions with
+webp/jpeg/png. Raw requests bypass resized-cache handling. Existing query serialization is
+unchanged. Library-cover accelerated delivery retains its 204 response mapping.
+
+2.37.1 introduces no additional package-exposed response shape changes.
+
+## 2.33.2
+
+Share playback sessions first include optional coverAspectRatio: 0 rectangular, 1 square.
+Ordinary sessions omit it; older and null values decode as nil.
+
+## 2.32.0
+
+External-book tags change from comma-separated strings to string arrays. Both representations
+remain supported; unrelated types fail decoding. Provider publishedYear remains normalized
+from either a string or integer.
+
+## 2.30.0
+
+Streaming cover-search commands and events become available, including SearchCoversEvent,
+CancelCoverSearchEvent, CoverSearchResult, CoverSearchComplete and CoverSearchError.
+Their payload shapes are unchanged.
+
+## 2.26.0 maintained-range corrections
+
+The corrected REST contracts apply across 2.26.0...2.37.1.
+They are not operations newly introduced in 2.37. Nullable ownership, ISO share/API-key dates,
+RSS episode normalization, write shapes, logger/task models and separate year statistics are
+maintained-range corrections. No transport fallback, OIDC wrapper or auth-flow implementation is added.
 
 ## 2.36.1
 
@@ -32,11 +74,11 @@ Added. On older servers the endpoint does not exist unless noted.
 
 | Member | Older servers |
 | --- | --- |
-| `GetYourAuthSessions` | — |
-| `DeleteYourAuthSession` | — |
+| `GetYourAuthSessions` | Unavailable |
+| `DeleteYourAuthSession` | Unavailable |
 | `GetAllMediaProgress` | Read `GetYourUser` instead |
 | `GetYourBookmarks` | Read `GetYourUser` instead |
-| `GetYourBookmarksForLibraryItem` | — |
+| `GetYourBookmarksForLibraryItem` | Unavailable |
 | `UpdatePassword(refreshToken:)` | Header ignored; `Response.user` is nil and the caller is logged out |
 | `Logout(allDevices:)` | Parameter ignored; only the current session is logged out |
 | `ServerSettings.timeZone` | Null |

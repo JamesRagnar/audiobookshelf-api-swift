@@ -52,6 +52,31 @@ private func expectation<T: Interface, E: Error & Sendable>(
 }
 
 private let interfaceFailureExpectations: [Expectation] = [
+    expectation(CreateLibrary.self, [400: CreateLibrary.AudiobookshelfError.badRequest, 500: .internalServerError]),
+    expectation(CreatePodcast.self, [500: CreatePodcast.AudiobookshelfError.internalServerError]),
+    expectation(CheckNewPodcastEpisodes.self, [400: CheckNewPodcastEpisodes.AudiobookshelfError.badRequest]),
+    expectation(DownloadPodcastEpisodes.self, [400: DownloadPodcastEpisodes.AudiobookshelfError.badRequest]),
+    expectation(GetYearStats.self, [400: GetYearStats.AudiobookshelfError.badRequest]),
+    expectation(GetAdminYearStats.self, [400: GetAdminYearStats.AudiobookshelfError.badRequest]),
+    expectation(UploadBackup.self, [500: UploadBackup.AudiobookshelfError.internalError]),
+    expectation(UploadLibraryItemCover.self, [
+        400: UploadLibraryItemCover.AudiobookshelfError.badRequest, 403: .forbidden, 404: .notFound, 500: .internalError
+    ]),
+    expectation(UpdateLibraryItemCover.self, [500: UpdateLibraryItemCover.AudiobookshelfError.internalError]),
+    expectation(DownloadLibraryItemCoverFromURL.self, [
+        400: DownloadLibraryItemCoverFromURL.AudiobookshelfError.badRequest,
+        403: .forbidden, 404: .notFound, 500: .internalError
+    ]),
+    expectation(UpdateLibraryItemTracks.self, [
+        400: UpdateLibraryItemTracks.AudiobookshelfError.badRequest, 403: .forbidden, 404: .notFound
+    ]),
+    expectation(RemoveSeriesFromContinueListening.self, [
+        404: RemoveSeriesFromContinueListening.AudiobookshelfError.notFound
+    ]),
+    expectation(ReaddSeriesToContinueListening.self, [
+        404: ReaddSeriesToContinueListening.AudiobookshelfError.notFound
+    ]),
+
     expectation(
         CheckNewPodcastEpisodes.self,
         [

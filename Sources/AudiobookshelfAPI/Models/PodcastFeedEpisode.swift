@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// Canonical parsed RSS episode on 2.26.0+.
+/// Required string fields are normalized to empty strings when original XML metadata is absent.
+/// Optional values decode missing/null as nil; enclosure and chapters remain required.
 public struct PodcastFeedEpisode {
 
     /// The podcast episode's title.
@@ -41,8 +44,21 @@ public struct PodcastFeedEpisode {
     /// Whether the podcast episode is explicit.
     public let explicit: String
 
-    /// The time (in ms since POSIX epoch) when the podcast episode was published.
-    public let publishedAt: Int
+    /// Optional wire publishedAt in epoch milliseconds; null for missing/invalid pubDate (2.26.0+).
+    public let publishedAt: Int?
+
+    /// Optional parsed fractional seconds (wire durationSeconds), 2.26.0+;
+    /// missing/null for absent, invalid or zero duration.
+    public let durationSeconds: Double?
+
+    /// Optional RSS identifier, wire guid; missing/null means unavailable.
+    public let guid: String?
+    /// Optional external chapter URL, wire chaptersUrl; missing/null means unavailable.
+    public let chaptersUrl: String?
+    /// Optional external chapter MIME type, wire chaptersType.
+    public let chaptersType: String?
+    /// Required parsed chapters (wire chapters), 2.26.0+; [] when none.
+    public let chapters: [BookChapter]
 
     /// Download information for the podcast episode.
     public let enclosure: PodcastEpisodeEnclosure

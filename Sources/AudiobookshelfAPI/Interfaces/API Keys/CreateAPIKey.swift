@@ -29,12 +29,16 @@ public struct CreateAPIKey: Interface {
 
         public let authentication: AuthenticationScheme? = .bearer
 
-        /// Create API Key Request
-        ///
+        /// Creates a key on 2.26.0+; name, userId and isActive are always transmitted.
         /// - Parameters:
-        ///   - expiresAt: Optional Unix timestamp for when the key expires.
-        public init(expiresAt: Int? = nil) {
-            self.body = Payload(expiresAt: expiresAt)
+        ///   - name: Required display name (wire key name).
+        ///   - userId: Required owning user ID (wire key userId).
+        ///   - isActive: Authentication-enabled flag. The true default is explicitly sent.
+        ///     Omission by other clients means false.
+        ///   - expiresIn: Positive lifetime in seconds from creation; nil omits the key
+        ///     and creates a non-expiring key. This is not an epoch timestamp.
+        public init(name: String, userId: String, isActive: Bool = true, expiresIn: Int? = nil) {
+            self.body = Payload(name: name, userId: userId, isActive: isActive, expiresIn: expiresIn)
         }
 
     }
@@ -100,7 +104,10 @@ public extension CreateAPIKey.Request {
 
     struct Payload: RequestBody, Encodable, Sendable {
 
-        let expiresAt: Int?
+        let name: String
+        let userId: String
+        let isActive: Bool
+        let expiresIn: Int?
 
     }
 

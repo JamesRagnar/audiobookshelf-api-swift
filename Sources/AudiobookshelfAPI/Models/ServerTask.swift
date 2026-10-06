@@ -7,7 +7,8 @@
 
 import Foundation
 
-/// A long running background task.
+/// A long running background task on 2.26.0+.
+/// Optional translation/description/error fields accept missing/null; completed tasks can clear them.
 public struct BackgroundTask {
 
     /// Unique task identifier.
@@ -16,26 +17,28 @@ public struct BackgroundTask {
     /// Task type/action identifier.
     public let action: String
 
-    /// Custom data for the action.
-    public let data: [String: String]?
+    /// Required wire data object (2.26.0+), including {}; nested JSON values are retained.
+    public let data: [String: JSONValue]
 
     /// Human-readable task title.
     public let title: String
 
     /// Translation key for title.
-    public let titleKey: String
+    public let titleKey: String?
 
-    /// Substitution values for title translation.
-    public let titleSubs: [String]
+    /// Optional wire titleSubs: heterogeneous JSON values for title translation (2.26.0+).
+    /// Elements may include strings, numeric counts and nulls; missing/null arrays decode as nil.
+    public let titleSubs: [JSONValue]?
 
     /// Detailed description of what the task is doing.
-    public let description: String
+    public let description: String?
 
     /// Translation key for description.
-    public let descriptionKey: String
+    public let descriptionKey: String?
 
-    /// Substitution values for description translation.
-    public let descriptionSubs: [String]
+    /// Optional wire descriptionSubs: heterogeneous JSON values for description translation (2.26.0+).
+    /// Elements may include strings, numeric counts and nulls; missing/null arrays decode as nil.
+    public let descriptionSubs: [JSONValue]?
 
     /// Error message if task failed.
     public let error: String?
@@ -43,8 +46,9 @@ public struct BackgroundTask {
     /// Translation key for error message.
     public let errorKey: String?
 
-    /// Substitution values for error translation.
-    public let errorSubs: [String]?
+    /// Optional wire errorSubs: heterogeneous JSON values for error translation (2.26.0+).
+    /// Elements may include strings, numeric counts and nulls; missing/null arrays decode as nil.
+    public let errorSubs: [JSONValue]?
 
     /// Whether client should keep the task visible after success.
     public let showSuccess: Bool

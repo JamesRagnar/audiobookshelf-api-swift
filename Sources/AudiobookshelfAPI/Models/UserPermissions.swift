@@ -9,7 +9,7 @@ import Foundation
 
 public struct UserPermissions {
 
-    /// Whether the user can download items to the server.
+    /// Whether the user can download media from the server.
     public let download: Bool
 
     ///  Whether the user can update library items.
@@ -29,6 +29,13 @@ public struct UserPermissions {
 
     /// Whether the user can access explicit content.
     public let accessExplicitContent: Bool
+
+    /// Optional wire createEreader (2.26.0+); absent in older persisted permissions.
+    public let createEreader: Bool?
+
+    /// Optional wire selectedTagsNotAccessible (2.26.0+); true makes itemTagsSelected
+    /// a denylist when accessAllTags is false. Missing/null means unspecified.
+    public let selectedTagsNotAccessible: Bool?
 
 }
 

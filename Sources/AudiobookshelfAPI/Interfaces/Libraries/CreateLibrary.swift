@@ -37,19 +37,22 @@ public struct CreateLibrary: Interface {
         ///   - icon: The icon for the library.
         ///   - mediaType: The media type of the library (book or podcast).
         ///   - provider: The metadata provider for the library.
+        ///   - settings: Optional wire settings object; nil omits. Creation applies defaults (2.26.0+).
         public init(
             name: String,
             folders: [String],
             icon: String? = nil,
             mediaType: String,
-            provider: String? = nil
+            provider: String? = nil,
+            settings: LibrarySettingsUpdate? = nil
         ) {
             self.body = Payload(
                 name: name,
-                folders: folders,
+                folders: folders.map { FolderPath(path: $0) },
                 icon: icon,
                 mediaType: mediaType,
-                provider: provider
+                provider: provider,
+                settings: settings
             )
         }
 
@@ -61,6 +64,10 @@ public struct CreateLibrary: Interface {
 
     public enum AudiobookshelfError: Error, Sendable {
 
+        case badRequest
+
+        case internalServerError
+
         case forbidden
 
     }
@@ -68,7 +75,9 @@ public struct CreateLibrary: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
-            .code(403, .error(AudiobookshelfError.forbidden))
+            .code(400, .error(AudiobookshelfError.badRequest)),
+            .code(403, .error(AudiobookshelfError.forbidden)),
+            .code(500, .error(AudiobookshelfError.internalServerError))
         ]
     )
 
@@ -76,17 +85,27 @@ public struct CreateLibrary: Interface {
 
 public extension CreateLibrary.Request {
 
+    /// Creation-only folder object with required wire path (2.26.0+).
+    struct FolderPath: Encodable, Sendable {
+        /// Required server-local folder path.
+        public let path: String
+        /// Creates a folder object; path is always transmitted.
+        public init(path: String) { self.path = path }
+    }
+
     struct Payload: RequestBody, Encodable, Sendable {
 
         let name: String
 
-        let folders: [String]
+        let folders: [FolderPath]
 
         let icon: String?
 
         let mediaType: String
 
         let provider: String?
+
+        let settings: LibrarySettingsUpdate?
 
     }
 

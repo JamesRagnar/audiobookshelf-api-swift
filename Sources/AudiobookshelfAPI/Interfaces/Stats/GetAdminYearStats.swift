@@ -29,7 +29,7 @@ public struct GetAdminYearStats: Interface {
 
         /// Get Admin Year Stats Request
         ///
-        /// - Parameter year: The year to get admin statistics for.
+        /// - Parameter year: Required year in 2000...9999 (2.26.0+).
         public init(year: Int) {
             self.path = "/api/stats/year/\(year)"
         }
@@ -38,11 +38,14 @@ public struct GetAdminYearStats: Interface {
 
     // MARK: Response
 
-    public typealias Response = YearStats
+    public typealias Response = AdminYearStats
 
     public enum AudiobookshelfError: Error, Sendable {
 
         /// Only admins may read server statistics.
+        /// Year must be an integer in 2000...9999.
+        case badRequest
+
         case forbidden
 
     }
@@ -50,6 +53,7 @@ public struct GetAdminYearStats: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
+            .code(400, .error(AudiobookshelfError.badRequest)),
             .code(403, .error(AudiobookshelfError.forbidden))
         ]
     )

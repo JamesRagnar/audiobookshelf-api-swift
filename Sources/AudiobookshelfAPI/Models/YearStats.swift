@@ -1,133 +1,113 @@
-//
-//  YearStats.swift
-//  AudiobookshelfAPI
-//
-//  Created by James Harquail on 2026-01-24.
-//
-
 import Foundation
 
-/// Yearly listening statistics for a user.
-public struct YearStats {
+/// User year statistics on 2.26.0...2.37.1. Arrays are required even when empty.
+public struct YearStats: Decodable, Sendable {
 
-    /// Top author statistics for a year.
-    public struct TopAuthor {
-        /// The author ID.
-        public let id: String
-        /// The author name.
+    public struct TopAuthor: Decodable, Sendable {
+
+        /// Required wire name: author name (2.26.0+).
         public let name: String
-        /// Number of books listened from this author.
-        public let count: Int
+
+        /// Required wire time: rounded listening seconds (2.26.0+).
+        public let time: Int
+
     }
 
-    /// Top genre statistics for a year.
-    public struct TopGenre {
-        /// The genre name.
+    public struct TopGenre: Decodable, Sendable {
+
+        /// Required wire genre: genre name (2.26.0+).
         public let genre: String
-        /// Number of items in this genre.
-        public let count: Int
+
+        /// Required wire time: rounded listening seconds (2.26.0+).
+        public let time: Int
+
     }
 
-    /// Most listened narrator for a year.
-    public struct MostListenedNarrator {
-        /// The narrator name.
+    public struct MostListenedNarrator: Decodable, Sendable {
+
+        /// Required wire name: narrator name (2.26.0+).
         public let name: String
-        /// Listening time in milliseconds.
+
+        /// Required wire time: rounded listening seconds (2.26.0+).
         public let time: Int
+
     }
 
-    /// Most listened month for a year.
-    public struct MostListenedMonth {
-        /// The month (1-12).
+    public struct MostListenedMonth: Decodable, Sendable {
+
+        /// Required wire month: zero-based month: 0 January through 11 December (2.26.0+).
         public let month: Int
-        /// Listening time in milliseconds.
+
+        /// Required wire time: rounded listening seconds (2.26.0+).
         public let time: Int
+
     }
 
-    /// Longest audiobook finished in a year.
-    public struct LongestAudiobook {
-        /// The book ID.
+    public struct LongestAudiobook: Decodable, Sendable {
+
+        /// Required wire id: book ID, not library-item ID (2.26.0+).
         public let id: String
-        /// The book title.
-        public let title: String
-        /// Duration in seconds.
-        public let duration: Float
+
+        /// Optional wire title: book title (2.26.0+); missing/null means no stored title.
+        public let title: String?
+
+        /// Required wire duration: rounded duration seconds (2.26.0+).
+        public let duration: Int
+
+        /// Required wire finishedAt: ISO-8601 completion date (2.26.0+).
+        public let finishedAt: Date
+
+        private enum CodingKeys: CodingKey {
+            case id, title, duration, finishedAt
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            id = try container.decode(String.self, forKey: .id)
+            title = try container.decodeIfPresent(String.self, forKey: .title)
+            duration = try container.decode(Int.self, forKey: .duration)
+            finishedAt = try container.decodeISODate(forKey: .finishedAt)
+        }
+
     }
 
-    // MARK: - Counts
+    /// Required wire totalListeningSessions: session count (2.26.0+).
+    public let totalListeningSessions: Int
 
-    /// Total number of unique items in user's library.
-    public let totalItems: Int
+    /// Required wire totalListeningTime: rounded listening seconds (2.26.0+).
+    public let totalListeningTime: Int
 
-    /// Total number of unique authors in user's library.
-    public let totalAuthors: Int
-
-    /// Total number of unique genres in user's library.
-    public let totalGenres: Int
-
-    /// Number of books listened to (started or continued).
-    public let numListenedBooks: Int
-
-    /// Number of books finished.
-    public let numFinishedBooks: Int
-
-    // MARK: - Durations
-
-    /// Total duration of book content in user's library (seconds).
-    public let totalBookDuration: Float
-
-    /// Total duration of podcast content in user's library (seconds).
-    public let totalPodcastDuration: Float
-
-    /// Total time spent listening to books (milliseconds).
+    /// Required wire totalBookListeningTime: rounded book listening seconds (2.26.0+).
     public let totalBookListeningTime: Int
 
-    /// Total time spent listening to podcasts (milliseconds).
+    /// Required wire totalPodcastListeningTime: rounded podcast listening seconds (2.26.0+).
     public let totalPodcastListeningTime: Int
 
-    // MARK: - Top Lists
+    /// Required wire numBooksFinished: finished-book progress count (2.26.0+).
+    public let numBooksFinished: Int
 
-    /// Top authors by listening time.
+    /// Required wire numBooksListened: distinct listened book titles (2.26.0+).
+    public let numBooksListened: Int
+
+    /// Required wire topAuthors: [] when empty (2.26.0+).
     public let topAuthors: [TopAuthor]
 
-    /// Top genres by listening time.
+    /// Required wire topGenres: [] when empty (2.26.0+).
     public let topGenres: [TopGenre]
 
-    // MARK: - Most Listened
-
-    /// Most listened narrator (if any).
+    /// Nullable wire mostListenedNarrator: null when none (2.26.0+).
     public let mostListenedNarrator: MostListenedNarrator?
 
-    /// Most listened month (if any).
+    /// Nullable wire mostListenedMonth: null when none (2.26.0+).
     public let mostListenedMonth: MostListenedMonth?
 
-    // MARK: - Records
-
-    /// Longest audiobook finished this year (if any).
+    /// Nullable wire longestAudiobookFinished: null when none (2.26.0+).
     public let longestAudiobookFinished: LongestAudiobook?
 
-    /// Number of books with covers.
-    public let booksWithCovers: Int
+    /// Required wire booksWithCovers: library-item IDs selected for covers (2.26.0+).
+    public let booksWithCovers: [String]
 
-    /// Number of finished books with covers.
-    public let finishedBooksWithCovers: Int
+    /// Required wire finishedBooksWithCovers: finished library-item IDs selected for covers (2.26.0+).
+    public let finishedBooksWithCovers: [String]
 
 }
-
-extension YearStats: Decodable {}
-extension YearStats: Sendable {}
-
-extension YearStats.TopAuthor: Decodable {}
-extension YearStats.TopAuthor: Sendable {}
-
-extension YearStats.TopGenre: Decodable {}
-extension YearStats.TopGenre: Sendable {}
-
-extension YearStats.MostListenedNarrator: Decodable {}
-extension YearStats.MostListenedNarrator: Sendable {}
-
-extension YearStats.MostListenedMonth: Decodable {}
-extension YearStats.MostListenedMonth: Sendable {}
-
-extension YearStats.LongestAudiobook: Decodable {}
-extension YearStats.LongestAudiobook: Sendable {}

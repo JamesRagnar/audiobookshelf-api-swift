@@ -61,8 +61,13 @@ public struct User {
     /// The IDs of libraries accessible to the user. An empty array means all libraries are accessible.
     public let librariesAccessible: [String]
 
-    /// The tags accessible to the user. An empty array means all tags are accessible.
+    /// Wire itemTagsSelected selection list (2.26.0+). accessAllTags bypasses it;
+    /// selectedTagsNotAccessible selects denylist mode. An empty allowlist is not unrestricted.
     public let itemTagsSelected: [String]
+
+    /// Optional wire latestSession (2.26.0+), included by GetAllUsers with include=latestSession.
+    /// Missing means not requested; null means no session. Both decode as nil.
+    public let latestSession: PlaybackSession?
 
 }
 
