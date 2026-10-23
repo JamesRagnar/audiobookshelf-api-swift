@@ -9,6 +9,32 @@ Overall range support does not guarantee identical behavior for every operation 
 releases. In particular, callers should check the full server patch version before offering legacy
 settings writes or library-scoped narrator mutations.
 
+## 2.37.2
+
+Source-review baseline: Audiobookshelf `v2.37.2`, commit
+`edb1f7efc92ecacdef51aafb4d9d5054ce10604f`. The new RSS image URL and empty external-book
+search response fixtures are source-derived. The search test verifies package response handling,
+not execution of the upstream provider fix.
+
+`RSSFeedMetadata.imageUrl` can contain a relative cover path with a cache-busting query, such as
+`/feed/feed-slug/cover.jpg?ts=1792786680000`. Preserve the complete string. This applies to
+library-item, collection, and series feeds. Covers without a timestamp have no query suffix;
+the missing-cover fallback remains `/Logo.png`.
+
+Audible searches with missing/null upstream products now return an empty result array instead
+of failing inside the provider. `SearchExternalBooks.Response` remains nonoptional.
+
+The server now accepts repeated multipart file fields. The existing structured single-file
+`UploadFile.Request` remains valid. No multi-file initializer is added.
+
+`ROUTER_BASE_PATH` is normalized to an empty root prefix or a prefix with a leading slash and no
+trailing slash. Existing REST and socket construction already preserves a configured URL prefix;
+no request-construction change is required.
+
+This patch requires no new endpoint, model field, optionality change, dependency update, or increase
+to the minimum maintained server version. The compatibility helper assesses the minor-line range;
+it does not establish that every future patch was audited.
+
 ## 2.37.0 and 2.37.1
 
 API-key JWT socket authentication and Audible external-book explicit flags start at 2.37.0.
