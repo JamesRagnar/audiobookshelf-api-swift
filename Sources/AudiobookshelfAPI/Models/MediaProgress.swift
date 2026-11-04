@@ -9,8 +9,8 @@ import Foundation
 
 public struct MediaProgress {
 
-    /// The ID of the media progress. If the media progress is for a book, this will just be the libraryItemId. If for a
-    /// podcast episode, it will be a hyphenated combination of the libraryItemId and episodeId.
+    /// Opaque progress-record identifier returned by the server. This is distinct from the
+    /// library-item, episode, and media-item identifiers. Use it when removing this record.
     public let id: String
 
     /// The ID of the user the media progress is for.
@@ -28,36 +28,38 @@ public struct MediaProgress {
     /// The type of the media item (book or podcastEpisode).
     public let mediaItemType: String
 
-    /// The total duration (in seconds) of the media. Will be 0 if the media was marked as finished without the user
-    /// listening to it.
+    /// Stored audio duration in seconds. The value depends on prior state and supplied writes;
+    /// marking the record finished does not establish its duration.
     public let duration: Float
 
-    /// The percentage completion progress of the media. Will be 1 if the media is finished.
+    /// Legacy serialized progress value. Marking finished can set this to 1 without moving
+    /// audio time, so it need not equal `currentTime / duration`.
     public let progress: Float
 
-    /// The current time (in seconds) of the user's progress. If the media has been marked as finished, this will be the
-    /// time the user was at beforehand.
+    /// Stored audio position in seconds, independent of the ebook position. Completion-only
+    /// writes need not move this position; other updates can reset it.
     public let currentTime: Float
 
-    /// The ebook location (for ebook progress tracking).
+    /// Stored ebook locator, independent of audio time. The server does not attach a file or
+    /// edition identifier or enforce an EPUB-specific locator syntax.
     public let ebookLocation: String?
 
-    /// The ebook progress (for ebook progress tracking).
+    /// Stored ebook fraction, conventionally 0 through 1. It does not imply record completion.
     public let ebookProgress: Float?
 
-    /// Whether the media is finished.
+    /// Shared record completion, rather than independent audio and ebook completion flags.
     public let isFinished: Bool
 
-    /// Whether the media will be hidden from the "Continue Listening" shelf.
+    /// Shared record visibility on the server's continuation shelves.
     public let hideFromContinueListening: Bool
 
-    /// The time (in ms since POSIX epoch) when the media progress was last updated.
+    /// Aggregate record update time in milliseconds since the POSIX epoch, shared by both formats.
     public let lastUpdate: Int
 
-    /// The time (in ms since POSIX epoch) when the media progress was created.
+    /// Record creation time in milliseconds since the POSIX epoch. Creation requests use `createdAt`.
     public let startedAt: Int
 
-    /// The time (in ms since POSIX epoch) when the media was finished. Will be null if the media has is not finished.
+    /// Shared completion time in milliseconds since the POSIX epoch, or nil when unfinished.
     public let finishedAt: Int?
 
     /// Optional administrator GetUser enrichment, wire displayTitle (2.26.0+).

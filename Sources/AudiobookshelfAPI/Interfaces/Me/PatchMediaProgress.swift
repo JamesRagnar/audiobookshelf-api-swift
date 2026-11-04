@@ -9,6 +9,8 @@ import Foundation
 import RagnarNetworking
 
 /// This endpoint creates/updates your media progress for a library item or podcast episode.
+/// Optional write fields are omitted when nil. Explicit zero and false values are transmitted.
+/// Audio and ebook positions share a record with one completion state and aggregate timestamps.
 public struct PatchMediaProgress: Interface {
 
     // MARK: Request
