@@ -31,7 +31,8 @@ public struct GetEbookFile: Interface {
         ///
         /// - Parameters:
         ///   - libraryItemId: The ID of the library item.
-        ///   - fileId: The ebook file ID (optional, uses first ebook if not specified).
+        ///   - fileId: The server file inode. Omit to select the current primary ebook;
+        ///     supply to select a specific ebook, including a supplementary file.
         public init(libraryItemId: String, fileId: String? = nil) {
             if let fileId = fileId {
                 self.path = "/api/items/\(libraryItemId)/ebook/\(fileId)"
