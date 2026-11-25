@@ -68,6 +68,33 @@ struct RSSFeedDecodingTests {
         #expect(feed.entityUpdatedAt == 300)
     }
 
+    @Test(arguments: ["libraryItem", "collection", "series"], [
+        "/feed/feed-slug/cover.jpg?ts=1792786680000",
+        "/feed/feed-slug/cover.jpg",
+        "/Logo.png"
+    ])
+    func rssFeedPreservesImageURL(entityType: String, imageURL: String) throws {
+        let feed = try decode(
+            """
+            {
+              "id": "E7F5A7E7-8C3A-4A31-BB2D-1A8D6033F001",
+              "slug": "feed-slug",
+              "entityType": "\(entityType)",
+              "entityId": "E7F5A7E7-8C3A-4A31-BB2D-1A8D6033F003",
+              "feedUrl": "/feed/feed-slug",
+              "meta": {
+                "title": "Feed Title",
+                "imageUrl": "\(imageURL)",
+                "preventIndexing": false
+              },
+              "episodes": []
+            }
+            """
+        )
+
+        #expect(feed.meta.imageUrl == imageURL)
+    }
+
     @Test
     func rssFeedDecodesMinifiedPayloadWithRemovedFields() throws {
         let feed = try decode(
@@ -93,6 +120,7 @@ struct RSSFeedDecodingTests {
         #expect(feed.coverPath == nil)
         #expect(feed.episodes == nil)
         #expect(feed.meta.title == "Series Feed")
+        #expect(feed.meta.imageUrl == nil)
         #expect(feed.meta.preventIndexing == false)
     }
 
