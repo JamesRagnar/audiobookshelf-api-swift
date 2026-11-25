@@ -268,7 +268,9 @@ private let interfaceFailureExpectations: [Expectation] = [
     ),
     expectation(OpenFeedForCollection.self, [403: OpenFeedForCollection.AudiobookshelfError.forbidden]),
     expectation(OpenFeedForSeries.self, [403: OpenFeedForSeries.AudiobookshelfError.forbidden]),
-    expectation(PatchMediaProgress.self, [400: PatchMediaProgress.AudiobookshelfError.badRequest, 404: .notFound]),
+    expectation(PatchMediaProgress.self, [
+        400: PatchMediaProgress.AudiobookshelfError.badRequest, 403: .forbidden, 404: .notFound
+    ]),
     expectation(RemoveLibraryItemCover.self, [403: RemoveLibraryItemCover.AudiobookshelfError.forbidden]),
     expectation(
         RemoveLibraryItemsWithIssues.self,

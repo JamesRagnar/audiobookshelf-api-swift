@@ -24,6 +24,15 @@ A completion-only request may supply `isFinished` and `finishedAt` while omittin
 
 The ebook fraction convention is 0 through 1. The server stores a locator string without enforcing an EPUB-specific syntax or attaching a file/edition identifier. `GetEbookFile` selects the current primary ebook when no file inode is supplied; a supplied inode selects that ebook, including a supplementary file. Downloading a selected file does not give it an independent progress record.
 
+## 2.38.0 Access Denial
+
+On server 2.38.0+, `PatchMediaProgress` returns 403 (`forbidden`) for inaccessible books or podcast
+episodes and 400 for an episode paired with a different library-item ID. A nonempty
+`BatchCreateUpdateMediaProgress` batch returns 200 while skipping rejected entries, even when all
+entries are rejected. There are no per-entry receipts; an absent or empty batch returns 400.
+Progress GET and DELETE did not gain these new item-access checks. Partial-write and shared-record
+semantics above still apply.
+
 ## Source-Verified Server Behavior
 
 The following side effects were verified against Audiobookshelf 2.37.2, revision `ce41ce489cebaf00e008919f6f2901b428acfd56`. They are observations about that revision, not additional guarantees for every server version supported by this package.

@@ -133,6 +133,21 @@ exists, but the server response does not include the live transcode stream, rese
 The server provides no other REST endpoint for that state. If `stream_reset` or `stream_error` may have been missed, do
 not infer transcode health from the playback session. Recover playback by establishing a new authoritative stream.
 
+## 2.38.0 Event Audiences
+
+On server 2.38.0+, `collection_added`, `collection_updated`, and `collection_removed` go only to
+connected sockets belonging to the user performing the mutation. Collections remain shared entities;
+other users must refresh their REST state to observe those changes. Collection event payloads are
+filtered for that user's permissions. No collection event is emitted when the filtered representation
+is null.
+
+`rss_feed_open` and `rss_feed_closed` are delivered only to users with library access. A close event
+may be omitted when the entity's library cannot be resolved. `notifications_updated` reports updated
+notification settings and goes only to admin/root users.
+
+Event names and non-null payload schemas remain unchanged. Collection event schemas remain
+nonoptional; audience filtering is performed by the server.
+
 ## Emit Client Events
 
 Client-originated event types conform to `EmittableSocketEvent`. `ABSSocketSession.emit` accepts only those types.

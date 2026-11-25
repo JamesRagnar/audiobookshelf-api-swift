@@ -25,11 +25,11 @@ public enum CompatibilityResult: Sendable, Equatable {
 /// The overall range is supported, but individual operations may differ between patch releases.
 ///
 /// - Minimum supported minor: **2.26**
-/// - Maximum supported minor: **2.37**
+/// - Maximum supported minor: **2.38**
 public enum ServerCompatibility: Sendable {
 
     private static let minimumVersion = Version(major: 2, minor: 26, patch: 0)
-    private static let maximumTestedVersion = Version(major: 2, minor: 37, patch: .max)
+    private static let maximumTestedVersion = Version(major: 2, minor: 38, patch: .max)
 
     /// Evaluates whether `serverVersion` falls within the supported range.
     public static func evaluate(serverVersion: String) -> CompatibilityResult {

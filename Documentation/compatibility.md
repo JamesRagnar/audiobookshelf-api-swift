@@ -1,6 +1,6 @@
 # Compatibility
 
-Supported server range: `>= 2.26.0` and `<= 2.37.x`.
+Supported server range: `>= 2.26.0` and `<= 2.38.x`.
 
 `ServerCompatibility` evaluates the overall range. It does not gate individual members, so check the
 server version before using anything listed below.
@@ -8,6 +8,41 @@ server version before using anything listed below.
 Overall range support does not guarantee identical behavior for every operation across server patch
 releases. In particular, callers should check the full server patch version before offering legacy
 settings writes or library-scoped narrator mutations.
+
+## 2.38.0
+
+Added Audiobookshelf 2.38 compatibility, typed progress-write access denial, and nullable permission-filtered collection mutation responses. Updated socket audience and permission guidance. Maintained server range is 2.26.0 through 2.38.x.
+
+- `PatchMediaProgress` returns 403 (`forbidden`) for inaccessible books or podcast episodes, and
+  400 for an episode paired with a different library-item ID. Batch writes skip rejected entries
+  and return 200 for a nonempty batch, even if all entries are rejected, with no per-entry receipts.
+  An absent or empty batch returns 400. These new item-access checks apply to writes; progress
+  GET and DELETE did not gain them.
+- `CreateCollection`, `UpdateCollection`, `CollectionAddBook`, `CollectionRemoveBook`,
+  `CollectionBatchAddBooks`, and `CollectionBatchRemoveBooks` now return `Collection?`.
+  On 2.38.0+, mutation results are filtered for the requesting user's tag and explicit-content
+  permissions. JSON `null` means successful completion with no visible representation of a
+  nonempty collection. A partially visible collection contains only visible books; an actually
+  empty collection remains an object with `books: []`.
+- Removing a collection book requires update permission. Whole-collection deletion still
+  requires delete permission.
+- Deleting another user's persisted playback session requires admin/root access in addition to
+  the endpoint's existing permission rules.
+- `GetLibraryItemsInProgress` excludes inaccessible items.
+- With access to all libraries disabled, an empty library allow list returns no libraries.
+  With access to all tags disabled, an empty tag allow list denies all items; an empty tag block
+  list denies none.
+- Authorized multipart request shapes remain unchanged. Scanner deduplication, iTunes author
+  cleanup, and sanitization of podcast description/subtitle read from audio tags require no new
+  package fields or request encoding.
+
+The six optional collection mutation responses are **breaking public API changes**. Unwrap a
+returned collection before use and handle nil as successful completion without a visible collection
+representation. See [socket audiences](sockets.md#2380-event-audiences) for the corresponding
+event behavior.
+
+The maintained minimum remains 2.26.0. The compatibility helper evaluates the minor-line range;
+it does not establish that every future patch was audited.
 
 ## 2.37.2
 

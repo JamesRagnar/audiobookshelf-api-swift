@@ -8,7 +8,9 @@
 import Foundation
 import RagnarNetworking
 
-/// This endpoint deletes a specific playback session.
+/// This endpoint deletes a specific persisted playback session.
+/// On server 2.38.0+, a non-admin user cannot delete another user's session, even with delete permission.
+/// Deleting another user's session requires admin/root access in addition to existing permission rules.
 public struct DeleteSession: Interface {
 
     // MARK: Request
@@ -44,7 +46,7 @@ public struct DeleteSession: Interface {
 
         case notFound
 
-        /// You do not have the required permission.
+        /// Insufficient permissions or a session owned by another user.
         case forbidden
 
     }
@@ -52,8 +54,9 @@ public struct DeleteSession: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
+            /// Insufficient permissions or a session owned by another user.
             .code(403, .error(AudiobookshelfError.forbidden)),
-            /// Session with the provided ID does not exist or user cannot access it.
+            /// Session with the provided ID was not found.
             .code(404, .error(AudiobookshelfError.notFound))
         ]
     )

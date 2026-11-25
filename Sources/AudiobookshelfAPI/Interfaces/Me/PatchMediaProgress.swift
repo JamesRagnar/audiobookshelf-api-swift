@@ -11,6 +11,8 @@ import RagnarNetworking
 /// This endpoint creates/updates your media progress for a library item or podcast episode.
 /// Optional write fields are omitted when nil. Explicit zero and false values are transmitted.
 /// Audio and ebook positions share a record with one completion state and aggregate timestamps.
+/// On server 2.38.0+, inaccessible books or podcast episodes return 403. Pairing an episode
+/// with a different library-item ID returns 400.
 public struct PatchMediaProgress: Interface {
 
     // MARK: Request
@@ -98,6 +100,8 @@ public struct PatchMediaProgress: Interface {
 
         case badRequest
 
+        case forbidden
+
         case notFound
 
     }
@@ -105,8 +109,10 @@ public struct PatchMediaProgress: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
-            // Invalid request payload for the target media.
+            // Invalid payload, including an episode paired with a different library-item ID.
             .code(400, .error(AudiobookshelfError.badRequest)),
+            // On 2.38.0+, the book or podcast episode is inaccessible.
+            .code(403, .error(AudiobookshelfError.forbidden)),
             // No library items or podcast episodes were found with the given IDs.
             .code(404, .error(AudiobookshelfError.notFound))
         ]

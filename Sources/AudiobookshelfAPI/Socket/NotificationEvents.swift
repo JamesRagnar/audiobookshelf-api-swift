@@ -8,7 +8,8 @@
 import Foundation
 import RagnarSocketIO
 
-/// A notification was fired.
+/// Notification settings were updated.
+/// On server 2.38.0+, delivered only to admin/root users.
 public struct NotificationsUpdatedEvent: SocketEvent {
 
     public static let name = "notifications_updated"
