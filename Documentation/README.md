@@ -9,3 +9,4 @@ This directory contains package documentation for integrators using `Audiobooksh
 - `compatibility.md`: supported server range and runtime compatibility handling
 - `sockets.md`: realtime integration with `ABSSocketSession`
 - `media-progress.md`: shared progress records, partial writes, and server-defined completion behavior
+- `release-notes.md`: unreleased changes and public API migration guidance

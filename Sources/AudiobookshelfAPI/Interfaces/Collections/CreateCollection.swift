@@ -9,6 +9,11 @@ import Foundation
 import RagnarNetworking
 
 /// This endpoint creates a collection and returns it.
+///
+/// On server 2.38.0+, results are filtered for the requesting user's tag and explicit-content permissions.
+/// A successful mutation can return JSON `null` when a nonempty collection has no visible books.
+/// This decodes to nil and does not mean the mutation failed. A partially visible collection contains
+/// only visible books. A genuinely empty collection returns an object with an empty books array.
 public struct CreateCollection: Interface {
 
     // MARK: Request
@@ -56,7 +61,7 @@ public struct CreateCollection: Interface {
 
     // MARK: Response
 
-    public typealias Response = Collection
+    public typealias Response = Collection?
 
     public enum AudiobookshelfError: Error, Sendable {
 
