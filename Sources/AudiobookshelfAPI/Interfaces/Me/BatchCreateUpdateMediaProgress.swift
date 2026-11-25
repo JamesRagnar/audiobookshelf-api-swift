@@ -9,6 +9,8 @@ import Foundation
 import RagnarNetworking
 
 /// This endpoint batch creates/updates your media progress.
+/// Optional write fields are omitted when nil. Explicit zero and false values are transmitted.
+/// Audio and ebook positions share a record with one completion state and aggregate timestamps.
 public struct BatchCreateUpdateMediaProgress: Interface {
 
     // MARK: Request
