@@ -62,8 +62,8 @@ public struct CollectionRemoveBook: Interface {
     public static let responses = ResponseContract<Response>(
         success: .exact(200),
         failures: [
-            /// On 2.38.0+, removing a book requires update permission; older servers require delete permission.
-            /// Whole-collection deletion still requires delete permission.
+            /// On 2.38.0+, removing a book requires update permission.
+            /// Whole-collection deletion requires delete permission.
             .code(403, .error(AudiobookshelfError.forbidden)),
             /// No collection with the specified ID exists.
             .code(404, .error(AudiobookshelfError.notFound))
